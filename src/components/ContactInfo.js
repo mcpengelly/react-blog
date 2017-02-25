@@ -4,6 +4,7 @@ export default class ContactInfo extends Component {
 	render(){
 		return (
 			<div>
+				<h4>Contact Information:</h4>
 				<address>
 					name: matt pengelly<br/>
 					github: mcpengelly<br/>

@@ -5,6 +5,7 @@ export default class ContactForm extends Component {
 		return (
 			<div>
 				<form>
+					<h4>Leave a message?</h4>
 					<label>
 						Name:
 						<input type="text" name="name" />
