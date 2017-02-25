@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
 import logo from './logo.svg';
 import './App.css';
 
@@ -12,10 +11,11 @@ class App extends Component {
 				<div className="App-header">
 					<NavBar />
 					<img src={logo} className="App-logo" alt="logo" />
-					<h2>Welcome to React</h2>
+					<h2>Welcome</h2>
 				</div>
+				{this.props.children}
 				<p className="App-intro">
-				To get started, edit <code>src/App.js</code> and save to reload.
+					Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum
 				</p>
 			</div>
 		);

@@ -9,7 +9,7 @@ import './index.css';
 
 ReactDOM.render(
 	<Router history={browserHistory}>
-		<Route path="/" component={App}>
+		<Route component={App}>
 			<Route path="/" component={Home} />
 			<Route path="/about" component={About} />
 			<Route path="/portfolio" component={Portfolio} />
