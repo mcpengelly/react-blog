@@ -15,7 +15,7 @@ class App extends Component {
 				</div>
 				{this.props.children}
 				<p className="App-intro">
-					Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum
+					Lorem Ipsum Lorem Ipsum Lorem Ipsum
 				</p>
 			</div>
 		);
