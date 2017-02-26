@@ -1,29 +1,21 @@
 import React, { Component } from 'react';
+import TextBox from './utility/TextBox';
+import TextArea from './utility/TextArea';
 
 export default class ContactForm extends Component {
 	render(){
 		return (
 			<div>
 				<form>
-					<h4>Leave a message?</h4>
-					<label>
-						Name:
-						<input type="text" name="name" />
-					</label><br/>
+					<h4>Leave me a message?</h4>
 
-					<label>
-						Email:
-						<input type="text" name="email" />
-					</label><br/>
-
-					<label>
-						Message:
-						<input type="text" name="message" />
-					</label><br/>
-
+					<TextBox caption="Name" fieldName="name" /><br/>
+					<TextBox caption="Email" fieldName="email" /><br/>
+					<TextArea caption="Message" fieldName="message" /><br/>
 					<input type="submit" value="Send" />
 				</form>
 			</div>
 		);
 	}
 }
+

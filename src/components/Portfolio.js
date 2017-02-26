@@ -5,6 +5,8 @@ export default class Portfolio extends Component {
 		return (
 			<div>
 				<h1>Portfolio Page</h1>
+				<h2>Programming</h2>
+				<h2>Other</h2>
 			</div>
 		);
 	}
