@@ -19,13 +19,17 @@ export default class About extends Component {
 						I'm Ottawa based professional web developer that started out making video games and was  drawn to web development by it's large and supportive open-source community.
 						</p>
 					</section>
+
 					<div style={{display: 'inline-block', padding: '20px'}}>
 						<ContactInfo />
 					</div>
-					<VerticalLine height="100"/>
+
+					<VerticalLine height="125"/>
+
 					<div style={{display: 'inline-block', padding: '20px'}}>
 						<ContactForm />
 					</div>
+
 				</div>
 			</div>
 		);
