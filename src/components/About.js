@@ -8,7 +8,7 @@ export default class About extends Component {
 		return (
 			<div>
 				<h1>About Page</h1>
-				<div width="500px">
+				<div>
 					<section>
 						<h3>What is this site for?</h3>
 						<p>
@@ -20,14 +20,16 @@ export default class About extends Component {
 						</p>
 					</section>
 
-					<div style={{display: 'inline-block', padding: '20px'}}>
-						<ContactInfo />
-					</div>
+					<hr/>
 
-					<VerticalLine height="125"/>
+					<div style={{display: 'flex', justifyContent: 'center'}}>
+						<div style={{padding: '20px'}}>
+							<ContactInfo />
+						</div>
 
-					<div style={{display: 'inline-block', padding: '20px'}}>
-						<ContactForm />
+						<div style={{padding: '20px'}}>
+							<ContactForm />
+						</div>
 					</div>
 
 				</div>

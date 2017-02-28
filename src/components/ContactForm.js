@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import TextBox from './utility/TextBox';
 import TextArea from './utility/TextArea';
 
+import MailIcon from 'react-icons/lib/fa/envelope-o';
+
 export default class ContactForm extends Component {
 	render(){
 		return (
@@ -12,7 +14,7 @@ export default class ContactForm extends Component {
 					<TextBox caption="Name" fieldName="name" /><br/>
 					<TextBox caption="Email" fieldName="email" /><br/>
 					<TextArea caption="Message" fieldName="message" /><br/>
-					<input type="submit" value="Send" />
+					<button type="submit" value="Send">Send <MailIcon /></button>
 				</form>
 			</div>
 		);
