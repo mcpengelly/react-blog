@@ -20,10 +20,9 @@ class App extends Component {
 					<h2>Welcome</h2>
 
 				</div>
-				{this.props.children}
-				<p className="App-intro">
-					Lorem Ipsum Lorem Ipsum Lorem Ipsum
-				</p>
+				<div className="App-intro">
+					{this.props.children}
+				</div>
 
 				<Footer copyright="Matt Pengelly 2017"/>
 			</div>

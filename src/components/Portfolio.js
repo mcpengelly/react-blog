@@ -24,6 +24,7 @@ export default class Portfolio extends Component {
 						<FlexBoxGridItem imageSrc={Logo}/>
 					</FlexBoxWrappedRowGrid>
 				</div>
+				<div style={{backgroundColor: 'black'}}></div>
 
 				<h2>Other</h2>
 			</div>

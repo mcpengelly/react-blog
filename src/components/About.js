@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ContactForm from './ContactForm';
 import ContactInfo from './ContactInfo';
-import VerticalLine from './utility/VerticalLine';
 
 export default class About extends Component {
 	render(){
