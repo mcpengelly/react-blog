@@ -12,8 +12,13 @@ class App extends Component {
 		return (
 			<div className="App" style={{ backgroundImage: "url(" + backgroundImage + ")" }}>
 				<div className="App-header">
+
+					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css"/>
+					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap-theme.min.css"/>
+
 					<NavBar />
 					<h2>Welcome</h2>
+
 				</div>
 				{this.props.children}
 				<p className="App-intro">
