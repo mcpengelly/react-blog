@@ -7,8 +7,8 @@ export default class ProfileImage extends Component {
 			<img src={this.props.source}
 				alt="profile"
 				style={{
-					width: '150px',
-					height: '150px',
+					width: '50%',
+					height: '50%',
 					borderRadius: '50%'
 				}}>
 			</img>
