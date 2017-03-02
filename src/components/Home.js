@@ -10,9 +10,8 @@ export default class Home extends Component {
 			<div>
 				<Grid>
 					<Row className="show-grid">
-						<h1>Home Page</h1>
-						<SideBar />
 						<BlogContainer />
+						<SideBar />
 					</Row>
 				</Grid>
 			</div>

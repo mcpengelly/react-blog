@@ -4,11 +4,12 @@ class FlexBoxGridItem extends Component {
 	render() {
 		return (
 			<a href={this.props.linkTo}>
-				<img src={this.props.imageSrc}
-					style={{ padding: '5px',
+				<img src={this.props.imageSrc} alt=""
+					style={{
+						padding: '5px',
 						width: this.props.width,
-						height: this.props.height }}
-					alt=""
+						height: this.props.height
+					}}
 				/>
 			</a>
 		);

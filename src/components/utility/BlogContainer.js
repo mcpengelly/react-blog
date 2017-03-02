@@ -7,6 +7,7 @@ export default class BlogContainer extends Component {
 		return (
 			<Col style={{backgroundColor: 'white', borderRadius: '10px'}} lg={9}>
 
+				<h1>Things</h1>
 				<Row>
 					<article>
 						<h1>Placeholder Title</h1>
