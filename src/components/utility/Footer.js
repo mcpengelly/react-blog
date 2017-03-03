@@ -8,7 +8,7 @@ export default class Footer extends Component {
 			<footer style={{ backgroundColor: 'grey' }}>
 				<SocialMediaIcons />
 				<small>
-					<p style={{ display: 'inline-block' }}>
+					<p>
 						{this.props.copyright + ' ' + new Date().getFullYear()}
 					</p>
 				</small>

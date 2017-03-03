@@ -4,7 +4,8 @@ import React, { Component } from 'react';
 export default class ProfileImage extends Component {
 	render(){
 		return (
-			<img src={this.props.source}
+			<img className="profile-image"
+				src={this.props.source}
 				alt="profile"
 				style={{
 					width: '50%',

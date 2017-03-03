@@ -11,14 +11,20 @@ class App extends Component {
 	render() {
 		return (
 			<div className="App" style={{ backgroundImage: "url(" + backgroundImage + ")" }}>
-				<NavBar />
+				<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css"/>
+				<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap-theme.min.css"/>
+
+				<div style={{
+					position: 'fixed',
+					zIndex: 2,
+					width: '100%',
+					height: '5%',
+					backgroundColor: 'grey'
+				}}>
+					<NavBar />
+				</div>
 				<div className="App-header">
-
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css"/>
-					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap-theme.min.css"/>
-
 					<h2>Welcome</h2>
-
 				</div>
 
 				<Grid className="App-intro">

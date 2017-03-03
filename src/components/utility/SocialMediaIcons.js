@@ -8,7 +8,7 @@ import A from './A';
 
 const SocialMediaIcons = () => {
 	return (
-		<div className="social-media-icons">
+		<div className="social-media-icons" style={{ display: 'inline-block' }}>
 			<A linkTo="https://github.com/mcpengelly"><FaGithub /></A>
 			<A linkTo="https://www.linkedin.com/in/matt-pengelly-575ba886"><FaLinkedIn /></A>
 			<A linkTo="https://twitter.com/typycyl"><FaTwitter /></A>
