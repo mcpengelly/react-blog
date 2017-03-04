@@ -1,4 +1,4 @@
-const projectsList = [
+const blogPosts = [
 	{
 		title: 'SpaceX lands another rocket',
 		body: 'This is a longer post, This is a longer post, This is a longer post, This is a longer post, This is a longer post, This is a longer post, This is a longer post, This is a longer post'
@@ -37,4 +37,4 @@ const projectsList = [
 	}
 ];
 
-export default projectsList;
+export default blogPosts;

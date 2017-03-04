@@ -4,7 +4,7 @@ class TextBox extends Component {
 	render() {
 		return (
 			<label>
-				{this.props.caption}:
+				{this.props.caption + ':' + ' '}
 				<input type="text" name={this.props.fieldName} />
 			</label>
 		);

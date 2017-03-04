@@ -25,3 +25,4 @@ export default class BlogContainer extends Component {
 		);
 	}
 };
+
