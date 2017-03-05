@@ -6,13 +6,15 @@ import blogPosts from '../data/BlogPosts';;
 //TODO: import list of projects from a .json/.js file
 export default class BlogContainer extends Component {
 	render(){
-		let blogItems = blogPosts.map((post) => {
+		const style = {
+			margin: '10px',
+			borderRadius: '10px',
+			backgroundColor:'white'
+		};
+
+		let blogItems = blogPosts.map((post, index) => {
 			return (
-				<div style={{
-					margin: '10px',
-					borderRadius: '10px',
-					backgroundColor:'white'
-				}}>
+				<div key={index} style={style}>
 					<BlogPost title={post.title} body={post.body} />
 				</div>
 			);

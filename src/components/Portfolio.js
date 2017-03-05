@@ -1,15 +1,41 @@
 import React, { Component } from 'react';
 import { Grid, Row, Accordion, Panel } from 'react-bootstrap';
 
-import Projects from './data/Projects';
+import request from 'request';
 
 export default class Portfolio extends Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			projectList: []
+		};
+	}
+
+	componentDidMount(){
+		//make ajax request for portfolio items
+		//setup using a fake json api for now
+		const root = 'https://jsonplaceholder.typicode.com';
+		const url = root + '/posts';
+
+		request.get(url, (err, res, body) => {
+			if(err) {
+				throw new Error('Url could not be resolved');
+			}
+			this.setState({
+				projectList: JSON.parse(body)
+			});
+			console.log(this.state.projectList);
+		});
+	}
+
 	render(){
-		let projectList = Projects.map((project, index) => {
+		let projects = this.state.projectList;
+
+		let projectList = projects.map((project, index) => {
 			return (
-				<Panel header={project.title} eventKey={index}>
+				<Panel key={index} header={project.title} eventKey={index}>
 					<img src={project.img} alt='project'></img>
-					<p>{project.description}</p>
+					<p>{project.body}</p>
 				</Panel>
 			);
 		});
@@ -19,7 +45,7 @@ export default class Portfolio extends Component {
 				<h1>Past Projects</h1>
 				<Grid>
 					<Row>
-						<Accordion expanded="true">
+						<Accordion>
 							{projectList}
 						</Accordion>
 					</Row>
