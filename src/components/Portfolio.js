@@ -4,23 +4,24 @@ import { Grid, Row, Accordion, Panel } from 'react-bootstrap';
 import request from 'request';
 
 export default class Portfolio extends Component {
-	constructor(props){
+	constructor(props) {
 		super(props);
 		this.state = {
 			projectList: []
 		};
 	}
 
-	//TODO: projects container? pass posts thru props?
-	componentDidMount(){
-		//make ajax request for portfolio items
-		//setup using a fake json api for now
-		const root = 'https://jsonplaceholder.typicode.com';
-		const url = root + '/posts';
+	// TODO: projects container? pass posts thru props?
+	componentDidMount() {
+		// make ajax request for portfolio items
+		// setup using a fake json api for now
+		// const root = 'https://jsonplaceholder.typicode.com';
+		// const url = root + '/posts';
+		const url = 'http://localhost:9000/api/projects';
 
 		request.get(url, (err, res, body) => {
 			if(err) {
-				throw new Error('Url could not be resolved');
+				throw err;
 			}
 			this.setState({
 				projectList: JSON.parse(body)
@@ -28,7 +29,7 @@ export default class Portfolio extends Component {
 		});
 	}
 
-	render(){
+	render() {
 		const projectList = this.state.projectList.map((project, index) => {
 			return (
 				<Panel key={index} header={project.title} eventKey={index}>
@@ -51,5 +52,5 @@ export default class Portfolio extends Component {
 			</div>
 		);
 	}
-};
+}
 

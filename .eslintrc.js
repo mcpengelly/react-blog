@@ -265,7 +265,7 @@ module.exports = {
         'quote-props': [2, 'consistent'],
         'quotes': [2, 'single', {allowTemplateLiterals: true}],
         'require-jsdoc': [
-            2, {
+            0, {
                 require: {
                     FunctionDeclaration: true,
                     MethodDefinition: true,

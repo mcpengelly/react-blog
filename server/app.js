@@ -32,6 +32,11 @@ var pgClient = new pg.Client({
 // GET list of projects
 app.get('/api/projects', (req, res) => {
 	pgClient.connect((err) => {
+		if (err) {
+			res.status(500);
+			throw err;
+		}
+
 		pgClient.query('SELECT * FROM projects', (err, result) => {
 			if (err) {
 				res.status(500);
@@ -62,6 +67,7 @@ app.post('/api/projects', (req, res) => {
 			res.status(500);
 			throw err;
 		}
+
 		const querystring = `INSERT INTO projects VALUES ('${req.query.title}', '${req.query.description}')`;
 		pgClient.query(querystring, (err, result) => {
 			if (err) {
@@ -75,6 +81,7 @@ app.post('/api/projects', (req, res) => {
 					throw err;
 				}
 
+				console.log(result.rows);
 				res.status(200);
 				res.send(result.rows);
 			});
