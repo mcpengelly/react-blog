@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.23.0",
+    "body-parser": "^1.17.0",
     "classnames": "^2.2.5",
     "express": "^4.15.0",
     "flexboxgrid": "^6.3.1",
     "morgan": "^1.8.1",
+    "node-mailer": "^0.1.1",
     "react": "^15.4.2",
     "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.2",

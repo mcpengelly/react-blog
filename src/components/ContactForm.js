@@ -9,7 +9,7 @@ export default class ContactForm extends Component {
 	render(){
 		return (
 			<div>
-				<form>
+				<form action="/send-mail" method="post">
 					<h4>Leave me a message?</h4>
 
 					<TextBox caption="Name" fieldName="name" /><br/>
