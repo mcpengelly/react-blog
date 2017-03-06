@@ -11,6 +11,7 @@ export default class Portfolio extends Component {
 		};
 	}
 
+	//TODO: projects container? pass posts thru props?
 	componentDidMount(){
 		//make ajax request for portfolio items
 		//setup using a fake json api for now
