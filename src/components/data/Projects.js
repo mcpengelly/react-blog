@@ -1,3 +1,4 @@
+//no longer being used
 const projectsList = [
 	{
 		title: 'project',

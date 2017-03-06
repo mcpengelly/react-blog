@@ -1,3 +1,4 @@
+//no longer being used
 const blogPosts = [
 	{
 		title: 'SpaceX lands another rocket',

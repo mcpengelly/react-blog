@@ -15,7 +15,7 @@ export default class Portfolio extends Component {
 		//make ajax request for portfolio items
 		//setup using a fake json api for now
 		const root = 'https://jsonplaceholder.typicode.com';
-		const url = root + '/posts';
+		const url = root + '/photos';
 
 		request.get(url, (err, res, body) => {
 			if(err) {
@@ -24,18 +24,16 @@ export default class Portfolio extends Component {
 			this.setState({
 				projectList: JSON.parse(body)
 			});
-			console.log(this.state.projectList);
+			console.log(body);
 		});
 	}
 
 	render(){
-		let projects = this.state.projectList;
-
-		let projectList = projects.map((project, index) => {
+		const projectList = this.state.projectList.map((project, index) => {
 			return (
 				<Panel key={index} header={project.title} eventKey={index}>
-					<img src={project.img} alt='project'></img>
-					<p>{project.body}</p>
+					<img src={project.url} alt='project'></img>
+					<p>{project.description}</p>
 				</Panel>
 			);
 		});
