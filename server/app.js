@@ -62,7 +62,7 @@ app.post('/api/projects', (req, res) => {
 			res.status(500);
 			throw err;
 		}
-		const querystring = `INSERT INTO projects VALUES ('${req.query.title}, ${req.query.description}')`;
+		const querystring = `INSERT INTO projects VALUES ('${req.query.title}', '${req.query.description}')`;
 		pgClient.query(querystring, (err, result) => {
 			if (err) {
 				res.status(500);
