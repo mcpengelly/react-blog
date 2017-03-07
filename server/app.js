@@ -20,41 +20,39 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // APIs
 
 const pg = require('pg');
-var pgClient = new pg.Client({
+var pool = new pg.Pool({
 	user: 'matthewpengelly',
 	password: 'postgres',
 	database: 'mydb',
 	host: 'localhost',
+	max: 10, // max number of clients in pool
+	idleTimeoutMillis: 1000,
 	port: 5432
 });
 
 // Projects API
 // GET list of projects
 app.get('/api/projects', (req, res) => {
-	pgClient.connect((err) => {
+	pool.connect((err, client, release) => {
 		if (err) {
 			res.status(500);
 			throw err;
 		}
 
-		pgClient.query('SELECT * FROM projects', (err, result) => {
+		client.query('SELECT * FROM projects', (err, result) => {
 			if (err) {
 				res.status(500);
 				throw err;
 			}
-
-			// disconnect
-			pgClient.end((err) => {
-				if (err) {
-					throw err;
-				}
-				res.status(200);
-				if(result && result.rows) {
-					res.send(result.rows);
-				} else {
-					res.send('no projects in the database');
-				}
-			});
+			// was successful
+			res.status(200);
+			if(result && result.rows) {
+				release();
+				res.send(result.rows);
+			} else {
+				release();
+				res.send('no projects in the database');
+			}
 		});
 	});
 });
@@ -62,29 +60,23 @@ app.get('/api/projects', (req, res) => {
 // CREATE new project
 app.post('/api/projects', (req, res) => {
 	// authenticate?
-	pgClient.connect((err) => {
+	pool.connect((err, client, release) => {
 		if (err) {
 			res.status(500);
 			throw err;
 		}
 
 		const querystring = `INSERT INTO projects VALUES ('${req.query.title}', '${req.query.description}')`;
-		pgClient.query(querystring, (err, result) => {
+		client.query(querystring, (err, result) => {
 			if (err) {
 				res.status(500);
 				throw err;
 			}
 
-			// disconnect
-			pgClient.end((err) => {
-				if (err) {
-					throw err;
-				}
-
-				console.log(result.rows);
-				res.status(200);
-				res.send(result.rows);
-			});
+			// was successful
+			res.status(200);
+			release();
+			res.send(result.rows);
 		});
 	});
 });
