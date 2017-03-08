@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-// MIDDLEWARE
+// middleware
 // Setup logger
 app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version"' +
 	':status :res[content-length] :response-time ms'));
@@ -16,11 +16,10 @@ app.use(express.static(path.resolve(__dirname, '..', 'build')));
 // req body middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// ROUTING
+// routing
 require('./routes/routes.js')(app);
 
-// REACT
-// Always return the main index.html, so react-router render the route in the client
+// react: Always return the main index.html, so react-router render the route in the client
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
 });

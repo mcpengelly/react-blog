@@ -1,5 +1,6 @@
 const pg = require('pg');
 const mailer = require('nodemailer');
+const shortid = require('shortid');
 
 const pool = new pg.Pool({
 	user: 'matthewpengelly',
@@ -12,7 +13,7 @@ const pool = new pg.Pool({
 });
 
 
-module.exports = function(app){
+module.exports = function(app) {
 	// Projects API
 	// GET list of projects
 	app.get('/api/projects', (req, res) => {
@@ -41,7 +42,7 @@ module.exports = function(app){
 	});
 
 	// CREATE new project
-	//TODO: ID
+	// TODO: ID
 	app.post('/api/projects', (req, res) => {
 		// authenticate?
 		pool.connect((err, client, release) => {
@@ -50,7 +51,10 @@ module.exports = function(app){
 				throw err;
 			}
 
-			const querystring = `INSERT INTO projects VALUES ('${req.query.title}', '${req.query.description}')`;
+			const uid = shortid.generate();
+			const querystring = `INSERT INTO projects (id, title, description)
+				VALUES ('${uid}', '${req.query.title}', '${req.query.description}')`;
+
 			client.query(querystring, (err, result) => {
 				if (err) {
 					res.status(500);
@@ -58,16 +62,66 @@ module.exports = function(app){
 				}
 
 				// was successful
-				res.status(200);
 				release();
+				res.status(200);
 				res.send(result.rows);
 			});
 		});
 	});
 	// TODO: UPDATE project
-	// TODO: DELETE project
+	// should really be PUT...
+	app.put('/api/projects/:id', (req, res) => {
+		// authenticate?
+		pool.connect((err, client, release) => {
+			if (err) {
+				res.status(500);
+				throw err;
+			}
 
-	//TODO: Blogpost api
+			const querystring = `SELECT * FROM projects WHERE id = ${req.params.id}`;
+
+			client.query(querystring, (err, result) => {
+				if (err) {
+					res.status(500);
+					throw err;
+				}
+
+				// was successful
+				release();
+				res.status(200);
+				res.send(result.rows);
+			});
+		});
+	});
+
+	// TODO: DELETE project
+	app.delete('/api/projects/:id', (req, res) => {
+		// authenticate?
+		pool.connect((err, client, release) => {
+			if (err) {
+				res.status(500);
+				throw err;
+			}
+
+			const querystring = `DELETE FROM projects WHERE id = ${req.params.id}`;
+
+			client.query(querystring, (err, result) => {
+				if (err) {
+					res.status(500);
+					throw err;
+				}
+
+				// was successful
+				release();
+				res.status(200);
+				res.send(result.rows);
+			});
+		});
+	});
+
+	// TODO: Blogpost api
+	// TODO: UPDATE project
+	// TODO: DELETE project
 
 	// Mailer
 	const transporter = mailer.createTransport({
