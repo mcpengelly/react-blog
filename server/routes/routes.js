@@ -149,7 +149,7 @@ module.exports = function(app) {
 
 				// was successful
 				release();
-				if(result && result.rows)
+				if(result && result.rows) {
 					res.send(result.rows);
 				} else {
 					res.send('no posts in database');
@@ -165,7 +165,7 @@ module.exports = function(app) {
 				throw err;
 			}
 
-			client.query(`SELECT * FROM projects WHERE id = '${req.params.id}'`, (err, result) => {
+			client.query(`SELECT * FROM posts WHERE id = '${req.params.id}'`, (err, result) => {
 				if (err) {
 					res.status(500);
 					throw err;
@@ -182,7 +182,7 @@ module.exports = function(app) {
 		});
 	});
 
-	// TODO: shortbody property is bodies first 120 chracters
+	// TODO: shortbody property is body's first 120 chracters
 	// CREATE new blog post
 	app.post('/api/posts', (req, res) => {
 		// authenticate?
