@@ -12,6 +12,8 @@ const pool = new pg.Pool({
 	port: 5432
 });
 
+let querystring = '';
+let uid;
 
 module.exports = function(app) {
 	// Projects API
@@ -29,7 +31,6 @@ module.exports = function(app) {
 					throw err;
 				}
 				// was successful
-				res.status(200);
 				if(result && result.rows) {
 					release();
 					res.send(result.rows);
@@ -42,7 +43,6 @@ module.exports = function(app) {
 	});
 
 	// CREATE new project
-	// TODO: ID
 	app.post('/api/projects', (req, res) => {
 		// authenticate?
 		pool.connect((err, client, release) => {
@@ -50,10 +50,15 @@ module.exports = function(app) {
 				res.status(500);
 				throw err;
 			}
-
-			const uid = shortid.generate();
-			const querystring = `INSERT INTO projects (id, title, description)
-				VALUES ('${uid}', '${req.query.title}', '${req.query.description}')`;
+			uid = shortid.generate();
+			querystring = `INSERT INTO projects 
+				(id, title, description, img)
+				VALUES (
+					'${uid}', 
+					'${req.query.title}', 
+					'${req.query.description}', 
+					'${req.query.img || null}'
+				)`;
 
 			client.query(querystring, (err, result) => {
 				if (err) {
@@ -63,13 +68,13 @@ module.exports = function(app) {
 
 				// was successful
 				release();
-				res.status(200);
-				res.send(result.rows);
+				res.send('insert finished');
 			});
 		});
 	});
-	// TODO: UPDATE project
-	// should really be PUT...
+
+	// TODO: allow for partial updates (PATCH?)
+	// UPDATE existing project using id
 	app.put('/api/projects/:id', (req, res) => {
 		// authenticate?
 		pool.connect((err, client, release) => {
@@ -78,9 +83,13 @@ module.exports = function(app) {
 				throw err;
 			}
 
-			const querystring = `SELECT * FROM projects WHERE id = ${req.params.id}`;
+			querystring = `UPDATE projects 
+				SET title = '${req.query.title}', 
+				description = '${req.query.description}',
+				img = '${req.query.img || null}'
+				WHERE id = '${req.params.id}'`;
 
-			client.query(querystring, (err, result) => {
+			client.query(querystring, (err) => {
 				if (err) {
 					res.status(500);
 					throw err;
@@ -88,13 +97,12 @@ module.exports = function(app) {
 
 				// was successful
 				release();
-				res.status(200);
-				res.send(result.rows);
+				res.send('update finished');
 			});
 		});
 	});
 
-	// TODO: DELETE project
+	// DELETE existing project using id
 	app.delete('/api/projects/:id', (req, res) => {
 		// authenticate?
 		pool.connect((err, client, release) => {
@@ -103,9 +111,9 @@ module.exports = function(app) {
 				throw err;
 			}
 
-			const querystring = `DELETE FROM projects WHERE id = ${req.params.id}`;
+			querystring = `DELETE FROM projects WHERE id = '${req.params.id}'`;
 
-			client.query(querystring, (err, result) => {
+			client.query(querystring, (err) => {
 				if (err) {
 					res.status(500);
 					throw err;
@@ -113,8 +121,7 @@ module.exports = function(app) {
 
 				// was successful
 				release();
-				res.status(200);
-				res.send(result.rows);
+				res.send('delete finished');
 			});
 		});
 	});
