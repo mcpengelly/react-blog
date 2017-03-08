@@ -12,6 +12,6 @@ DROP TABLE IF EXISTS posts;
 CREATE TABLE posts (
 	id character varying,
 	title character varying,
-	body character varying,
-	shortbody character varying
+	content character varying,
+	shortcontent character varying
 );

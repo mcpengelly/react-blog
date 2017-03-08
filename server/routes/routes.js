@@ -34,12 +34,9 @@ module.exports = function(app) {
 				}
 
 				// was successful
+				release();
 				if(result && result.rows) {
-					release();
 					res.send(result.rows);
-				} else {
-					release();
-					res.send('no projects in database');
 				}
 			});
 		});
@@ -59,9 +56,9 @@ module.exports = function(app) {
 				(id, title, description, img)
 				VALUES (
 					'${uid}', 
-					'${req.query.title}', 
-					'${req.query.description}', 
-					'${req.query.img || null}'
+					'${req.body.title || null}', 
+					'${req.body.description || null}', 
+					'${req.body.img || null}'
 				)`;
 
 			client.query(querystring, (err, result) => {
@@ -88,9 +85,9 @@ module.exports = function(app) {
 			}
 
 			querystring = `UPDATE projects 
-				SET title = '${req.query.title}', 
-				description = '${req.query.description}',
-				img = '${req.query.img || null}'
+				SET title = '${req.body.title || null}', 
+				description = '${req.body.description || null}',
+				img = '${req.body.img || null}'
 				WHERE id = '${req.params.id}'
 			`;
 
@@ -194,12 +191,12 @@ module.exports = function(app) {
 
 			uid = shortid.generate();
 			querystring = `INSERT INTO posts 
-				(id, title, body, shortbody)
+				(id, title, content, shortcontent)
 				VALUES (
 					'${uid}', 
-					'${req.query.title}', 
-					'${req.query.body}', 
-					'${req.query.body}'
+					'${req.body.title || null}', 
+					'${req.body.content || null}', 
+					'${req.body.content.substring(0, 120) + '...'}'
 				)`;
 
 			client.query(querystring, (err) => {
@@ -226,9 +223,9 @@ module.exports = function(app) {
 			}
 
 			querystring = `UPDATE posts SET
-				title = '${req.query.title}', 
-				body = '${req.query.body}', 
-				shortbody = '${req.query.body}',
+				title = '${req.body.title || null}', 
+				content = '${req.body.content || null}', 
+				shortcontent = '${req.body.content.substring(0, 120) + '...'}',
 				WHERE id = '${req.params.id}'
 			`;
 
