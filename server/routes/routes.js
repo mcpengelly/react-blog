@@ -16,7 +16,9 @@ let querystring = '';
 let uid;
 
 module.exports = function(app) {
-	// Projects API
+	/**
+	 	projects api
+	 */
 	// GET list of projects
 	app.get('/api/projects', (req, res) => {
 		pool.connect((err, client, release) => {
@@ -30,13 +32,14 @@ module.exports = function(app) {
 					res.status(500);
 					throw err;
 				}
+
 				// was successful
 				if(result && result.rows) {
 					release();
 					res.send(result.rows);
 				} else {
 					release();
-					res.send('no projects in the database');
+					res.send('no projects in database');
 				}
 			});
 		});
@@ -50,6 +53,7 @@ module.exports = function(app) {
 				res.status(500);
 				throw err;
 			}
+
 			uid = shortid.generate();
 			querystring = `INSERT INTO projects 
 				(id, title, description, img)
@@ -87,7 +91,8 @@ module.exports = function(app) {
 				SET title = '${req.query.title}', 
 				description = '${req.query.description}',
 				img = '${req.query.img || null}'
-				WHERE id = '${req.params.id}'`;
+				WHERE id = '${req.params.id}'
+			`;
 
 			client.query(querystring, (err) => {
 				if (err) {
@@ -112,7 +117,6 @@ module.exports = function(app) {
 			}
 
 			querystring = `DELETE FROM projects WHERE id = '${req.params.id}'`;
-
 			client.query(querystring, (err) => {
 				if (err) {
 					res.status(500);
@@ -126,9 +130,143 @@ module.exports = function(app) {
 		});
 	});
 
-	// TODO: Blogpost api
-	// TODO: UPDATE project
-	// TODO: DELETE project
+	/**
+		blog posts api
+	*/
+	// GET list of blog posts
+	app.get('/api/posts', (req, res) => {
+		pool.connect((err, client, release) => {
+			if (err) {
+				res.status(500);
+				throw err;
+			}
+
+			client.query('SELECT * FROM posts', (err, result) => {
+				if (err) {
+					res.status(500);
+					throw err;
+				}
+
+				// was successful
+				release();
+				if(result && result.rows)
+					res.send(result.rows);
+				} else {
+					res.send('no posts in database');
+				}
+			});
+		});
+	});
+
+	app.get('/api/posts/:id', (req, res) => {
+		pool.connect((err, client, release) => {
+			if (err) {
+				res.status(500);
+				throw err;
+			}
+
+			client.query(`SELECT * FROM projects WHERE id = '${req.params.id}'`, (err, result) => {
+				if (err) {
+					res.status(500);
+					throw err;
+				}
+
+				// was successful
+				release();
+				if(result && result.rows) {
+					res.send(result.rows);
+				} else {
+					res.send('no projects in the database');
+				}
+			});
+		});
+	});
+
+	// TODO: shortbody property is bodies first 120 chracters
+	// CREATE new blog post
+	app.post('/api/posts', (req, res) => {
+		// authenticate?
+		pool.connect((err, client, release) => {
+			if (err) {
+				res.status(500);
+				throw err;
+			}
+
+			uid = shortid.generate();
+			querystring = `INSERT INTO posts 
+				(id, title, body, shortbody)
+				VALUES (
+					'${uid}', 
+					'${req.query.title}', 
+					'${req.query.body}', 
+					'${req.query.body}'
+				)`;
+
+			client.query(querystring, (err) => {
+				if (err) {
+					res.status(500);
+					throw err;
+				}
+
+				// was successful
+				release();
+				res.send('added new post');
+			});
+		});
+	});
+
+	// TODO: allow for partial updates (PATCH?)
+	// UPDATE existing blog post using id
+	app.put('/api/posts/:id', (req, res) => {
+		// authenticate?
+		pool.connect((err, client, release) => {
+			if (err) {
+				res.status(500);
+				throw err;
+			}
+
+			querystring = `UPDATE posts SET
+				title = '${req.query.title}', 
+				body = '${req.query.body}', 
+				shortbody = '${req.query.body}',
+				WHERE id = '${req.params.id}'
+			`;
+
+			client.query(querystring, (err) => {
+				if (err) {
+					res.status(500);
+					throw err;
+				}
+
+				// was successful
+				release();
+				res.send('updated post');
+			});
+		});
+	});
+
+	// DELETE existing blog post using id
+	app.delete('/api/posts/:id', (req, res) => {
+		// authenticate?
+		pool.connect((err, client, release) => {
+			if (err) {
+				res.status(500);
+				throw err;
+			}
+
+			querystring = `DELETE FROM posts WHERE id = '${req.params.id}'`;
+			client.query(querystring, (err) => {
+				if (err) {
+					res.status(500);
+					throw err;
+				}
+
+				// was successful
+				release();
+				res.send('deleted post');
+			});
+		});
+	});
 
 	// Mailer
 	const transporter = mailer.createTransport({
