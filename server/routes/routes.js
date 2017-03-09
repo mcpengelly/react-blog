@@ -52,12 +52,12 @@ module.exports = function(app) {
 			}
 
 			uid = shortid.generate();
-			querystring = `INSERT INTO projects 
+			querystring = `INSERT INTO projects
 				(id, title, description, img)
 				VALUES (
-					'${uid}', 
-					'${req.body.title || null}', 
-					'${req.body.description || null}', 
+					'${uid}',
+					'${req.body.title || null}',
+					'${req.body.description || null}',
 					'${req.body.img || null}'
 				)`;
 
@@ -84,8 +84,8 @@ module.exports = function(app) {
 				throw err;
 			}
 
-			querystring = `UPDATE projects 
-				SET title = '${req.body.title || null}', 
+			querystring = `UPDATE projects
+				SET title = '${req.body.title || null}',
 				description = '${req.body.description || null}',
 				img = '${req.body.img || null}'
 				WHERE id = '${req.params.id}'
@@ -190,12 +190,12 @@ module.exports = function(app) {
 			}
 
 			uid = shortid.generate();
-			querystring = `INSERT INTO posts 
+			querystring = `INSERT INTO posts
 				(id, title, content, shortcontent)
 				VALUES (
-					'${uid}', 
-					'${req.body.title || null}', 
-					'${req.body.content || null}', 
+					'${uid}',
+					'${req.body.title || null}',
+					'${req.body.content || null}',
 					'${req.body.content.substring(0, 120) + '...'}'
 				)`;
 
@@ -223,8 +223,8 @@ module.exports = function(app) {
 			}
 
 			querystring = `UPDATE posts SET
-				title = '${req.body.title || null}', 
-				content = '${req.body.content || null}', 
+				title = '${req.body.title || null}',
+				content = '${req.body.content || null}',
 				shortcontent = '${req.body.content.substring(0, 120) + '...'}',
 				WHERE id = '${req.params.id}'
 			`;
@@ -265,7 +265,6 @@ module.exports = function(app) {
 		});
 	});
 
-	console.log(process.env.BURNER_PASS);
 	// Mailer
 	const transporter = mailer.createTransport({
 		service: 'gmail',
@@ -292,6 +291,7 @@ module.exports = function(app) {
 			console.log('Message %s sent: %s', info.messageId, info.response);
 		});
 		res.status(200);
+		res.redirect('/about');
 		res.send('email sent');
 	});
 };
