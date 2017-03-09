@@ -265,19 +265,20 @@ module.exports = function(app) {
 		});
 	});
 
+	console.log(process.env.BURNER_PASS);
 	// Mailer
 	const transporter = mailer.createTransport({
 		service: 'gmail',
 		auth: {
-			user: 'gmail.user@gmail.com',
-			pass: 'yourpass'
+			user: 'burnermcbernstein@gmail.com',
+			pass: process.env.BURNER_PASS
 		}
 	});
 
 	app.post('/api/send-mail', (req, res) => {
 		// setup email data with unicode symbols
 		const mailOptions = {
-			from: '"Burna" <burner@gmail.com>', // sender address
+			from: '"Burna" <burnermcbernstein@gmail.com>', // sender address
 			to: 'pengelly.mat@gmail.com',
 			subject: `Hello from: ${req.body.email}`,
 			text: `${req.body.name} has sent you: ${req.body.message}`
@@ -286,7 +287,7 @@ module.exports = function(app) {
 		// send mail with defined transport object
 		transporter.sendMail(mailOptions, (error, info) => {
 			if (error) {
-				console.log(error);
+				throw error;
 			}
 			console.log('Message %s sent: %s', info.messageId, info.response);
 		});
