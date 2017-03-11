@@ -29,7 +29,7 @@ class App extends Component {
 					{this.props.children}
 				</div>
 
-				<Footer copyright="Matt Pengelly"/>
+				<Footer copyright="Matt Pengelly 2017"/>
 			</div>
 		);
 	}

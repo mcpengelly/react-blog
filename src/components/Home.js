@@ -30,11 +30,11 @@ export default class Home extends Component {
 	render() {
 		return (
 			<Grid>
-				<Row className="show-grid" style={{ backgroundColor: 'white' }}>
-					<Col sm={9}>
-						<BlogContainer posts={this.state.blogPosts} />
+				<Row className="show-grid" >
+					<Col sm={9} style={{ backgroundColor: 'white' }}>
+						<BlogContainer posts={this.state.blogPosts}  />
 					</Col>
-					<Col sm={3} style={{ backgroundColor: 'lightgrey' }}>
+					<Col sm={3} style={{ backgroundColor: 'white'}}>
 						<SideBar />
 					</Col>
 				</Row>
