@@ -1,8 +1,7 @@
 import React from 'react';
-//load icons
 import FaGithub from 'react-icons/lib/fa/github';
 import FaLinkedIn from 'react-icons/lib/fa/linkedin';
-import FaTwitter from 'react-icons/lib/fa/twitter'
+import FaTwitter from 'react-icons/lib/fa/twitter';
 
 import A from './A';
 

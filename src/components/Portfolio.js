@@ -12,6 +12,7 @@ export default class Portfolio extends Component {
 	}
 
 	// TODO: projects container? pass posts thru props?
+	// TODO: individual project container
 	componentDidMount() {
 		// fetch portfolio items
 		const url = 'http://localhost:9000/api/projects';
@@ -38,9 +39,9 @@ export default class Portfolio extends Component {
 
 		return (
 			<div>
-				<h1>Past Projects</h1>
-				<Grid>
+				<Grid style={{ backgroundColor: 'white' }}>
 					<Row>
+						<h1>Projects</h1>
 						<Accordion>
 							{projectList}
 						</Accordion>

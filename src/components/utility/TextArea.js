@@ -1,17 +1,29 @@
 import React, { Component } from 'react';
 
-export default class NavBar extends Component {
+class TextArea extends Component {
 	render() {
 		return (
 			<label>
 				{this.props.caption}:
-				<br/>
+				<br />
 				<textarea
 					rows="4"
-					cols="50"
+					cols="30"
 					name={this.props.fieldName}>
 				</textarea>
 			</label>
 		);
 	}
 };
+
+TextArea.defaultProps = {
+	caption: '???',
+	fieldName: '???'
+};
+
+TextArea.propTypes = {
+	caption: React.PropTypes.string,
+	fieldName: React.PropTypes.string
+};
+
+export default TextArea;

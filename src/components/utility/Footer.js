@@ -9,7 +9,7 @@ export default class Footer extends Component {
 				<SocialMediaIcons />
 				<small>
 					<p>
-						{this.props.copyright + ' ' + new Date().getFullYear()}
+						{this.props.copyright + ' 2017'}
 					</p>
 				</small>
 			</footer>

@@ -11,8 +11,15 @@ class TextBox extends Component {
 	}
 };
 
+
 TextBox.defaultProps = {
-	caption: '? No caption was supplied ?'
+	caption: '? No caption was supplied ?',
+	fieldName: '? No caption was supplied ?'
+};
+
+TextBox.propTypes = {
+	caption: React.PropTypes.string,
+	fieldName: React.PropTypes.string
 };
 
 export default TextBox;

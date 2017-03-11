@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Row } from 'react-bootstrap';
 
-//TODO: import list of projects from a .json/.js file
 export default class BlogPost extends Component {
 	render(){
 		return (

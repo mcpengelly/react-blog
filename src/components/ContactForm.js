@@ -8,16 +8,14 @@ import TextArea from './utility/TextArea';
 export default class ContactForm extends Component {
 	render(){
 		return (
-			<div>
-				<form action="/api/send-mail" method="post">
-					<h4>Leave me a message?</h4>
+			<form action="/api/send-mail" method="post">
+				<h4>Feel free drop me a email or contact me using the form below</h4>
 
-					<TextBox caption="Name" fieldName="name" /><br/>
-					<TextBox caption="Email" fieldName="email" /><br/>
-					<TextArea caption="Message" fieldName="message" /><br/>
-					<Button type="submit" value="Send">Send <MailIcon /></Button>
-				</form>
-			</div>
+				<TextBox caption="Name" fieldName="name" /><br/>
+				<TextBox caption="Email" fieldName="email" /><br/>
+				<TextArea caption="Message" fieldName="message" /><br/>
+				<Button type="submit" value="Send">Send <MailIcon /></Button>
+			</form>
 		);
 	}
 }
