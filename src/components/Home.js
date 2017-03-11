@@ -1,17 +1,40 @@
 import React, { Component } from 'react';
-import { Grid, Row } from 'react-bootstrap'
+import { Grid, Row } from 'react-bootstrap';
+import request from 'request';
 
 import SideBar from './utility/SideBar';
 import BlogContainer from './utility/BlogContainer';
 
+
 export default class Home extends Component {
-	render(){
+	constructor(props) {
+		super(props);
+		this.state = {
+			blogPosts: []
+		};
+	}
+	componentDidMount() {
+		// ajax request for blog posts
+		const url = 'http://localhost:9000/api/posts';
+
+		request.get(url, (err, res, body) => {
+			if(err) {
+				throw new Error('Url could not be resolved');
+			}
+
+			this.setState({
+				blogPosts: JSON.parse(body)
+			});
+		});
+	}
+
+	render() {
 		return (
 			<div>
 				<Grid>
 					<Row className="show-grid">
 						<div>
-							<BlogContainer />
+							<BlogContainer posts={this.state.blogPosts} />
 						</div>
 						<div>
 							<SideBar />

@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 
 //TODO: load an icon for the external links
 export default class A extends Component {
+
 	render(){
+		const style = { padding: '5px' };
 		return (
-			<a href={this.props.linkTo} style={{padding: '5px'}}>
+			<a href={this.props.linkTo} style={style}>
 				{this.props.children}
 			</a>
 		);
