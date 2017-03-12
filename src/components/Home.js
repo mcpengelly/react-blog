@@ -34,7 +34,7 @@ export default class Home extends Component {
 					<Col sm={9} style={{ backgroundColor: 'white' }}>
 						<BlogContainer posts={this.state.blogPosts}  />
 					</Col>
-					<Col sm={3} style={{ backgroundColor: 'white'}}>
+					<Col sm={3} style={{ backgroundColor: 'white' }}>
 						<SideBar />
 					</Col>
 				</Row>
