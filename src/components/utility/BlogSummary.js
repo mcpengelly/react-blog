@@ -1,22 +1,19 @@
 import React, { Component } from 'react';
 import { Row } from 'react-bootstrap';
 
-export default class BlogPost extends Component {
+export default class BlogSummary extends Component {
 	render(){
 		return (
-			<div>
-				<div>
-					<h3>ID:</h3>
-				</div>
+			<Row>
 				<article>
 					<header>
-						<h1>{this.props.title}</h1>
+						<a href={`/${this.props.id}`}><h1>{this.props.title}</h1></a>
 					</header>
 					<section>
-						<p>{this.props.content}</p>
+						<p>{this.props.shortcontent}</p>
 					</section>
 				</article>
-			</div>
+			</Row>
 		);
 	}
 };

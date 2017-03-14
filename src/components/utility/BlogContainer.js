@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import BlogPost from './BlogPost';
+import BlogSummary from './BlogSummary';
 
 export default class BlogContainer extends Component {
 	render(){
@@ -8,8 +8,13 @@ export default class BlogContainer extends Component {
 		let blogPosts = this.props.posts.map((post, index) => {
 			return (
 				<div key={index}>
-					<BlogPost title={post.title} content={post.content} shortcontent={post.shortcontent} />
-					<hr style={style}/>
+					<BlogSummary
+						id={post.id}
+						title={post.title}
+						content={post.content}
+						shortcontent={post.shortcontent}
+					/>
+					<hr style={style} />
 				</div>
 			);
 		});

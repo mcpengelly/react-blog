@@ -15,6 +15,47 @@ const pool = new pg.Pool({
 let querystring = '';
 let uid;
 
+// db table agnostic GET all
+function getAllFromTable(table){
+	client.query(`SELECT * FROM ${table}`, (err, result) => {
+		if (err) {
+			throw err;
+		}
+
+		// was successful
+		release();
+		if(result && result.rows) {
+			res.send(result.rows);
+		}
+	});
+}
+
+function lookupById(table, id){
+	client.query(`SELECT * FROM ${table} WHERE id = ${id}`, (err, result) => {
+		if (err) {
+			throw err;
+		}
+
+		// was successful
+		release();
+		if(result && result.rows) {
+			res.send(result.rows);
+		}
+	});
+}
+
+// app.get('/api/projects', (req, res) => {
+// 	pool.connect((err, client, release) => {
+// 		if (err) {
+// 			res.status(500);
+// 			throw err;
+// 		}
+
+// 		getAllFromTable('projects');
+// 	});
+// });
+
+
 module.exports = function(app) {
 	/**
 	 	projects api
