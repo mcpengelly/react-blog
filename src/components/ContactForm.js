@@ -9,12 +9,12 @@ export default class ContactForm extends Component {
 	render(){
 		return (
 			<form action="/api/send-mail" method="post">
-				<h4>Feel free drop me a email or contact me using the form below</h4>
+				<h4>drop me a email or contact me using the form below</h4>
 
 				<TextBox caption="Name" fieldName="name" /><br/>
 				<TextBox caption="Email" fieldName="email" /><br/>
 				<TextArea caption="Message" fieldName="message" /><br/>
-				<Button type="submit" value="Send">Send <MailIcon /></Button>
+				<Button type="submit" value="Send">Send<MailIcon /></Button>
 			</form>
 		);
 	}

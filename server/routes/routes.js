@@ -3,10 +3,10 @@ const mailer = require('nodemailer');
 const shortid = require('shortid');
 
 const pool = new pg.Pool({
-	user: 'matthewpengelly',
-	password: 'postgres',
-	database: 'mydb',
-	host: 'localhost',
+	user: process.env.USERNAME,
+	password: process.env.POSTGRES_PASSWORD,
+	database: process.env.TODO_DB,
+	host: process.env.APP_HOST,
 	max: 10, // max number of clients in pool
 	idleTimeoutMillis: 1000,
 	port: 5432
