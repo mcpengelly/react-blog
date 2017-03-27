@@ -5,7 +5,7 @@ const shortid = require('shortid');
 const pool = new pg.Pool({
 	user: process.env.USERNAME,
 	password: process.env.POSTGRES_PASSWORD,
-	database: process.env.TODO_DB,
+	database: 'mydb',
 	host: process.env.APP_HOST,
 	max: 10, // max number of clients in pool
 	idleTimeoutMillis: 1000,
