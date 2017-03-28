@@ -16,25 +16,16 @@ let querystring = '';
 let uid;
 
 // db table agnostic GET all
-function getAllFromTable(table){
+function getRows(table, client){
 	client.query(`SELECT * FROM ${table}`, (err, result) => {
-		if (err) {
-			throw err;
-		}
-
-		// was successful
-		release();
-		if(result && result.rows) {
-			res.send(result.rows);
-		}
+		if (err) throw err;
+		return result.rows;
 	});
 }
 
 function lookupById(table, id){
 	client.query(`SELECT * FROM ${table} WHERE id = ${id}`, (err, result) => {
-		if (err) {
-			throw err;
-		}
+		if (err) throw err;
 
 		// was successful
 		release();
@@ -44,19 +35,20 @@ function lookupById(table, id){
 	});
 }
 
-// app.get('/api/projects', (req, res) => {
-// 	pool.connect((err, client, release) => {
-// 		if (err) {
-// 			res.status(500);
-// 			throw err;
-// 		}
 
-// 		getAllFromTable('projects');
-// 	});
-// });
 
 
 module.exports = function(app) {
+	app.get('/api/projects/all', (req, res) => {
+		pool.connect((err, client, release) => {
+			if (err) {
+				throw err;
+			}
+			console.log(getRows('projects', client))
+			res.send(getRows('projects', client));
+		});
+	});
+
 	/**
 	 	projects api
 	 */
@@ -64,13 +56,11 @@ module.exports = function(app) {
 	app.get('/api/projects', (req, res) => {
 		pool.connect((err, client, release) => {
 			if (err) {
-				res.status(500);
 				throw err;
 			}
 
 			client.query('SELECT * FROM projects', (err, result) => {
 				if (err) {
-					res.status(500);
 					throw err;
 				}
 
@@ -88,7 +78,6 @@ module.exports = function(app) {
 		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
-				res.status(500);
 				throw err;
 			}
 
@@ -104,7 +93,6 @@ module.exports = function(app) {
 
 			client.query(querystring, (err, result) => {
 				if (err) {
-					res.status(500);
 					throw err;
 				}
 
@@ -121,20 +109,19 @@ module.exports = function(app) {
 		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
-				res.status(500);
 				throw err;
 			}
 
 			querystring = `UPDATE projects
-				SET title = '${req.body.title || null}',
+				SET
+				title 		= '${req.body.title || null}',
 				description = '${req.body.description || null}',
-				img = '${req.body.img || null}'
-				WHERE id = '${req.params.id}'
+				img 		= '${req.body.img || null}'
+				WHERE id	= '${req.params.id}'
 			`;
 
 			client.query(querystring, (err) => {
 				if (err) {
-					res.status(500);
 					throw err;
 				}
 
@@ -150,14 +137,12 @@ module.exports = function(app) {
 		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
-				res.status(500);
 				throw err;
 			}
 
 			querystring = `DELETE FROM projects WHERE id = '${req.params.id}'`;
 			client.query(querystring, (err) => {
 				if (err) {
-					res.status(500);
 					throw err;
 				}
 
@@ -175,13 +160,11 @@ module.exports = function(app) {
 	app.get('/api/posts', (req, res) => {
 		pool.connect((err, client, release) => {
 			if (err) {
-				res.status(500);
 				throw err;
 			}
 
 			client.query('SELECT * FROM posts', (err, result) => {
 				if (err) {
-					res.status(500);
 					throw err;
 				}
 
@@ -199,13 +182,11 @@ module.exports = function(app) {
 	app.get('/api/posts/:id', (req, res) => {
 		pool.connect((err, client, release) => {
 			if (err) {
-				res.status(500);
 				throw err;
 			}
 
 			client.query(`SELECT * FROM posts WHERE id = '${req.params.id}'`, (err, result) => {
 				if (err) {
-					res.status(500);
 					throw err;
 				}
 
@@ -226,7 +207,6 @@ module.exports = function(app) {
 		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
-				res.status(500);
 				throw err;
 			}
 
@@ -242,7 +222,6 @@ module.exports = function(app) {
 
 			client.query(querystring, (err) => {
 				if (err) {
-					res.status(500);
 					throw err;
 				}
 
@@ -259,20 +238,18 @@ module.exports = function(app) {
 		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
-				res.status(500);
 				throw err;
 			}
 
 			querystring = `UPDATE posts SET
-				title = '${req.body.title || null}',
-				content = '${req.body.content || null}',
-				shortcontent = '${req.body.content.substring(0, 120) + '...'}',
+				title 			= '${req.body.title || null}',
+				content			= '${req.body.content || null}',
+				shortcontent 	= '${req.body.content.substring(0, 120) + '...'}',
 				WHERE id = '${req.params.id}'
 			`;
 
 			client.query(querystring, (err) => {
 				if (err) {
-					res.status(500);
 					throw err;
 				}
 
@@ -288,14 +265,12 @@ module.exports = function(app) {
 		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
-				res.status(500);
 				throw err;
 			}
 
 			querystring = `DELETE FROM posts WHERE id = '${req.params.id}'`;
 			client.query(querystring, (err) => {
 				if (err) {
-					res.status(500);
 					throw err;
 				}
 
