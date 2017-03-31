@@ -1,22 +1,28 @@
 import React, { Component } from 'react';
-import { Col } from 'react-bootstrap';
-import BlogPost from './BlogPost';
+import BlogSummary from './BlogSummary';
 
-//TODO: import list of projects from a .json/.js file
 export default class BlogContainer extends Component {
 	render(){
+		const style = { borderColor: 'lightgrey' };
+
 		let blogPosts = this.props.posts.map((post, index) => {
 			return (
 				<div key={index}>
-					<BlogPost title={post.title} body={post.body} />
+					<BlogSummary
+						id={post.id}
+						title={post.title}
+						content={post.content}
+						shortcontent={post.shortcontent}
+					/>
+					<hr style={style} />
 				</div>
 			);
 		});
 
 		return (
-			<Col sm={9}>
+			<div>
 				{blogPosts}
-			</Col>
+			</div>
 		);
 	}
 };

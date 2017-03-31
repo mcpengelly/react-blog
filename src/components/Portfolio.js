@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Grid, Row, Accordion, Panel } from 'react-bootstrap';
-
+import { Grid, Row } from 'react-bootstrap';
 import request from 'request';
+
+import ProjectsContainer from './utility/ProjectsContainer';
 
 export default class Portfolio extends Component {
 	constructor(props) {
@@ -11,7 +12,6 @@ export default class Portfolio extends Component {
 		};
 	}
 
-	// TODO: projects container? pass posts thru props?
 	componentDidMount() {
 		// fetch portfolio items
 		const url = 'http://localhost:9000/api/projects';
@@ -27,23 +27,12 @@ export default class Portfolio extends Component {
 	}
 
 	render() {
-		const projectList = this.state.projectList.map((project, index) => {
-			return (
-				<Panel key={index} header={project.title} eventKey={index}>
-					<img src={project.img} alt='project'></img>
-					<p>{project.description}</p>
-				</Panel>
-			);
-		});
-
 		return (
 			<div>
-				<h1>Past Projects</h1>
-				<Grid>
+				<Grid style={{ backgroundColor: 'white' }}>
 					<Row>
-						<Accordion>
-							{projectList}
-						</Accordion>
+						<h1>Projects</h1>
+						<ProjectsContainer projects={this.state.projectList}/>
 					</Row>
 				</Grid>
 			</div>

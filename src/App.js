@@ -3,7 +3,6 @@ import './App.css';
 
 import NavBar from './components/utility/NavBar';
 import Footer from './components/utility/Footer';
-import {Grid} from 'react-bootstrap';
 /* Background pattern from Subtle Patterns */
 import backgroundImage from './assets/img/escheresque_@2X.png';
 
@@ -26,11 +25,11 @@ class App extends Component {
 					<h2>Welcome</h2>
 				</div>
 
-				<Grid className="App-intro">
+				<div className="App-intro">
 					{this.props.children}
-				</Grid>
+				</div>
 
-				<Footer copyright="Matt Pengelly"/>
+				<Footer copyright="Matt Pengelly 2017"/>
 			</div>
 		);
 	}
