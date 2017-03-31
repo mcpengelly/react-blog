@@ -36,19 +36,18 @@ function lookupById(table, id){
 }
 
 
+app.get('/api/projects/all', (req, res) => {
+	pool.connect((err, client, release) => {
+		if (err) {
+			throw err;
+		}
+		console.log(getRows('projects', client))
+		res.send(getRows('projects', client));
+	});
+});
 
 
 module.exports = function(app) {
-	app.get('/api/projects/all', (req, res) => {
-		pool.connect((err, client, release) => {
-			if (err) {
-				throw err;
-			}
-			console.log(getRows('projects', client))
-			res.send(getRows('projects', client));
-		});
-	});
-
 	/**
 	 	projects api
 	 */
