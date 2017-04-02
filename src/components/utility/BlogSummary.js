@@ -12,6 +12,9 @@ marked.setOptions({
 	smartypants: false
 });
 
+
+const style = { textAlign: 'left' };
+
 export default class BlogSummary extends Component {
 	constructor(props, context) {
 		super(props, context);
@@ -29,7 +32,7 @@ export default class BlogSummary extends Component {
 						<h2>{this.props.title}</h2>
 					</header>
 					<section>
-						<div dangerouslySetInnerHTML={this.rawMarkup()}></div>
+						<div style={style} dangerouslySetInnerHTML={this.rawMarkup()}></div>
 					</section>
 				</article>
 			</div>
