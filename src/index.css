@@ -6,7 +6,10 @@ body {
 
 h2 {
 	font-family: 'Roboto', sans-serif !important;
+	margin-top: 1em;
+	padding-top: 1em;
 }
 p {
 	font-family: 'Open Sans', sans-serif;
+	color: #555;
 }
