@@ -12,6 +12,9 @@ marked.setOptions({
 	smartypants: false
 });
 
+
+const style = { textAlign: 'left' };
+
 export default class BlogSummary extends Component {
 	constructor(props, context) {
 		super(props, context);
@@ -22,7 +25,6 @@ export default class BlogSummary extends Component {
 		return { __html: rawMarkup };
 	}
 	render(){
-		const style = { textAlign: 'left' };
 		return (
 			<div>
 				<article>

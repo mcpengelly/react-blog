@@ -4,20 +4,24 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import ContactForm from './utility/ContactForm';
 import ContactInfo from './utility/ContactInfo';
 
+const style = {
+	margin: '0 auto',
+	maxWidth: '50em',
+	backgroundColor: 'white'
+};
+const leftAlign = { textAlign: 'left' };
+const centerStyle = { display: 'flex', justifyContent: 'center' };
+const padElements = { padding: '5%' };
+
 export default class About extends Component {
 	render(){
-		const style = {
-			display: 'flex',
-			justifyContent: 'center'
-		};
-
 		return (
-			<Grid style={{ backgroundColor: 'white' }}>
+			<Grid style={style}>
 
 				<Row>
 					<Col sm={12}>
 						<h1>About</h1>
-						<section style={{ textAlign: 'left' }}>
+						<section style={leftAlign}>
 							<h3>What is this site for?</h3>
 							<p>
 								A place for me to share things I'm working on and a place to put past/future projects.
@@ -32,15 +36,12 @@ export default class About extends Component {
 				</Row>
 
 				<Row>
-					<Col sm={12}>
-						<div style={style}>
-							<div style={{padding: '20px'}}>
-								<ContactInfo />
-							</div>
-
-							<div style={{padding: '20px'}}>
-								<ContactForm />
-							</div>
+					<Col style={centerStyle} sm={12}>
+						<div style={padElements}>
+							<ContactInfo />
+						</div>
+						<div style={padElements}>
+							<ContactForm />
 						</div>
 					</Col>
 				</Row>

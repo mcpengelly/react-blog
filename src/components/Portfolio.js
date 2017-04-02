@@ -4,6 +4,12 @@ import request from 'request';
 
 import ProjectsContainer from './utility/ProjectsContainer';
 
+const style = {
+	margin: '0 auto',
+	maxWidth: '50em',
+	backgroundColor: 'white'
+};
+
 export default class Portfolio extends Component {
 	constructor(props) {
 		super(props);
@@ -28,7 +34,6 @@ export default class Portfolio extends Component {
 
 	render() {
 		return (
-		const style = { backgroundColor: 'white' };
 			<div>
 				<Grid style={style}>
 					<Row>

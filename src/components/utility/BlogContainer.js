@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import BlogPost from './BlogPost';
 
+const hrStyle = { borderColor: 'lightgrey' };
+
 export default class BlogContainer extends Component {
 	render(){
-		const hrStyle = { borderColor: 'lightgrey' };
-
 		let blogPosts = this.props.posts.map((post, index) => {
 			return (
 				<div key={index}>

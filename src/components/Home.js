@@ -4,6 +4,12 @@ import request from 'request';
 
 import BlogContainer from './utility/BlogContainer';
 
+const style = {
+	margin: '0 auto',
+	maxWidth: '50em',
+	backgroundColor: 'white'
+};
+
 export default class Home extends Component {
 	constructor(props) {
 		super(props);
@@ -27,12 +33,6 @@ export default class Home extends Component {
 	}
 
 	render() {
-		const style = {
-			margin: '0 auto',
-			maxWidth: '50em',
-			backgroundColor: 'white'
-		};
-
 		return (
 			<Grid style={style}>
 				<Row className="show-grid">

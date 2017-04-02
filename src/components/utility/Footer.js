@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 
 import SocialMediaIcons from './SocialMediaIcons';
 
+var style = { backgroundColor: 'grey' };
+
 export default class Footer extends Component {
 	render(){
-		var style = { backgroundColor: 'grey' };
 		return (
 			<footer style={style}>
 				<SocialMediaIcons />
