@@ -28,8 +28,9 @@ export default class Portfolio extends Component {
 
 	render() {
 		return (
+		const style = { backgroundColor: 'white' };
 			<div>
-				<Grid style={{ backgroundColor: 'white' }}>
+				<Grid style={style}>
 					<Row>
 						<h1>Projects</h1>
 						<ProjectsContainer projects={this.state.projectList}/>

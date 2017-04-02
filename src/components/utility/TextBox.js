@@ -11,7 +11,6 @@ class TextBox extends Component {
 	}
 };
 
-
 TextBox.defaultProps = {
 	caption: '? No caption was supplied ?',
 	fieldName: '? No caption was supplied ?'

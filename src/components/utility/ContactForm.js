@@ -2,8 +2,8 @@ import MailIcon from 'react-icons/lib/fa/envelope-o';
 import { Button } from 'react-bootstrap';
 
 import React, { Component } from 'react';
-import TextBox from './utility/TextBox';
-import TextArea from './utility/TextArea';
+import TextBox from './TextBox';
+import TextArea from './TextArea';
 
 export default class ContactForm extends Component {
 	render(){

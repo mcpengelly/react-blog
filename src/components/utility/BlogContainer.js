@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
-import BlogSummary from './BlogSummary';
+import BlogPost from './BlogPost';
 
 export default class BlogContainer extends Component {
 	render(){
-		const style = { borderColor: 'lightgrey' };
+		const hrStyle = { borderColor: 'lightgrey' };
 
 		let blogPosts = this.props.posts.map((post, index) => {
 			return (
 				<div key={index}>
-					<BlogSummary
+					<BlogPost
 						id={post.id}
 						title={post.title}
 						content={post.content}
-						shortcontent={post.shortcontent}
 					/>
-					<hr style={style} />
+					<hr style={hrStyle} />
 				</div>
 			);
 		});

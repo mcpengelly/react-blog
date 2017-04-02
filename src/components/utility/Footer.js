@@ -4,8 +4,9 @@ import SocialMediaIcons from './SocialMediaIcons';
 
 export default class Footer extends Component {
 	render(){
+		var style = { backgroundColor: 'grey' };
 		return (
-			<footer style={{ backgroundColor: 'grey' }}>
+			<footer style={style}>
 				<SocialMediaIcons />
 				<small>
 					<p>
