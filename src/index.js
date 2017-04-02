@@ -21,7 +21,6 @@ ReactDOM.render(
 			<Route path="/" component={Home} />
 			<Route path="/about" component={About} />
 			<Route path="/portfolio" component={Portfolio} />
-			<Route path="/:posttitle" component={Child} />
 		</Route>
 	</Router>,
 	document.getElementById('root')

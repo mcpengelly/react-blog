@@ -15,38 +15,6 @@ const pool = new pg.Pool({
 let querystring = '';
 let uid;
 
-// db table agnostic GET all
-function getRows(table, client){
-	client.query(`SELECT * FROM ${table}`, (err, result) => {
-		if (err) throw err;
-		return result.rows;
-	});
-}
-
-function lookupById(table, id){
-	client.query(`SELECT * FROM ${table} WHERE id = ${id}`, (err, result) => {
-		if (err) throw err;
-
-		// was successful
-		release();
-		if(result && result.rows) {
-			res.send(result.rows);
-		}
-	});
-}
-
-
-app.get('/api/projects/all', (req, res) => {
-	pool.connect((err, client, release) => {
-		if (err) {
-			throw err;
-		}
-		console.log(getRows('projects', client))
-		res.send(getRows('projects', client));
-	});
-});
-
-
 module.exports = function(app) {
 	/**
 	 	projects api
@@ -211,12 +179,11 @@ module.exports = function(app) {
 
 			uid = shortid.generate();
 			querystring = `INSERT INTO posts
-				(id, title, content, shortcontent)
+				(id, title, content)
 				VALUES (
 					'${uid}',
 					'${req.body.title || null}',
-					'${req.body.content || null}',
-					'${req.body.content.substring(0, 120) + '...'}'
+					'${req.body.content || null}'
 				)`;
 
 			client.query(querystring, (err) => {
@@ -243,7 +210,6 @@ module.exports = function(app) {
 			querystring = `UPDATE posts SET
 				title 			= '${req.body.title || null}',
 				content			= '${req.body.content || null}',
-				shortcontent 	= '${req.body.content.substring(0, 120) + '...'}',
 				WHERE id = '${req.params.id}'
 			`;
 

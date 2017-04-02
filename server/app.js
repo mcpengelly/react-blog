@@ -17,7 +17,7 @@ app.use(express.static(path.resolve(__dirname, '..', 'build')));
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // routing
-require('./routes/routes.js')(app);
+require('./routes.js')(app);
 
 // react: Always return the main index.html, so react-router render the route in the client
 app.get('*', (req, res) => {
