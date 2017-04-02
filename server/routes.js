@@ -15,7 +15,6 @@ const pool = new pg.Pool({
 let querystring = '';
 let uid;
 
-
 module.exports = function(app) {
 	/**
 	 	projects api
@@ -184,8 +183,7 @@ module.exports = function(app) {
 				VALUES (
 					'${uid}',
 					'${req.body.title || null}',
-					'${req.body.content || null}',
-					'${req.body.content.substring(0, 120) + '...'}'
+					'${req.body.content || null}'
 				)`;
 
 			client.query(querystring, (err) => {
