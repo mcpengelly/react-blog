@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Row } from 'react-bootstrap';
 import marked from 'marked';
 
 marked.setOptions({

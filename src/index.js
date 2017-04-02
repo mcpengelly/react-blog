@@ -7,14 +7,6 @@ import About from './components/About';
 import Portfolio from './components/Portfolio';
 import './index.css';
 
-import BlogPost from './components/utility/BlogPost';
-
-const Child = ({ match }) => (
-	<div>
-		<h3>ID: {match.params.posttitle}</h3>
-	</div>
-);
-
 ReactDOM.render(
 	<Router history={browserHistory}>
 		<Route component={App}>

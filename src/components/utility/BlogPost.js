@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Row } from 'react-bootstrap';
 
 export default class BlogPost extends Component {
 	render(){
