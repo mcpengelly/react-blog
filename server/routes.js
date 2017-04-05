@@ -1,6 +1,7 @@
 const pg = require('pg');
 const mailer = require('nodemailer');
 const shortid = require('shortid');
+const passport = require('passport');
 
 const pool = new pg.Pool({
 	user: process.env.USERNAME,
@@ -15,9 +16,32 @@ const pool = new pg.Pool({
 let querystring = '';
 let uid;
 
+passport.use(new BasicStrategy(
+	function(username, password, done) {
+		pool.connect((err, client, release) => {
+			if(err){ return done(err); }
+			let pwQuery = `SELECT password FROM users WHERE username = ${username}`;
+			client.query(pwQuery, (err, result) => {
+				if (err) {
+					return done(err);
+				}
+
+				release();
+				if (!result) {
+					return done(null, false);
+				}
+				if (result === password) {
+					return done(null, result);
+				}
+			});
+		}
+	});
+}));
+
+
 module.exports = function(app) {
 	/**
-	 	projects api
+		projects api
 	 */
 	// GET list of projects
 	app.get('/api/projects', (req, res) => {
@@ -33,7 +57,7 @@ module.exports = function(app) {
 
 				// was successful
 				release();
-				if(result && result.rows) {
+				if (result && result.rows) {
 					res.send(result.rows);
 				}
 			});
@@ -137,7 +161,7 @@ module.exports = function(app) {
 
 				// was successful
 				release();
-				if(result && result.rows) {
+				if (result && result.rows) {
 					res.send(result.rows);
 				} else {
 					res.send('no posts in database');
@@ -159,7 +183,7 @@ module.exports = function(app) {
 
 				// was successful
 				release();
-				if(result && result.rows) {
+				if (result && result.rows) {
 					res.send(result.rows);
 				} else {
 					res.send('no projects in the database');
