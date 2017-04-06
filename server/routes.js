@@ -65,7 +65,8 @@ module.exports = function(app) {
 	});
 
 	// CREATE new project
-	app.post('/api/projects', (req, res) => {
+	app.post('/api/projects',
+		(req, res) => {
 		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
@@ -194,7 +195,9 @@ module.exports = function(app) {
 
 	// TODO: shortbody property is body's first 120 chracters
 	// CREATE new blog post
-	app.post('/api/posts', (req, res) => {
+	app.post('/api/posts',
+		passport.authenticate('basic', { session: false }),
+		(req, res) => {
 		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
