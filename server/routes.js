@@ -2,6 +2,7 @@ const pg = require('pg');
 const mailer = require('nodemailer');
 const shortid = require('shortid');
 const passport = require('passport');
+const BasicStrategy = require('passport-http').BasicStrategy;
 
 const pool = new pg.Pool({
 	user: process.env.USERNAME,
@@ -20,7 +21,7 @@ passport.use(new BasicStrategy(
 	function(username, password, done) {
 		pool.connect((err, client, release) => {
 			if(err){ return done(err); }
-			let pwQuery = `SELECT password FROM users WHERE username = ${username}`;
+			let pwQuery = `SELECT password FROM users WHERE username = '${username}'`;
 			client.query(pwQuery, (err, result) => {
 				if (err) {
 					return done(err);
@@ -30,13 +31,14 @@ passport.use(new BasicStrategy(
 				if (!result) {
 					return done(null, false);
 				}
-				if (result === password) {
+				console.log(result.rows[0]);
+				if (result.rows[0].password === password) {
 					return done(null, result);
 				}
 			});
-		}
-	});
-}));
+		});
+	})
+);
 
 
 module.exports = function(app) {
@@ -66,6 +68,7 @@ module.exports = function(app) {
 
 	// CREATE new project
 	app.post('/api/projects',
+		passport.authenticate('basic', { session: false }),
 		(req, res) => {
 		// authenticate?
 		pool.connect((err, client, release) => {
@@ -97,7 +100,9 @@ module.exports = function(app) {
 
 	// TODO: allow for partial updates (PATCH?)
 	// UPDATE existing project using id
-	app.put('/api/projects/:id', (req, res) => {
+	app.put('/api/projects/:id',
+		passport.authenticate('basic', { session: false }),
+		(req, res) => {
 		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
@@ -125,7 +130,9 @@ module.exports = function(app) {
 	});
 
 	// DELETE existing project using id
-	app.delete('/api/projects/:id', (req, res) => {
+	app.delete('/api/projects/:id',
+		passport.authenticate('basic', { session: false }),
+		(req, res) => {
 		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
@@ -193,7 +200,6 @@ module.exports = function(app) {
 		});
 	});
 
-	// TODO: shortbody property is body's first 120 chracters
 	// CREATE new blog post
 	app.post('/api/posts',
 		passport.authenticate('basic', { session: false }),
@@ -227,7 +233,9 @@ module.exports = function(app) {
 
 	// TODO: allow for partial updates (PATCH?)
 	// UPDATE existing blog post using id
-	app.put('/api/posts/:id', (req, res) => {
+	app.put('/api/posts/:id',
+		passport.authenticate('basic', { session: false }),
+		(req, res) => {
 		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
@@ -253,7 +261,9 @@ module.exports = function(app) {
 	});
 
 	// DELETE existing blog post using id
-	app.delete('/api/posts/:id', (req, res) => {
+	app.delete('/api/posts/:id',
+		passport.authenticate('basic', { session: false }),
+		(req, res) => {
 		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
