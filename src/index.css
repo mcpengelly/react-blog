@@ -1,15 +1,42 @@
+:root {
+	--white: #FFFFFF;
+
+	--dark-grey: #4F5350;
+	--gray: #656E75;
+	--gray-2: #48504D;
+	--navy-blue: #4D5964;
+
+	--beige: #4F5350;
+	--teal: #4E7775;
+	--gray-blue: #3D575B;
+	--dark-navy-blue: #4E7775;
+}
+
 body {
+	font-family: 'Open Sans', sans-serif;
+	color: var(--dark-gray);
 	margin: 0;
 	padding: 0;
-	font-family: sans-serif;
 }
 
 h2 {
-	font-family: 'Roboto', sans-serif !important;
+	font-family: 'Roboto', sans-serif;
+	color: var(--dark-gray);
 	margin-top: 1em;
 	padding-top: 1em;
 }
+
 p {
 	font-family: 'Open Sans', sans-serif;
-	color: #555;
+	color: var(--navy-blue);
+}
+
+.navbar {
+	background-color: black;
+}
+
+.navbar-link {
+	font-family: 'Roboto', sans-serif;
+	font-size: 17px;
+	padding-top: 1em;
 }

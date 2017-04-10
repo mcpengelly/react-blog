@@ -70,7 +70,6 @@ module.exports = function(app) {
 	app.post('/api/projects',
 		passport.authenticate('basic', { session: false }),
 		(req, res) => {
-		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
 				throw err;
@@ -103,7 +102,6 @@ module.exports = function(app) {
 	app.put('/api/projects/:id',
 		passport.authenticate('basic', { session: false }),
 		(req, res) => {
-		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
 				throw err;
@@ -133,7 +131,6 @@ module.exports = function(app) {
 	app.delete('/api/projects/:id',
 		passport.authenticate('basic', { session: false }),
 		(req, res) => {
-		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
 				throw err;
@@ -204,7 +201,6 @@ module.exports = function(app) {
 	app.post('/api/posts',
 		passport.authenticate('basic', { session: false }),
 		(req, res) => {
-		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
 				throw err;
@@ -236,7 +232,6 @@ module.exports = function(app) {
 	app.put('/api/posts/:id',
 		passport.authenticate('basic', { session: false }),
 		(req, res) => {
-		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
 				throw err;
@@ -264,7 +259,6 @@ module.exports = function(app) {
 	app.delete('/api/posts/:id',
 		passport.authenticate('basic', { session: false }),
 		(req, res) => {
-		// authenticate?
 		pool.connect((err, client, release) => {
 			if (err) {
 				throw err;

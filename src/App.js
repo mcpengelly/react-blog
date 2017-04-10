@@ -8,17 +8,20 @@ import backgroundImage from './assets/img/escheresque_@2X.png';
 
 class App extends Component {
 	render() {
+		const style = {
+			position: 'fixed',
+			zIndex: 2,
+			width: '100%',
+			height: '5%',
+			backgroundColor: 'black'
+		};
+
 		return (
 			<div className="App" style={{ backgroundImage: "url(" + backgroundImage + ")" }}>
 				<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css"/>
 				<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap-theme.min.css"/>
 
-				<div style={{
-					position: 'fixed',
-					zIndex: 2,
-					width: '100%',
-					backgroundColor: 'grey'
-				}}>
+				<div style={style}>
 					<NavBar />
 				</div>
 				<div className="App-header">

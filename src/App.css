@@ -1,3 +1,17 @@
+:root {
+	--white: #FFFFFF;
+
+	--dark-grey: #4F5350;
+	--gray: #656E75;
+	--gray-2: #48504D;
+	--navy-blue: #4D5964;
+
+	--beige: #4F5350;
+	--teal: #4E7775;
+	--gray-blue: #3D575B;
+	--dark-navy-blue: #4E7775;
+}
+
 .App {
 	text-align: center;
 }
@@ -8,10 +22,10 @@
 }
 
 .App-header {
-	background-color: #222;
-	height: 150px;
+	background-image: url('./assets/img/macbook-unsplash.jpg');
+	height: 1000px;
 	padding: 20px;
-	color: white;
+	color: var(--white);
 }
 
 .App-intro {
@@ -22,4 +36,5 @@
 	from { transform: rotate(0deg); }
 	to { transform: rotate(360deg); }
 }
+
 
