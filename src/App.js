@@ -6,16 +6,17 @@ import Footer from './components/utility/Footer';
 /* Background pattern from Subtle Patterns */
 import backgroundImage from './assets/img/escheresque_@2X.png';
 
-class App extends Component {
-	render() {
-		const style = {
-			position: 'fixed',
-			zIndex: 2,
-			width: '100%',
-			height: '5%',
-			backgroundColor: 'black'
-		};
+const style = {
+	position: 'fixed',
+	zIndex: 2,
+	width: '100%',
+	height: '5%',
+	backgroundColor: 'black'
+};
 
+class App extends Component {
+
+	render() {
 		return (
 			<div className="App" style={{ backgroundImage: "url(" + backgroundImage + ")" }}>
 				<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css"/>

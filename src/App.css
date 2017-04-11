@@ -23,7 +23,16 @@
 
 .App-header {
 	background-image: url('./assets/img/macbook-unsplash.jpg');
-	height: 1000px;
+	min-height: 600px;
+
+	/* Full height */
+	height: 100%;
+
+	/* Center and scale the image */
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+
 	padding: 20px;
 	color: var(--white);
 }

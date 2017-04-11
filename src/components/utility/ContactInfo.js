@@ -23,7 +23,7 @@ export default class ContactInfo extends Component {
 				<address>
 					Github: mcpengelly<br />
 					<a href="mailto:pengelly.mat@gmail.com">pengelly.mat@gmail.com</a><br />
-					Ottawa, Ontario; Canada<br />
+					Ontario, Canada<br />
 				</address>
 				<SOFlair />
 				<SocialMediaIcons />

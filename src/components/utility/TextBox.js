@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
+import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 class TextBox extends Component {
 	render() {
 		return (
-			<label>
-				{this.props.caption}:
-				<input type="text" name={this.props.fieldName} />
-			</label>
+			<FormGroup>
+				<ControlLabel>{this.props.caption}</ControlLabel>
+				<FormControl type="text" placeholder="Enter text" />
+			</FormGroup>
 		);
 	}
 };
