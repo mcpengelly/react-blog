@@ -6,7 +6,7 @@ class TextBox extends Component {
 		return (
 			<FormGroup style={{ padding: 0, margin: 0  }}>
 				<ControlLabel>{this.props.caption}</ControlLabel>
-				<FormControl type="text"  style={{ width: '50%' }}  placeholder="Enter text" />
+				<FormControl type="text" style={{ width: '50%' }} placeholder="Enter text" />
 			</FormGroup>
 		);
 	}

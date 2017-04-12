@@ -24,8 +24,11 @@ p {
 	color: var(--dark-grey);
 }
 
-.navbar {
-	background-color: var(--dark-navy-blue);
+/* override bootstrap navbar colors */
+.navbar,
+.navbar-default {
+	background-image: linear-gradient(to bottom,#2c4053 0,#2c4053 100%) !important;
+	border-color: #2c4053 !important;
 }
 
 .navbar-link {

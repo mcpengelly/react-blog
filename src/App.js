@@ -4,7 +4,7 @@ import './App.css';
 import NavBar from './components/utility/NavBar';
 import Footer from './components/utility/Footer';
 /* Background pattern from Subtle Patterns */
-import backgroundImage from './assets/img/escheresque_@2X.png';
+import backgroundImage from './assets/img/escheresque.png';
 
 const style = {
 	position: 'fixed',
