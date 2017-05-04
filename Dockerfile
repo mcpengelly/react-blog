@@ -1,18 +1,19 @@
 FROM node:boron
 
-# create app dir
-RUN mkdir -p /usr/src/app
-WORKDIR /user/src/app
+# Clone repo
+RUN git clone https://github.com/mcpengelly/react-portfolio.git
+
+# Change working dir
+WORKDIR /react-portfolio
 
 # Install app dependencies
-COPY package.json /usr/src/app/
 RUN npm install
 
-# bundle application code
-COPY . /usr/src/app
+# Bundle application code
+# COPY . /usr/src/app
 
 EXPOSE 8080
 
-CMD ["npm", "run", "build"]
-# CMD ["node", "server"]
+# CMD ["npm", "run", "build"]
+CMD ["node", "server"]
 
