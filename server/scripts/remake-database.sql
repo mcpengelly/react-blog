@@ -14,3 +14,10 @@ CREATE TABLE posts (
 	title character varying,
 	content character varying
 );
+
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+	username character varying,
+	password character varying
+);

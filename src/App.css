@@ -1,24 +1,36 @@
-.App {
-  text-align: center;
+:root {
+	--white: #FFFFFF;
+	--navy-blue: #475c71;
+	--orange: #edbf74;
+	--dark-navy-blue: #2c4053;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.App {
+	text-align: center;
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+	color: var(--white);
+	background-color: var(--navy-blue);
+	/*background-image: url('./assets/img/nasa-earth.jpg');*/
+	min-height: 200px;
+
+	/* Full height */
+	height: 100%;
+
+	/* Center and scale the image */
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+
+	padding: 20px;
 }
 
 .App-intro {
-  font-size: large;
+	font-size: large;
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
 }

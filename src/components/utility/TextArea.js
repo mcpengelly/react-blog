@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
+import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 class TextArea extends Component {
 	render() {
 		return (
-			<label>
-				{this.props.caption}:
-				<br />
-				<textarea
-					rows="4"
-					cols="30"
-					name={this.props.fieldName}>
-				</textarea>
-			</label>
+			<FormGroup>
+				<ControlLabel>{this.props.caption}</ControlLabel>
+				<FormControl componentClass="textarea" bsSize="large" placeholder="Enter text" />
+			</FormGroup>
 		);
 	}
 };

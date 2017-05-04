@@ -4,6 +4,12 @@ import request from 'request';
 
 import BlogContainer from './utility/BlogContainer';
 
+const style = {
+	margin: '0 auto',
+	maxWidth: '50em',
+	backgroundColor: 'white'
+};
+
 export default class Home extends Component {
 	constructor(props) {
 		super(props);
@@ -17,7 +23,7 @@ export default class Home extends Component {
 
 		request.get(url, (err, res, body) => {
 			if(err) {
-				throw new Error('Url could not be resolved');
+				throw err;
 			}
 
 			this.setState({
@@ -28,10 +34,10 @@ export default class Home extends Component {
 
 	render() {
 		return (
-			<Grid>
+			<Grid style={style}>
 				<Row className="show-grid">
-					<Col sm={12} style={{ backgroundColor: 'white' }}>
-						<BlogContainer posts={this.state.blogPosts}  />
+					<Col sm={12}>
+						<BlogContainer posts={this.state.blogPosts} />
 					</Col>
 				</Row>
 			</Grid>
