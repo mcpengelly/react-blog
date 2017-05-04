@@ -14,5 +14,5 @@ COPY . /usr/src/app
 EXPOSE 8080
 
 CMD ["npm", "run", "build"]
-CMD ["node", "server"]
+# CMD ["node", "server"]
 
