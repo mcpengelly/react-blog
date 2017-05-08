@@ -12,8 +12,7 @@ RUN npm install
 # Build
 RUN npm run build
 
-EXPOSE 8080
+EXPOSE 9000
 
-# CMD ["npm", "run", "build"]
 CMD ["node", "server"]
 
