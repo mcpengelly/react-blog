@@ -9,11 +9,10 @@ WORKDIR /react-portfolio
 # Install app dependencies
 RUN npm install
 
-# Bundle application code
-# COPY . /usr/src/app
+# Build
+RUN npm run build
 
-EXPOSE 8080
+EXPOSE 9000
 
-# CMD ["npm", "run", "build"]
 CMD ["node", "server"]
 
