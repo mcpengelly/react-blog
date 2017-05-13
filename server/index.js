@@ -2,6 +2,9 @@
 
 'use strict';
 
+// setup process.env variables
+require('dotenv').config();
+
 const app = require('./app');
 
 const PORT = 80;
