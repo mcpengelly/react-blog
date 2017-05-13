@@ -302,8 +302,7 @@ module.exports = function(app) {
 			}
 			console.log('Message %s sent: %s', info.messageId, info.response);
 		});
-		res.status(200);
+
 		res.redirect('/about');
-		res.send('email sent');
 	});
 };
