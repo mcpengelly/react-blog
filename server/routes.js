@@ -31,7 +31,7 @@ passport.use(new BasicStrategy(
 				if (!result) {
 					return done(null, false);
 				}
-				console.log(result.rows[0]);
+
 				if (result.rows[0].password === password) {
 					return done(null, result);
 				}
