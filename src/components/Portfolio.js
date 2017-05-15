@@ -4,6 +4,8 @@ import request from 'request';
 
 import ProjectsContainer from './utility/ProjectsContainer';
 
+const HOSTNAME = process.argv.HOSTNAME;
+
 const style = {
 	margin: '0 auto',
 	maxWidth: '50em',
@@ -20,7 +22,7 @@ export default class Portfolio extends Component {
 
 	componentDidMount() {
 		// fetch portfolio items
-		const url = 'http://localhost:9000/api/projects';
+		const url = HOSTNAME + '/api/projects';
 
 		request.get(url, (err, res, body) => {
 			if(err) {

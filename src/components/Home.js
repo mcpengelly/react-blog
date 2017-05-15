@@ -4,6 +4,8 @@ import request from 'request';
 
 import BlogContainer from './utility/BlogContainer';
 
+const HOSTNAME = process.argv.HOSTNAME;
+
 const style = {
 	margin: '0 auto',
 	maxWidth: '50em',
@@ -19,7 +21,8 @@ export default class Home extends Component {
 	}
 	componentDidMount() {
 		// request blog posts from server
-		const url = 'http://localhost:9000/api/posts';
+		// v
+		const url = HOSTNAME + '/api/posts';
 
 		request.get(url, (err, res, body) => {
 			if(err) {
