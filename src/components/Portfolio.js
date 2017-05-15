@@ -20,7 +20,7 @@ export default class Portfolio extends Component {
 
 	componentDidMount() {
 		// fetch portfolio items
-		const url = 'http://localhost:9000/api/projects';
+		const url = '/api/projects';
 
 		request.get(url, (err, res, body) => {
 			if(err) {

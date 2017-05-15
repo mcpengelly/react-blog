@@ -298,7 +298,7 @@ module.exports = function(app) {
 		// send mail with defined transport object
 		transporter.sendMail(mailOptions, (error, info) => {
 			if (error) {
-				console.log('error: ', error, '----', process.env.BURNER_PASS)
+				console.log('error: ', error, '----', process.env.BURNER_PASS);
 			}
 			console.log('Message %s sent: %s', info.messageId, info.response);
 		});

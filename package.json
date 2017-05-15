@@ -29,7 +29,8 @@
     "react-router": "^3.0.2",
     "react-sticky": "^5.0.5",
     "request": "^2.80.0",
-    "shortid": "^2.2.8"
+    "shortid": "^2.2.8",
+    "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import request from 'request';
+import 'whatwg-fetch'; //fetch
 
 import BlogContainer from './utility/BlogContainer';
 
@@ -19,17 +20,29 @@ export default class Home extends Component {
 	}
 	componentDidMount() {
 		// request blog posts from server
-		const url = 'http://localhost:9000/api/posts';
-
-		request.get(url, (err, res, body) => {
-			if(err) {
-				throw err;
-			}
-
-			this.setState({
-				blogPosts: JSON.parse(body)
+		fetch('/api/posts')
+			.then((response) => {
+				return response.json();
+			})
+			.then((text) => {
+				// set state to list received from backend
+				this.setState({
+					blogPosts: JSON.parse(text)
+				});
+			})
+			.catch((error) => {
+				throw error;
 			});
-		});
+
+		// request.get(url, (err, res, body) => {
+		// 	if(err) {
+		// 		throw err;
+		// 	}
+
+		// 	this.setState({
+		// 		blogPosts: JSON.parse(body)
+		// 	});
+		// });
 	}
 
 	render() {
