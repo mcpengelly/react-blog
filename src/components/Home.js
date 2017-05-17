@@ -27,7 +27,7 @@ export default class Home extends Component {
 			.then((text) => {
 				// set state to list received from backend
 				this.setState({
-					blogPosts: JSON.parse(text)
+					blogPosts: text
 				});
 			})
 			.catch((error) => {

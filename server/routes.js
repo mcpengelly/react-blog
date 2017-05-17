@@ -154,6 +154,7 @@ module.exports = function(app) {
 	*/
 	// GET list of blog posts
 	app.get('/api/posts', (req, res) => {
+		console.log('test')
 		pool.connect((err, client, release) => {
 			if (err) {
 				throw err;
