@@ -20,16 +20,30 @@ export default class Portfolio extends Component {
 
 	componentDidMount() {
 		// fetch portfolio items
-		const url = '/api/projects';
+		const url = 'localhost:9000/api/projects';
 
-		request.get(url, (err, res, body) => {
-			if(err) {
-				throw err;
-			}
-			this.setState({
-				projectList: JSON.parse(body)
+		fetch('/api/projects')
+			.then((response) => {
+				return response.json();
+			})
+			.then((text) => {
+				// set state to list received from backend
+				this.setState({
+					projectList: text
+				});
+			})
+			.catch((error) => {
+				throw error;
 			});
-		});
+
+		// request.get(url, (err, res, body) => {
+		// 	if(err) {
+		// 		throw err;
+		// 	}
+		// 	this.setState({
+		// 		projectList: JSON.parse(body)
+		// 	});
+		// });
 	}
 
 	render() {
