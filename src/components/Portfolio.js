@@ -20,8 +20,6 @@ export default class Portfolio extends Component {
 
 	componentDidMount() {
 		// fetch portfolio items
-		const url = 'localhost:9000/api/projects';
-
 		fetch('/api/projects')
 			.then((response) => {
 				return response.json();
@@ -35,15 +33,6 @@ export default class Portfolio extends Component {
 			.catch((error) => {
 				throw error;
 			});
-
-		// request.get(url, (err, res, body) => {
-		// 	if(err) {
-		// 		throw err;
-		// 	}
-		// 	this.setState({
-		// 		projectList: JSON.parse(body)
-		// 	});
-		// });
 	}
 
 	render() {
