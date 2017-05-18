@@ -33,16 +33,6 @@ export default class Home extends Component {
 			.catch((error) => {
 				throw error;
 			});
-
-		// request.get(url, (err, res, body) => {
-		// 	if(err) {
-		// 		throw err;
-		// 	}
-
-		// 	this.setState({
-		// 		blogPosts: JSON.parse(body)
-		// 	});
-		// });
 	}
 
 	render() {
