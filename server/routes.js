@@ -10,7 +10,7 @@ const pool = new pg.Pool({
 	database: 'mydb',
 	host: process.env.APP_HOST,
 	max: 10, // max number of clients in pool
-	idleTimeoutMillis: 1000,
+	idleTimeoutMillis: 600000,
 	port: 5432
 });
 
