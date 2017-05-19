@@ -4,13 +4,15 @@ const shortid = require('shortid');
 const passport = require('passport');
 const BasicStrategy = require('passport-http').BasicStrategy;
 
+pg.defaults.poolIdleTimeout = 600000; // 10 mins
+
 const pool = new pg.Pool({
 	user: process.env.USERNAME,
 	password: process.env.POSTGRES_PASSWORD,
 	database: 'mydb',
 	host: process.env.APP_HOST,
 	max: 10, // max number of clients in pool
-	idleTimeoutMillis: 600000,
+	idleTimeoutMillis: 1000,
 	port: 5432
 });
 
@@ -154,7 +156,6 @@ module.exports = function(app) {
 	*/
 	// GET list of blog posts
 	app.get('/api/posts', (req, res) => {
-		console.log('test')
 		pool.connect((err, client, release) => {
 			if (err) {
 				throw err;
