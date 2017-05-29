@@ -18,7 +18,7 @@ export default class ProjectsContainer extends Component {
 
 				return (
 						<div>
-								{projectList}
+							{projectList}
 						</div>
 				);
 		}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
-import request from 'request';
+// import request from 'request';
 import 'whatwg-fetch'; //fetch
 
 import BlogContainer from './utility/BlogContainer';
