@@ -1,4 +1,7 @@
 const pg = require('pg');
+var pgp = require('pg-promise')({
+    // Initialization Options
+});
 const mailer = require('nodemailer');
 const shortid = require('shortid');
 const passport = require('passport');
