@@ -1,10 +1,10 @@
 FROM node:boron
 
 # copy files
-COPY build /react-portfolio
-COPY src /react-portfolio
+COPY build/ /react-portfolio
+COPY src/ /react-portfolio
 COPY server/ /react-portfolio
-COPY public /react-portfolio
+COPY public/ /react-portfolio
 COPY package.json /react-portfolio
 
 # Change working dir
