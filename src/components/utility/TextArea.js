@@ -16,7 +16,6 @@ class TextArea extends Component {
 			<FormGroup>
 				<ControlLabel>{this.props.caption}</ControlLabel>
 				<FormControl
-					id={this.props.fieldName}
 					componentClass="textarea"
 					bsSize="large"
 					placeholder="Enter text"

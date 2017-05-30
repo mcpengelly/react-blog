@@ -16,7 +16,6 @@ class TextBox extends Component {
 			<FormGroup style={{ padding: 0, margin: 0  }}>
 				<ControlLabel>{this.props.caption}</ControlLabel>
 				<FormControl
-					controlId={this.props.fieldName}
 					type="text"
 					value={this.state.value}
 					onChange={this.handleChange.bind(this)}
