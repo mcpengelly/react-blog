@@ -1,2 +1,12 @@
+db:
+  image: postgres
 myapp:
   build: .
+  ports:
+   - "8080:9000"
+  links:
+    - db
+  environment:
+    - PGHOST=db
+    - PGDATABASE=postgres
+    - PGUSER=postgres
