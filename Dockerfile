@@ -1,22 +1,21 @@
 FROM node:boron
 
-# copy files
-COPY build/ /react-portfolio
-COPY src/ /react-portfolio
-COPY server/ /react-portfolio
-COPY public/ /react-portfolio
-COPY package.json /react-portfolio
+# Create Dir
+RUN mkdir react-portfolio
 
-# Change working dir
+# Copy files
+COPY . /react-portfolio
+
+# Change Dir
 WORKDIR /react-portfolio
 
 # Install app dependencies
 RUN npm install
 
-# Build
+# Build app
 RUN npm run build
 
+# Expose ports
 EXPOSE 8080
 
 CMD ["node", "server"]
-
