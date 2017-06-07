@@ -1,7 +1,5 @@
 db:
   image: postgres
-  ports:
-    - "5432:5432"
 myapp:
   build: .
   ports:
@@ -12,4 +10,4 @@ myapp:
     - PGHOST=db
     - PGDATABASE=postgres
     - PGUSER=postgres
-    - DATABASE_URL=postgres://postgres@db:5432/postgres
+    - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
