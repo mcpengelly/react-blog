@@ -17,7 +17,7 @@ const pool = new pg.Pool({
 	user: 'postgres',
 	password: '',
 	database: 'postgres',
-	host: process.ENV.DATABASE_URL,
+	host: 'postgres://postgres:postgres@db:5432/postgres',
 	max: 10, // max number of clients in pool
 	idleTimeoutMillis: 1000,
 	port: 5432
