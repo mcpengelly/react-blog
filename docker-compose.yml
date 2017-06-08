@@ -10,4 +10,7 @@ myapp:
     - PGHOST=db
     - PGDATABASE=postgres
     - PGUSER=postgres
+    - BURNER_PASS=iAmABurner
     - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+  volumes:
+    - /var/lib/postgres

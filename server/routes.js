@@ -1,7 +1,7 @@
 const pg = require('pg');
-var pgp = require('pg-promise')({
-    // Initialization Options
-});
+// var pgp = require('pg-promise')({
+//     // Initialization Options
+// });
 const mailer = require('nodemailer');
 const shortid = require('shortid');
 const passport = require('passport');
@@ -12,10 +12,6 @@ pg.defaults.poolIdleTimeout = 600000; // 10 mins
 console.log(process.env);
 
 const pool = new pg.Pool({
-	// user: process.env.USERNAME,
-	// password: process.env.POSTGRES_PASSWORD,
-	// database: 'mydb',
-	// host: process.env.APP_HOST,
 	user: process.env.PGUSER,
 	password: 'postgres',
 	database: 'postgres',
@@ -310,8 +306,9 @@ module.exports = function(app) {
 		transporter.sendMail(mailOptions, (error, info) => {
 			if (error) {
 				console.log('error: ', error, '----', process.env.BURNER_PASS);
+				throw error;
 			}
-			console.log('Message %s sent: %s', info.messageId, info.response);
+			console.log('mail sent.');
 		});
 
 		res.redirect('/about');
