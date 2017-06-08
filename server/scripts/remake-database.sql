@@ -21,3 +21,8 @@ CREATE TABLE users (
 	username character varying,
 	password character varying
 );
+
+
+# INSERT INTO posts (id, title, content) VALUES ('Placeholder Title', 'placeholder', 'placeholder');
+
+# INSERT INTO projects (id, title, description, img) VALUES ('counter', 'placeholder', 'placeholder', 'placeholderimage');

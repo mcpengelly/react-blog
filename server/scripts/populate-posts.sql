@@ -5,4 +5,3 @@ BEGIN
 		VALUES (counter, 'placeholder', 'placeholder');
 	END LOOP;
 END; $$
-
