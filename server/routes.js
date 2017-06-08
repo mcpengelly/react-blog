@@ -9,15 +9,17 @@ const BasicStrategy = require('passport-http').BasicStrategy;
 
 pg.defaults.poolIdleTimeout = 600000; // 10 mins
 
+console.log(process.env);
+
 const pool = new pg.Pool({
 	// user: process.env.USERNAME,
 	// password: process.env.POSTGRES_PASSWORD,
 	// database: 'mydb',
 	// host: process.env.APP_HOST,
-	user: 'postgres',
-	password: '',
+	user: process.env.PGUSER,
+	password: 'postgres',
 	database: 'postgres',
-	host: 'postgres://postgres:postgres@db:5432/postgres',
+	host: process.env.DBHOST,
 	max: 10, // max number of clients in pool
 	idleTimeoutMillis: 1000,
 	port: 5432

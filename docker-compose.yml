@@ -10,4 +10,4 @@ myapp:
     - PGHOST=db
     - PGDATABASE=postgres
     - PGUSER=postgres
-    - DATABASE_URL=postgres://postgres@db:5432/postgre
+    - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
