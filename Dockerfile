@@ -16,6 +16,6 @@ RUN npm install
 RUN npm run build
 
 # Expose ports
-EXPOSE 8080
+EXPOSE 80
 
 CMD ["node", "server"]
