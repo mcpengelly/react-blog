@@ -3,7 +3,7 @@ db:
 myapp:
   build: .
   ports:
-   - "8080:9000"
+   - "80:9000"
   links:
     - db
   environment:
