@@ -14,6 +14,7 @@ const centerStyle = { display: 'flex', justifyContent: 'center' };
 const padElements = { padding: '5%' };
 
 export default class About extends Component {
+
 	render(){
 		return (
 			<Grid style={style}>

@@ -12,12 +12,14 @@ const style = {
 };
 
 export default class Home extends Component {
+
 	constructor(props) {
 		super(props);
 		this.state = {
 			blogPosts: []
 		};
 	}
+
 	componentDidMount() {
 		// request blog posts from server
 		fetch('/api/posts')

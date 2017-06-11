@@ -7,15 +7,11 @@ const shortid = require('shortid');
 const passport = require('passport');
 const BasicStrategy = require('passport-http').BasicStrategy;
 
-pg.defaults.poolIdleTimeout = 600000; // 10 mins
-
-console.log(process.env);
-
 const pool = new pg.Pool({
-	user: process.env.PGUSER,
-	password: 'postgres',
-	database: 'postgres',
-	host: process.env.DBHOST,
+	host: process.env.DBHOST || 'localhost',
+	user: process.env.PGUSER || 'postgres',
+	password: process.env.PGPASS || 'postgres',
+	database: process.env.PGDATABASE || 'postgres',
 	max: 10, // max number of clients in pool
 	idleTimeoutMillis: 1000,
 	port: 5432
@@ -27,7 +23,9 @@ let uid;
 passport.use(new BasicStrategy(
 	function(username, password, done) {
 		pool.connect((err, client, release) => {
-			if(err){ return done(err); }
+			if (err) {
+				return done(err);
+			}
 			let pwQuery = `SELECT password FROM users WHERE username = '${username}'`;
 			client.query(pwQuery, (err, result) => {
 				if (err) {
@@ -44,8 +42,7 @@ passport.use(new BasicStrategy(
 				}
 			});
 		});
-	})
-);
+}));
 
 
 module.exports = function(app) {
@@ -75,86 +72,94 @@ module.exports = function(app) {
 
 	// CREATE new project
 	app.post('/api/projects',
-		passport.authenticate('basic', { session: false }),
+		passport.authenticate('basic', {
+			session: false
+		}),
 		(req, res) => {
-		pool.connect((err, client, release) => {
-			if (err) {
-				throw err;
-			}
-
-			uid = shortid.generate();
-			querystring = `INSERT INTO projects
-				(id, title, description, img)
-				VALUES (
-					'${uid}',
-					'${req.body.title || null}',
-					'${req.body.description || null}',
-					'${req.body.img || null}'
-				)`;
-
-			client.query(querystring, (err, result) => {
+			pool.connect((err, client, release) => {
 				if (err) {
 					throw err;
 				}
 
-				// was successful
-				release();
-				res.send('insert finished');
+				uid = shortid.generate();
+				querystring = `
+					INSERT INTO projects
+						(id, title, description, img)
+						VALUES (
+							'${uid}',
+							'${req.body.title || null}',
+							'${req.body.description || null}',
+							'${req.body.img || null}'
+						)
+				`;
+
+				client.query(querystring, (err, result) => {
+					if (err) {
+						throw err;
+					}
+
+					// was successful
+					release();
+					res.send('insert finished');
+				});
 			});
 		});
-	});
 
 	// TODO: allow for partial updates (PATCH?)
 	// UPDATE existing project using id
 	app.put('/api/projects/:id',
-		passport.authenticate('basic', { session: false }),
+		passport.authenticate('basic', {
+			session: false
+		}),
 		(req, res) => {
-		pool.connect((err, client, release) => {
-			if (err) {
-				throw err;
-			}
-
-			querystring = `UPDATE projects
-				SET
-				title 		= '${req.body.title || null}',
-				description = '${req.body.description || null}',
-				img 		= '${req.body.img || null}'
-				WHERE id	= '${req.params.id}'
-			`;
-
-			client.query(querystring, (err) => {
+			pool.connect((err, client, release) => {
 				if (err) {
 					throw err;
 				}
 
-				// was successful
-				release();
-				res.send('update finished');
+				querystring = `
+					UPDATE projects SET
+						title 		= '${req.body.title || null}',
+						description = '${req.body.description || null}',
+						img 		= '${req.body.img || null}'
+						WHERE id	= '${req.params.id}'
+				`;
+
+				client.query(querystring, (err) => {
+					if (err) {
+						throw err;
+					}
+
+					// was successful
+					release();
+					res.send('update finished');
+				});
 			});
 		});
-	});
 
 	// DELETE existing project using id
 	app.delete('/api/projects/:id',
-		passport.authenticate('basic', { session: false }),
+		passport.authenticate('basic', {
+			session: false
+		}),
 		(req, res) => {
-		pool.connect((err, client, release) => {
-			if (err) {
-				throw err;
-			}
-
-			querystring = `DELETE FROM projects WHERE id = '${req.params.id}'`;
-			client.query(querystring, (err) => {
+			pool.connect((err, client, release) => {
 				if (err) {
 					throw err;
 				}
 
-				// was successful
-				release();
-				res.send('delete finished');
+				querystring = `DELETE FROM projects WHERE id = '${req.params.id}'`;
+				client.query(querystring, (err) => {
+					if (err) {
+						throw err;
+					}
+
+					// was successful
+					release();
+					res.send('delete finished');
+				});
 			});
 		});
-	});
 
 	/**
 		blog posts api
@@ -206,83 +211,91 @@ module.exports = function(app) {
 
 	// CREATE new blog post
 	app.post('/api/posts',
-		passport.authenticate('basic', { session: false }),
+		passport.authenticate('basic', {
+			session: false
+		}),
 		(req, res) => {
-		pool.connect((err, client, release) => {
-			if (err) {
-				throw err;
-			}
-
-			uid = shortid.generate();
-			querystring = `INSERT INTO posts
-				(id, title, content)
-				VALUES (
-					'${uid}',
-					'${req.body.title || null}',
-					'${req.body.content || null}'
-				)`;
-
-			client.query(querystring, (err) => {
+			pool.connect((err, client, release) => {
 				if (err) {
 					throw err;
 				}
 
-				// was successful
-				release();
-				res.send('added new post');
+				uid = shortid.generate();
+				querystring = `
+					INSERT INTO posts (id, title, content)
+						VALUES (
+							'${uid}',
+							'${req.body.title || null}',
+							'${req.body.content || null}'
+						)
+				`;
+
+				client.query(querystring, (err) => {
+					if (err) {
+						throw err;
+					}
+
+					// was successful
+					release();
+					res.send('added new post');
+				});
 			});
 		});
-	});
 
 	// TODO: allow for partial updates (PATCH?)
 	// UPDATE existing blog post using id
 	app.put('/api/posts/:id',
-		passport.authenticate('basic', { session: false }),
+		passport.authenticate('basic', {
+			session: false
+		}),
 		(req, res) => {
-		pool.connect((err, client, release) => {
-			if (err) {
-				throw err;
-			}
-
-			querystring = `UPDATE posts SET
-				title 			= '${req.body.title || null}',
-				content			= '${req.body.content || null}',
-				WHERE id = '${req.params.id}'
-			`;
-
-			client.query(querystring, (err) => {
+			pool.connect((err, client, release) => {
 				if (err) {
 					throw err;
 				}
 
-				// was successful
-				release();
-				res.send('updated post');
+				querystring = `
+					UPDATE posts SET
+						title 		= '${req.body.title || null}',
+						content		= '${req.body.content || null}',
+						WHERE id 	= '${req.params.id}'
+				`;
+
+				client.query(querystring, (err) => {
+					if (err) {
+						throw err;
+					}
+
+					// was successful
+					release();
+					res.send('updated post');
+				});
 			});
 		});
-	});
 
 	// DELETE existing blog post using id
 	app.delete('/api/posts/:id',
-		passport.authenticate('basic', { session: false }),
+		passport.authenticate('basic', {
+			session: false
+		}),
 		(req, res) => {
-		pool.connect((err, client, release) => {
-			if (err) {
-				throw err;
-			}
-
-			querystring = `DELETE FROM posts WHERE id = '${req.params.id}'`;
-			client.query(querystring, (err) => {
+			pool.connect((err, client, release) => {
 				if (err) {
 					throw err;
 				}
 
-				// was successful
-				release();
-				res.send('deleted post');
+				querystring = `DELETE FROM posts WHERE id = '${req.params.id}'`;
+				client.query(querystring, (err) => {
+					if (err) {
+						throw err;
+					}
+
+					// was successful
+					release();
+					res.send('deleted post');
+				});
 			});
 		});
-	});
 
 	// Mailer
 	const transporter = mailer.createTransport({

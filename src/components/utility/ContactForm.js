@@ -7,6 +7,7 @@ import TextBox from './TextBox';
 import TextArea from './TextArea';
 
 export default class ContactForm extends Component {
+
 	onSubmitClick(e) {
 		e.preventDefault();
 		let name = this.refs.name.state.value;
@@ -29,12 +30,8 @@ export default class ContactForm extends Component {
 
 		fetch('/api/send-mail', options)
 		.then(function(response) {
-			console.log(response.status);     //=> number 100–599
-			console.log(response.statusText); //=> String
-			console.log(response.headers);    //=> Headers
-			console.log(response.url);        //=> String
 
-			// return response.text()
+			return response.text();
 		}, function(error) {
 			console.log(error.message) //=> String
 		});
