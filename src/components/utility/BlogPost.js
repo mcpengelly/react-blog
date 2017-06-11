@@ -16,14 +16,17 @@ marked.setOptions({
 const style = { textAlign: 'left' };
 
 export default class BlogSummary extends Component {
+
 	constructor(props, context) {
 		super(props, context);
 		this.rawMarkup = this.rawMarkup.bind(this);
 	}
+
 	rawMarkup() {
 		let rawMarkup = marked(this.props.content, {sanitize: true});
 		return { __html: rawMarkup };
 	}
+
 	render(){
 		return (
 			<div>

@@ -11,6 +11,7 @@ const style = {
 };
 
 export default class Portfolio extends Component {
+
 	constructor(props) {
 		super(props);
 		this.state = {

@@ -9,7 +9,7 @@ const SOFlair = () => {
 				height="58"
 				alt="profile for Matt Pengelly at Stack Overflow, Q&amp;A for professional and enthusiast programmers"
 				title="profile for Matt Pengelly at Stack Overflow, Q&amp;A for professional and enthusiast programmers"
-				/>
+			/>
 		</a>
 	);
 }

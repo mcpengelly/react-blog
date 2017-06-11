@@ -6,6 +6,7 @@ var style = { backgroundColor: 'white' };
 var textStyle = { color: 'black' };
 
 export default class Footer extends Component {
+
 	render(){
 		return (
 			<footer className="footer" style={style}>
