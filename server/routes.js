@@ -8,7 +8,7 @@ const passport = require('passport');
 const BasicStrategy = require('passport-http').BasicStrategy;
 
 const pool = new pg.Pool({
-	host: process.env.DBHOST || 'localhost',
+	host: process.env.PGHOST || 'localhost',
 	user: process.env.PGUSER || 'postgres',
 	password: process.env.PGPASS || 'postgres',
 	database: process.env.PGDATABASE || 'postgres',
