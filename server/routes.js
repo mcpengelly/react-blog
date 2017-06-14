@@ -37,7 +37,8 @@ passport.use(new BasicStrategy(
 					return done(null, false);
 				}
 
-				if (result.rows[0].password === password) {
+				console.log('result.rows[0]:', result.rows[0]);
+				if (result.rows[0] && result.rows[0].password === password) {
 					return done(null, result);
 				}
 			});
