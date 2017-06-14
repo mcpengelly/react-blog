@@ -94,7 +94,7 @@ module.exports = function(app) {
 						)
 				`;
 
-				client.query(querystring, (err, result) => {
+				client.query(querystring, (err) => {
 					if (err) {
 						throw err;
 					}
@@ -312,14 +312,13 @@ module.exports = function(app) {
 		const mailOptions = {
 			from: '"Burna" <burnermcbernstein@gmail.com>', // sender address
 			to: 'pengelly.mat@gmail.com',
-			subject: `Hello from: ${req.body.email}`,
-			text: `${req.body.name} has sent you: ${req.body.message}`
+			subject: `Hello from: ${req.body.email || 'Unknown'}`,
+			text: `${req.body.name || 'Anonymous'} has sent you: ${req.body.message}`
 		};
 
 		// send mail with defined transport object
-		transporter.sendMail(mailOptions, (error, info) => {
+		transporter.sendMail(mailOptions, (error) => {
 			if (error) {
-				console.log('error: ', error, '----', process.env.BURNER_PASS);
 				throw error;
 			}
 			console.log('mail sent.');
