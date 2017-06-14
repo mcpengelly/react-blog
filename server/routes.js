@@ -94,7 +94,7 @@ module.exports = function(app) {
 						)
 				`;
 
-				client.query(querystring, (err, result) => {
+				client.query(querystring, (err) => {
 					if (err) {
 						throw err;
 					}
