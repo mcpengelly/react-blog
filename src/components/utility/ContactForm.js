@@ -68,9 +68,9 @@ export default class ContactForm extends Component {
 	render(){
 		return (
 			<div>
-				<form onSubmit={this.onSubmitClick.bind(this)}>
+				<form style={{ width:'50%' }} onSubmit={this.onSubmitClick.bind(this)}>
 					<FormGroup role="form">
-						<h4>feel free drop me a email or contact me using the form below</h4>
+						<h4>Feel free drop me a email or contact me using the form below</h4>
 
 						<TextBox ref="name" caption="Name" fieldName="name" /><br/>
 						<TextBox ref="email" caption="Email" fieldName="email" /><br/>
