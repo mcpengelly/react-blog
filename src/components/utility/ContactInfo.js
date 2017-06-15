@@ -5,8 +5,8 @@ const SOFlair = () => {
 	return (
 		<a href="http://stackoverflow.com/users/7664140/matt-pengelly">
 			<img src="http://stackoverflow.com/users/flair/7664140.png"
-				width="208"
-				height="58"
+				width="256"
+				height="74"
 				alt="profile for Matt Pengelly at Stack Overflow, Q&amp;A for professional and enthusiast programmers"
 				title="profile for Matt Pengelly at Stack Overflow, Q&amp;A for professional and enthusiast programmers"
 			/>
