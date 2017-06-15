@@ -12,7 +12,6 @@ marked.setOptions({
 	smartypants: false
 });
 
-
 const style = { textAlign: 'left' };
 
 export default class BlogSummary extends Component {

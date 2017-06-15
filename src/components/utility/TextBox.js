@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 class TextBox extends Component {
+
 	constructor(props){
 		super(props);
 		this.state = { value: '' };

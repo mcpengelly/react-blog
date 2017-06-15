@@ -4,6 +4,7 @@ import BlogPost from './BlogPost';
 const hrStyle = { borderColor: 'lightgrey' };
 
 export default class BlogContainer extends Component {
+
 	render(){
 		let blogPosts = this.props.posts.map((post, index) => {
 			return (
