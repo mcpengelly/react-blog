@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Grid, Row } from 'react-bootstrap';
-// import request from 'request';
 
 import ProjectsContainer from './utility/ProjectsContainer';
 
