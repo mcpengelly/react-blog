@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-import SocialMediaIcons from './SocialMediaIcons';
-
 const SOFlair = () => {
 	return (
 		<a href="http://stackoverflow.com/users/7664140/matt-pengelly">
@@ -27,7 +25,6 @@ export default class ContactInfo extends Component {
 					Ontario, Canada<br />
 				</address>
 				<SOFlair />
-				<SocialMediaIcons />
 			</div>
 		);
 	}

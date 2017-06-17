@@ -6,7 +6,7 @@ import BlogContainer from './utility/BlogContainer';
 
 const style = {
 	margin: '0 auto',
-	maxWidth: '50em',
+	maxWidth: '55em',
 	backgroundColor: 'white'
 };
 

@@ -6,12 +6,11 @@ import ContactInfo from './utility/ContactInfo';
 
 const style = {
 	margin: '0 auto',
-	maxWidth: '50em',
+	maxWidth: '55em',
 	backgroundColor: 'white'
 };
 const leftAlign = { textAlign: 'left' };
-const centerStyle = { display: 'flex', justifyContent: 'center' };
-const padElements = { padding: '5%' };
+const hrStyle = { borderColor: 'lightgrey' };
 
 export default class About extends Component {
 
@@ -23,22 +22,32 @@ export default class About extends Component {
 					<Col sm={12}>
 						<h1>About</h1>
 						<section style={leftAlign}>
+							More info coming soon...
 						</section>
 					</Col>
 				</Row>
 
+				<hr style={hrStyle}/>
+
 				<Row>
-					<Col style={centerStyle} sm={12}>
-						<div style={padElements}>
-							<ContactInfo />
-						</div>
-						<div style={padElements}>
-							<ContactForm />
-						</div>
-					</Col>
+					<center>
+						<ContactForm />
+					</center>
+				</Row>
+
+				<Row>
+					<ContactInfo  style={leftAlign}/>
 				</Row>
 
 			</Grid>
 		);
 	}
 };
+// <Col style={centerStyle} sm={12}>
+// 	<div style={padElements}>
+// 		<ContactInfo />
+// 	</div>
+// 	<div style={padElements}>
+// 		<ContactForm />
+// 	</div>
+// </Col>
