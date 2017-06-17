@@ -19,11 +19,44 @@ export default class ContactForm extends Component {
 	}
 
 	addNewSubscriberNotification() {
-		// TODO: implement
-		this._notificationSystem.addNotification({
-			message: 'Sorry this isn\'t avalible just yet, check back later!',
-			level: 'error'
-		});
+		let email = this.refs.subscriberEmail.state.value;
+		if(!email) {
+			this._notificationSystem.addNotification({
+				message: 'Sorry that email address doesnt look right. ' +
+					'Please enter a valid email address.',
+				level: 'error'
+			});
+			return;
+		}
+
+		const options = {
+			method: 'POST',
+			body: { subscriberEmail: email },
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		};
+
+		fetch('/api/subscribe', options)
+			.then((response)  => {
+				return response.text();
+			})
+			.then(() => {
+				this._notificationSystem.addNotification({
+					message: 'Sorry this isn\'t avalible just yet, check back later!',
+					level: 'error'
+				});
+
+				//TODO:
+				// display notification
+				// this._notificationSystem.addNotification({
+				// 	message: 'An Email confirmation is being sent to you.',
+				// 	level: 'success'
+				// });
+
+				// clear input
+				this.refs.subscriberEmail.setState({ value: '' });
+			});
 	}
 
 	onSubmitClick(e) {
