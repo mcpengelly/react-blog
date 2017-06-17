@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import NavBar from './components/utility/NavBar';
-import Footer from './components/utility/Footer';
+import Footer from './components/utility/Footer'
 
 /* Background pattern from Subtle Patterns */
 import backgroundImage from './assets/img/escheresque.png';
@@ -15,6 +15,9 @@ const style = {
 };
 
 class App extends Component {
+	constructor(props){
+		super(props);
+	}
 
 	render() {
 		return (
@@ -32,6 +35,7 @@ class App extends Component {
 				<div className="App-intro">
 					{this.props.children}
 				</div>
+
 
 				<Footer copyright="Matt Pengelly 2017"/>
 			</div>

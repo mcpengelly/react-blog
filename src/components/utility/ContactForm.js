@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, FormGroup } from 'react-bootstrap';
 import MailIcon from 'react-icons/lib/fa/envelope-o';
-import { Notification } from 'react-notification';
+import NotificationSystem  from 'react-notification-system'
 import 'whatwg-fetch'; //fetch
 
 import TextBox from './TextBox';
@@ -11,17 +11,19 @@ export default class ContactForm extends Component {
 
 	constructor(props){
 		super(props);
-
-		this.state = {
-			isActive: false
-		};
+		this._notificationSystem = null;
 	}
 
-	//TODO: move notification logic out of form?
-	toggleNotification() {
-		this.setState({
-			isActive: !this.state.isActive
-		})
+	componentDidMount() {
+		// setup notification system
+		this._notificationSystem = this.refs.notificationSystem
+	}
+
+	addEmailSubmitNotification() {
+		this._notificationSystem.addNotification({
+			message: 'Email Sent. Thanks for the feedback!',
+			level: 'success'
+		});
 	}
 
 	onSubmitClick(e) {
@@ -50,6 +52,7 @@ export default class ContactForm extends Component {
 			}
 		};
 
+		// send users email data to backend
 		fetch('/api/send-mail', options)
 		.then((response)  => {
 			return response.text();
@@ -68,6 +71,7 @@ export default class ContactForm extends Component {
 	render(){
 		return (
 			<div>
+
 				<form style={{ width:'50%' }} onSubmit={this.onSubmitClick.bind(this)}>
 					<FormGroup role="form">
 						<h4>Feel free drop me a email or contact me using the form below</h4>
@@ -75,19 +79,16 @@ export default class ContactForm extends Component {
 						<TextBox ref="name" caption="Name" fieldName="name" /><br/>
 						<TextBox ref="email" caption="Email" fieldName="email" /><br/>
 						<TextArea ref="message" caption="Message" fieldName="message" /><br/>
-						<Button type="submit" value="Send">Send <MailIcon /></Button>
+						<Button type="submit"
+								onClick={this.addEmailSubmitNotification.bind(this)}
+								value="Send">
+							Send <MailIcon />
+						</Button>
+						<NotificationSystem ref="notificationSystem" />
 					</FormGroup>
 				</form>
 
-				<Notification
-					isActive={this.state.isActive}
-					message="Thanks for the feedback!"
-					action="Dismiss"
-					title="Email Sent."
-					onDismiss={this.toggleNotification.bind(this)}
-				/>
 			</div>
 		);
 	}
 }
-
