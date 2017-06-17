@@ -15,14 +15,14 @@ export default class ContactForm extends Component {
 	}
 
 	componentDidMount() {
-		// setup notification system
 		this._notificationSystem = this.refs.notificationSystem
 	}
 
-	addEmailSubmitNotification() {
+	addNewSubscriberNotification() {
+		// TODO: implement
 		this._notificationSystem.addNotification({
-			message: 'Email Sent. Thanks for the feedback!',
-			level: 'success'
+			message: 'Sorry this isn\'t avalible just yet, check back later!',
+			level: 'error'
 		});
 	}
 
@@ -35,6 +35,10 @@ export default class ContactForm extends Component {
 
 		// if no input found ignore submit click
 		if(!name && !email && !message){
+			this._notificationSystem.addNotification({
+				message: 'There isn\'t anything to send! Try entering a message.',
+				level: 'warning'
+			});
 			return;
 		}
 
@@ -54,25 +58,28 @@ export default class ContactForm extends Component {
 
 		// send users email data to backend
 		fetch('/api/send-mail', options)
-		.then((response)  => {
-			return response.text();
-		})
-		.then(() => {
-			// display notification
-			this.setState({ isActive: true });
+			.then((response)  => {
+				return response.text();
+			})
+			.then(() => {
+				// display notification
+				this._notificationSystem.addNotification({
+					message: 'Email Sent. Thanks for the feedback!',
+					level: 'success'
+				});
 
-			// clear input
-			this.refs.name.setState({ value: '' });
-			this.refs.email.setState({ value: '' });
-			this.refs.message.setState({ value: '' });
-		});
+				// clear input
+				this.refs.name.setState({ value: '' });
+				this.refs.email.setState({ value: '' });
+				this.refs.message.setState({ value: '' });
+			});
 	}
 
 	render(){
 		return (
-			<div>
+			<div style={{ width:'50%' }}>
 
-				<form style={{ width:'50%' }} onSubmit={this.onSubmitClick.bind(this)}>
+				<form onSubmit={this.onSubmitClick.bind(this)}>
 					<FormGroup role="form">
 						<h4>Feel free drop me a email or contact me using the form below</h4>
 
@@ -80,13 +87,26 @@ export default class ContactForm extends Component {
 						<TextBox ref="email" caption="Email" fieldName="email" /><br/>
 						<TextArea ref="message" caption="Message" fieldName="message" /><br/>
 						<Button type="submit"
-								onClick={this.addEmailSubmitNotification.bind(this)}
+
 								value="Send">
 							Send <MailIcon />
 						</Button>
 						<NotificationSystem ref="notificationSystem" />
 					</FormGroup>
 				</form>
+
+				<br/>
+
+				<div>
+					Want to get an email when I make a new blog post? Enter your email below.
+					<TextBox ref="subscriberEmail"
+							fieldName="subscriberEmail" />
+					<br/>
+					<Button onClick={this.addNewSubscriberNotification.bind(this)}
+							value="Subscribe">
+						Subscribe
+					</Button>
+				</div>
 
 			</div>
 		);
