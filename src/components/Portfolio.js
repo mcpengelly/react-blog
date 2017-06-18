@@ -21,18 +21,18 @@ export default class Portfolio extends Component {
 	componentDidMount() {
 		// fetch portfolio items
 		fetch('/api/projects')
-			.then((response) => {
-				return response.json();
-			})
-			.then((text) => {
-				// set state to list received from backend
-				this.setState({
-					projectList: text
-				});
-			})
-			.catch((error) => {
-				throw error;
+		.then((response) => {
+			return response.json();
+		})
+		.then((text) => {
+			// set state to list received from backend
+			this.setState({
+				projectList: text
 			});
+		})
+		.catch((error) => {
+			throw error;
+		});
 	}
 
 	render() {

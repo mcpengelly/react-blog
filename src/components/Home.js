@@ -22,18 +22,18 @@ export default class Home extends Component {
 	componentDidMount() {
 		// request blog posts from server
 		fetch('/api/posts')
-			.then((response) => {
-				return response.json();
-			})
-			.then((text) => {
-				// set state to list received from backend
-				this.setState({
-					blogPosts: text
-				});
-			})
-			.catch((error) => {
-				throw error;
+		.then((response) => {
+			return response.json();
+		})
+		.then((text) => {
+			// set state to list received from backend
+			this.setState({
+				blogPosts: text
 			});
+		})
+		.catch((error) => {
+			throw error;
+		});
 	}
 
 	render() {

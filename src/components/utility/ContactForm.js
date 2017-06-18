@@ -15,48 +15,15 @@ export default class ContactForm extends Component {
 	}
 
 	componentDidMount() {
+		// setup notification system
 		this._notificationSystem = this.refs.notificationSystem
 	}
 
-	addNewSubscriberNotification() {
-		let email = this.refs.subscriberEmail.state.value;
-		if(!email) {
-			this._notificationSystem.addNotification({
-				message: 'Sorry that email address doesnt look right. ' +
-					'Please enter a valid email address.',
-				level: 'error'
-			});
-			return;
-		}
-
-		const options = {
-			method: 'POST',
-			body: { subscriberEmail: email },
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		};
-
-		fetch('/api/subscribe', options)
-			.then((response)  => {
-				return response.text();
-			})
-			.then(() => {
-				this._notificationSystem.addNotification({
-					message: 'Sorry this isn\'t avalible just yet, check back later!',
-					level: 'error'
-				});
-
-				//TODO:
-				// display notification
-				// this._notificationSystem.addNotification({
-				// 	message: 'An Email confirmation is being sent to you.',
-				// 	level: 'success'
-				// });
-
-				// clear input
-				this.refs.subscriberEmail.setState({ value: '' });
-			});
+	addEmailSubmitNotification() {
+		this._notificationSystem.addNotification({
+			message: 'Email Sent. Thanks for the feedback!',
+			level: 'success'
+		});
 	}
 
 	onSubmitClick(e) {
@@ -68,10 +35,6 @@ export default class ContactForm extends Component {
 
 		// if no input found ignore submit click
 		if(!name && !email && !message){
-			this._notificationSystem.addNotification({
-				message: 'There isn\'t anything to send! Try entering a message',
-				level: 'warning'
-			});
 			return;
 		}
 
@@ -91,48 +54,40 @@ export default class ContactForm extends Component {
 
 		// send users email data to backend
 		fetch('/api/send-mail', options)
-			.then((response)  => {
-				return response.text();
-			})
-			.then(() => {
-				// display notification
-				this._notificationSystem.addNotification({
-					message: 'Email Sent. Thanks for the feedback!',
-					level: 'success'
-				});
+		.then((response)  => {
+			return response.text();
+		})
+		.then(() => {
+			// display notification
+			this.setState({ isActive: true });
 
-				// clear input
-				this.refs.name.setState({ value: '' });
-				this.refs.email.setState({ value: '' });
-				this.refs.message.setState({ value: '' });
-			});
+			// clear input
+			this.refs.name.setState({ value: '' });
+			this.refs.email.setState({ value: '' });
+			this.refs.message.setState({ value: '' });
+		});
 	}
 
 	render(){
 		return (
-			<div style={{ width:'50%' }}>
+			<div>
 
-				<form onSubmit={this.onSubmitClick.bind(this)}>
+				<form style={{ width:'50%' }} onSubmit={this.onSubmitClick.bind(this)}>
 					<FormGroup role="form">
 						<h4>Feel free drop me a email or contact me using the form below</h4>
 
 						<TextBox ref="name" caption="Name" fieldName="name" /><br/>
 						<TextBox ref="email" caption="Email" fieldName="email" /><br/>
 						<TextArea ref="message" caption="Message" fieldName="message" /><br/>
-						<Button type="submit" value="Send">
+						<Button type="submit"
+								onClick={this.addEmailSubmitNotification.bind(this)}
+								value="Send">
 							Send <MailIcon />
 						</Button>
 						<NotificationSystem ref="notificationSystem" />
 					</FormGroup>
-
-					Want to get an email when there are new blog posts? Enter your email below.
-					<TextBox ref="subscriberEmail" fieldName="subscriberEmail" />
-					<br/>
-					<Button onClick={this.addNewSubscriberNotification.bind(this)}
-							value="Subscribe">
-						Subscribe
-					</Button>
 				</form>
+
 			</div>
 		);
 	}
