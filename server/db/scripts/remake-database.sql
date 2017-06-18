@@ -22,6 +22,13 @@ CREATE TABLE users (
 	password character varying
 );
 
+DROP TABLE IF EXISTS subscribers;
+
+CREATE TABLE subscribers (
+	email character varying,
+	isActivated boolean
+);
+
 
 # INSERT INTO posts (id, title, content) VALUES ('Placeholder Title', 'placeholder', 'placeholder');
 
