@@ -35,6 +35,7 @@ export default class About extends Component {
 					</center>
 				</Row>
 
+				<hr style={hrStyle}/>
 				<Row>
 					<ContactInfo  style={leftAlign}/>
 				</Row>

@@ -69,7 +69,7 @@ export default class ContactForm extends Component {
 		// if no input found ignore submit click
 		if(!name && !email && !message){
 			this._notificationSystem.addNotification({
-				message: 'There isn\'t anything to send! Try entering a message.',
+				message: 'There isn\'t anything to send! Try entering a message',
 				level: 'warning'
 			});
 			return;
@@ -119,28 +119,20 @@ export default class ContactForm extends Component {
 						<TextBox ref="name" caption="Name" fieldName="name" /><br/>
 						<TextBox ref="email" caption="Email" fieldName="email" /><br/>
 						<TextArea ref="message" caption="Message" fieldName="message" /><br/>
-						<Button type="submit"
-
-								value="Send">
+						<Button type="submit" value="Send">
 							Send <MailIcon />
 						</Button>
 						<NotificationSystem ref="notificationSystem" />
 					</FormGroup>
-				</form>
 
-				<br/>
-
-				<div>
-					Want to get an email when I make a new blog post? Enter your email below.
-					<TextBox ref="subscriberEmail"
-							fieldName="subscriberEmail" />
+					Want to get an email when there are new blog posts? Enter your email below.
+					<TextBox ref="subscriberEmail" fieldName="subscriberEmail" />
 					<br/>
 					<Button onClick={this.addNewSubscriberNotification.bind(this)}
 							value="Subscribe">
 						Subscribe
 					</Button>
-				</div>
-
+				</form>
 			</div>
 		);
 	}
