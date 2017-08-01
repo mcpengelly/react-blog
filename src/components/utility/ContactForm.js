@@ -43,7 +43,7 @@ export default class ContactForm extends Component {
 			})
 			.then(() => {
 				this._notificationSystem.addNotification({
-					message: 'Sorry this isn\'t avalible just yet, check back later!',
+					message: 'Sorry, this isn\'t available just yet, try checking back later!',
 					level: 'error'
 				});
 
@@ -62,24 +62,22 @@ export default class ContactForm extends Component {
 	onSubmitClick(e) {
 		e.preventDefault();
 
-		let name = this.refs.name.state.value;
-		let email = this.refs.email.state.value;
-		let message = this.refs.message.state.value;
+		const name = this.refs.name.state.value;
+		const email = this.refs.email.state.value;
+		const message = this.refs.message.state.value;
 
 		// if no input found ignore submit click
-		if(!name && !email && !message){
+		let missingAllInput =  !name && !email && !message;
+		if(missingAllInput){
 			this._notificationSystem.addNotification({
 				message: 'There isn\'t anything to send! Try entering a message',
 				level: 'warning'
 			});
-			return;
+			return; // exit function if missing all fields
 		}
 
-		let data = {
-			name: name,
-			email: email,
-			message: message
-		};
+		//using es6 property value syntax
+		let data = { name, email, message };
 
 		const options = {
 			method: 'POST',
@@ -101,10 +99,10 @@ export default class ContactForm extends Component {
 					level: 'success'
 				});
 
-				// clear input
-				this.refs.name.setState({ value: '' });
-				this.refs.email.setState({ value: '' });
-				this.refs.message.setState({ value: '' });
+				// clear inputs
+				['name', 'email', 'message'].forEach(function(elem){
+					this.refs[elem].setState({ value: '' })
+				});
 			});
 	}
 
@@ -123,15 +121,18 @@ export default class ContactForm extends Component {
 							Send <MailIcon />
 						</Button>
 						<NotificationSystem ref="notificationSystem" />
-					</FormGroup>
+						<br/>
 
-					Want to get an email when there are new blog posts? Enter your email below.
-					<TextBox ref="subscriberEmail" fieldName="subscriberEmail" />
-					<br/>
-					<Button onClick={this.addNewSubscriberNotification.bind(this)}
-							value="Subscribe">
-						Subscribe
-					</Button>
+						Want to get an email whenever there are new blog posts?
+						Enter your email and click "Subscribe"
+						<TextBox ref="subscriberEmail" fieldName="subscriberEmail" />
+						<br/>
+
+						<Button onClick={this.addNewSubscriberNotification.bind(this)}
+								value="Subscribe">
+							Subscribe
+						</Button>
+					</FormGroup>
 				</form>
 			</div>
 		);
