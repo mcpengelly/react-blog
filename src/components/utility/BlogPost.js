@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import marked from 'marked';
 
+// render from markdown
 marked.setOptions({
 	renderer: new marked.Renderer(),
 	gfm: true,
