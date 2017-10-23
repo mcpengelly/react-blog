@@ -1,47 +1,73 @@
 const pg = require("pg");
-// var pgp = require('pg-promise')({
-//     // Initialization Options
-// });
+var pgp = require('pg-promise')({
+    // Initialization Options
+});
 const mailer = require("nodemailer");
 const shortid = require("shortid");
 const passport = require("passport");
 const BasicStrategy = require("passport-http").BasicStrategy;
 
 const pool = new pg.Pool({
-	host: process.env.PGHOST || "localhost",
-	user: process.env.PGUSER || "postgres",
-	password: process.env.PGPASS || "postgres",
-	database: process.env.PGDATABASE || "postgres",
+	host: process.env.PGHOST || 'localhost',
+	user: process.env.PGUSER || 'postgres',
+	password: process.env.PGPASS || 'postgres',
+	database: process.env.PGDATABASE || 'postgres',
 	max: 10, // max number of clients in pool
 	idleTimeoutMillis: 1000,
 	port: 5432
 });
 
-let querystring = "";
+let querystring = '';
 let uid;
+
+//**
+const pgpConfig = {
+	host: process.env.PGHOST || 'localhost',
+	user: process.env.PGUSER || 'postgres',
+	password: process.env.PGPASS || 'postgres',
+	database: process.env.PGDATABASE || 'postgres',
+	port: 5432
+};
+const db = pgp(pgpConfig);
+//**
 
 passport.use(
 	new BasicStrategy(function(username, password, done) {
-		pool.connect((err, client, release) => {
-			if (err) {
-				return done(err);
+		//****
+		// pool.connect((err, client, release) => {
+		// 	if (err) {
+		// 		return done(err);
+		// 	}
+		// 	let pwQuery = `SELECT password FROM users WHERE username = '${username}'`;
+		// 	client.query(pwQuery, (err, result) => {
+		// 		if (err) {
+		// 			return done(err);
+		// 		}
+
+		// 		release();
+		// 		if (!result) {
+		// 			return done(null, false);
+		// 		}
+
+		// 		console.log("result.rows[0]:", result.rows[0]);
+		// 		if (result.rows[0] && result.rows[0].password === password) {
+		// 			return done(null, result);
+		// 		}
+		// 	});
+		// });
+		//****
+		db
+		.one('SELECT password FROM users WHERE username = $1', [username])
+		.then((data) => {
+			if(!data) {
+				done(null, false)
 			}
-			let pwQuery = `SELECT password FROM users WHERE username = '${username}'`;
-			client.query(pwQuery, (err, result) => {
-				if (err) {
-					return done(err);
-				}
-
-				release();
-				if (!result) {
-					return done(null, false);
-				}
-
-				console.log("result.rows[0]:", result.rows[0]);
-				if (result.rows[0] && result.rows[0].password === password) {
-					return done(null, result);
-				}
-			});
+			else {
+				done(null, data)
+			}
+		})
+		.catch((error) => {
+			done(null, error)
 		});
 	})
 );
@@ -52,23 +78,36 @@ module.exports = function(app) {
 	 */
 	// GET list of projects
 	app.get("/api/projects", (req, res) => {
-		pool.connect((err, client, release) => {
-			if (err) {
-				throw err;
+		// pool.connect((err, client, release) => {
+		// 	if (err) {
+		// 		throw err;
+		// 	}
+
+		// 	client.query("SELECT * FROM projects", (err, result) => {
+		// 		if (err) {
+		// 			throw err;
+		// 		}
+
+		// 		// was successful
+		// 		release();
+		// 		if (result && result.rows) {
+		// 			res.send(result.rows);
+		// 		}
+		// 	});
+		// });
+		db
+		.any('SELECT * from projects')
+		.then((projects) => {
+			if(!projects) {
+				res.status(204).send('no projects found');
 			}
-
-			client.query("SELECT * FROM projects", (err, result) => {
-				if (err) {
-					throw err;
-				}
-
-				// was successful
-				release();
-				if (result && result.rows) {
-					res.send(result.rows);
-				}
-			});
-		});
+			else {
+				res.status(200).send(projects);
+			}
+		})
+		.catch((err) => {
+			res.status(500).send(err);
+		})
 	});
 
 	// CREATE new project
@@ -154,8 +193,7 @@ module.exports = function(app) {
 					throw err;
 				}
 
-				querystring = `DELETE FROM projects WHERE id = '${req.params
-					.id}'`;
+				querystring = `DELETE FROM projects WHERE id = '${req.params.id}'`;
 				client.query(querystring, err => {
 					if (err) {
 						throw err;
@@ -174,50 +212,79 @@ module.exports = function(app) {
 	*/
 	// GET list of blog posts
 	app.get("/api/posts", (req, res) => {
-		pool.connect((err, client, release) => {
-			if (err) {
-				throw err;
+		// pool.connect((err, client, release) => {
+		// 	if (err) {
+		// 		throw err;
+		// 	}
+
+		// 	client.query("SELECT * FROM posts", (err, result) => {
+		// 		if (err) {
+		// 			throw err;
+		// 		}
+
+		// 		// was successful
+		// 		release();
+		// 		if (result && result.rows) {
+		// 			res.send(result.rows);
+		// 		} else {
+		// 			res.send("no posts in database");
+		// 		}
+		// 	});
+		// });
+
+		db
+		.any('SELECT * FROM posts')
+		.then((posts) => {
+			if(!posts) {
+				res.status(204).send('no posts found');
 			}
-
-			client.query("SELECT * FROM posts", (err, result) => {
-				if (err) {
-					throw err;
-				}
-
-				// was successful
-				release();
-				if (result && result.rows) {
-					res.send(result.rows);
-				} else {
-					res.send("no posts in database");
-				}
-			});
+			else {
+				res.status(200).send(posts);
+			}
+		})
+		.catch((error) =>  {
+			res.send(error)
 		});
+
 	});
 
 	app.get("/api/posts/:id", (req, res) => {
-		pool.connect((err, client, release) => {
-			if (err) {
-				throw err;
+		// pool.connect((err, client, release) => {
+		// 	if (err) {
+		// 		throw err;
+		// 	}
+
+		// 	client.query(
+		// 		`SELECT * FROM posts WHERE id = '${req.params.id}'`,
+		// 		(err, result) => {
+		// 			if (err) {
+		// 				throw err;
+		// 			}
+
+		// 			// was successful
+		// 			release();
+		// 			if (result && result.rows) {
+		// 				res.send(result.rows);
+		// 			} else {
+		// 				res.send("no projects in the database");
+		// 			}
+		// 		}
+		// 	);
+		// });
+		db
+		.one('SELECT * from posts WHERE id = $1', [req.params.id])
+		.then((post) => {
+			if(!post) { //TOFIX
+				res.status(204).send('post with id: ' + req.params.id + ' not found');
 			}
+			else {
+				res.status(200).send(post);
+			}
+		})
+		.catch((err) => {
+			res.status(500).send(err);
+		})
 
-			client.query(
-				`SELECT * FROM posts WHERE id = '${req.params.id}'`,
-				(err, result) => {
-					if (err) {
-						throw err;
-					}
-
-					// was successful
-					release();
-					if (result && result.rows) {
-						res.send(result.rows);
-					} else {
-						res.send("no projects in the database");
-					}
-				}
-			);
-		});
 	});
 
 	// CREATE new blog post
@@ -295,22 +362,31 @@ module.exports = function(app) {
 			session: false
 		}),
 		(req, res) => {
-			pool.connect((err, client, release) => {
-				if (err) {
-					throw err;
-				}
+			// pool.connect((err, client, release) => {
+			// 	if (err) {
+			// 		throw err;
+			// 	}
 
-				querystring = `DELETE FROM posts WHERE id = '${req.params.id}'`;
-				client.query(querystring, err => {
-					if (err) {
-						throw err;
-					}
+			// 	querystring = `DELETE FROM posts WHERE id = '${req.params.id}'`;
+			// 	client.query(querystring, err => {
+			// 		if (err) {
+			// 			throw err;
+			// 		}
 
-					// was successful
-					release();
-					res.send("deleted post");
-				});
-			});
+			// 		// was successful
+			// 		release();
+			// 		res.send("deleted post");
+			// 	});
+			// });
+
+			db
+			.none('DELETE FROM posts WHERE id = $1', [req.params.id])
+			.then(() => {
+				res.status(200).send('postID: ' + req.params.id + ' has been deleted');
+			})
+			.catch((err) => {
+				res.status(500).send(err);
+			})
 		}
 	);
 
@@ -334,7 +410,7 @@ module.exports = function(app) {
 		};
 
 		// send mail with defined transport object
-		transporter.sendMail(mailOptions, error => {
+		transporter.sendMail(mailOptions, (error) => {
 			if (error) {
 				throw error;
 			}
