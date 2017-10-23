@@ -5,21 +5,20 @@ const fs = require('fs');
 const https = require('https');
 
 const app = require('./app');
-const DEV_PORT = process.env.PORT || 9000;
-const PRODUCTION_PORT = process.env.PRODUCTION_PORT || 8443;
+const HTTP_PORT = process.env.PORT || 9000;
+const HTTPS_PORT = process.env.HTTPS_PORT || 443;
 
-app.listen(DEV_PORT, () => {
-	console.log(`App listening on port ${DEV_PORT}!`);
+app.listen(HTTP_PORT, () => {
+	console.log(`App listening on port ${HTTP_PORT}!`);
 });
 
+var sslOptions = {
+	key: fs.readFileSync(__dirname + '/ssl/server.key'),
+	cert: fs.readFileSync(__dirname + '/ssl/server.cert')
+};
+
+https.createServer(sslOptions, app).listen(HTTPS_PORT);
 
 // Prod
 // if(process.env.NODE_ENV === 'production'){
-	var sslOptions = {
-	  key: fs.readFileSync('./ssl/key.pem'),
-	  cert: fs.readFileSync('./ssl/cert.pem'),
-	  passphrase: 'boag'
-	};
-
-	https.createServer(sslOptions, app).listen(PRODUCTION_PORT)
 // }
