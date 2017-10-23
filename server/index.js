@@ -1,27 +1,25 @@
 // server/index.js
 
 "use strict";
+const fs = require('fs');
+const https = require('https');
 
-const app = require("./app");
-const https = require("https");
+const app = require('./app');
+const DEV_PORT = process.env.PORT || 9000;
+const PRODUCTION_PORT = process.env.PRODUCTION_PORT || 8443;
 
-const PORT = process.env.PORT || 9000;
-
-/* Redirect http to https */
-app.get('*', function(req,res,next) {
-  if(req.headers['x-forwarded-proto'] != 'https' && process.env.NODE_ENV === 'production')
-    res.redirect('https://'+req.hostname+req.url)
-  else
-    next() /* Continue to other routes if we're not redirecting */
-});
-
-app.listen(PORT, () => {
-	console.log(`App listening on port ${PORT}!`);
+app.listen(DEV_PORT, () => {
+	console.log(`App listening on port ${DEV_PORT}!`);
 });
 
 
-
-// Test in prod
+// Prod
 // if(process.env.NODE_ENV === 'production'){
-// 	https.createServer({}, app).listen(443);
+	var sslOptions = {
+	  key: fs.readFileSync('./ssl/key.pem'),
+	  cert: fs.readFileSync('./ssl/cert.pem'),
+	  passphrase: 'boag'
+	};
+
+	https.createServer(sslOptions, app).listen(PRODUCTION_PORT)
 // }
