@@ -31,7 +31,7 @@ export default class ContactForm extends Component {
 
 		const options = {
 			method: 'POST',
-			body: { subscriberEmail: email },
+			body: JSON.stringify({ subscriberEmail: email }),
 			headers: {
 				'Content-Type': 'application/json'
 			}
@@ -39,6 +39,7 @@ export default class ContactForm extends Component {
 
 		fetch('/api/subscribe', options)
 			.then(response => {
+				console.log(response.text())
 				return response.text();
 			})
 			.then(() => {

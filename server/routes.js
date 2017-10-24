@@ -12,6 +12,15 @@ const pgpConfig = {
 	port: 5432
 };
 
+// Mailer
+const transporter = mailer.createTransport({
+	service: 'gmail',
+	auth: {
+		user: 'burnermcbernstein@gmail.com',
+		pass: process.env.BURNER_PASS
+	}
+});
+
 const db = pgp(pgpConfig);
 
 let querystring = '';
@@ -38,37 +47,64 @@ passport.use(
 );
 
 module.exports = function(app) {
-	/**
-		projects api
-	 */
-	// GET list of projects
-	app.get('/api/projects', (req, res) => {
-		db
-			.any('SELECT * from projects')
-			.then(projects => {
-				if (projects.length < 1) {
-					res.send('no projects found');
-				} else {
-					res.send(projects);
-				}
-			})
-			.catch(err => {
-				res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
-			});
-	});
 
-	// GET project by id
-	app.get('/api/projects/:id', (req, res) => {
-		db
-			.one('SELECT * from projects WHERE id = $1', [req.params.id])
-			.then(post => {
-				//TODO: return different message when nothing found?
-				res.send(post);
-			})
-			.catch(err => {
-				res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
-			});
-	});
+	function getAll(relation){
+		app.get(`/api/${relation}`, (req, res) => {
+			db
+				.any(`SELECT * from ${relation}`)
+				.then(data => {
+					if (data.length < 1) {
+						res.send('no ${relation} found');
+					} else {
+						res.send(data);
+					}
+				})
+				.catch(err => {
+					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
+				});
+		});
+	}
+
+	function getOneById(relation){
+		app.get(`/api/${relation}/:id`, (req, res) => {
+			db
+				.one(`SELECT * from ${relation} WHERE id = $1`, [req.params.id])
+				.then(data => {
+					//TODO: return different message when nothing found?
+					res.send(data);
+				})
+				.catch(err => {
+					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
+				});
+		});
+	}
+
+	function deleteById(relation){
+		app.delete(
+			`/api/${relation}/:id`,
+			passport.authenticate('basic', {
+				session: false
+			}),
+			(req, res) => {
+				db
+					.none(`DELETE FROM ${relation} WHERE id = $1`, [req.params.id])
+					.then(() => {
+						res.send(`${relation} ID: ${req.params.id} has been deleted`);
+					})
+					.catch(err => {
+						res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
+					});
+			}
+		);
+	}
+
+	getAll('projects');
+	getAll('posts');
+	getOneById('projects');
+	getOneById('posts');
+	deleteById('projects');
+	deleteById('posts');
+
 
 	// CREATE new project
 	app.post(
@@ -121,54 +157,9 @@ module.exports = function(app) {
 		}
 	);
 
-	// DELETE existing project using id
-	app.delete(
-		'/api/projects/:id',
-		passport.authenticate('basic', {
-			session: false
-		}),
-		(req, res) => {
-			db
-				.none('DELETE FROM projects WHERE id = $1', [req.params.id])
-				.then(() => {
-					res.send(`projects ID: ${req.params.id} has been deleted`);
-				})
-				.catch(err => {
-					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
-				});
-		}
-	);
-
 	/**
 		blog posts api
 	*/
-	// GET list of blog posts
-	app.get('/api/posts', (req, res) => {
-		db
-			.any('SELECT * FROM posts')
-			.then(posts => {
-				if (posts.length < 1) {
-					res.send('no posts found');
-				} else {
-					res.send(posts);
-				}
-			})
-			.catch(error => {
-				res.status(HTTP_INTERNAL_SERVER_ERROR).send(error);
-			});
-	});
-
-	app.get('/api/posts/:id', (req, res) => {
-		db
-			.one('SELECT * from posts WHERE id = $1', [req.params.id])
-			.then(post => {
-				//TODO: return different message when nothing found?
-				res.send(post);
-			})
-			.catch(err => {
-				res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
-			});
-	});
 
 	// CREATE new blog post
 	app.post(
@@ -212,33 +203,7 @@ module.exports = function(app) {
 		}
 	);
 
-	// DELETE existing blog post using id
-	app.delete(
-		'/api/posts/:id',
-		passport.authenticate('basic', {
-			session: false
-		}),
-		(req, res) => {
-			db
-				.none('DELETE FROM posts WHERE id = $1', [req.params.id])
-				.then(() => {
-					res.send(`post ID: ${req.params.id} has been deleted`);
-				})
-				.catch(err => {
-					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
-				});
-		}
-	);
-
-	// Mailer
-	const transporter = mailer.createTransport({
-		service: 'gmail',
-		auth: {
-			user: 'burnermcbernstein@gmail.com',
-			pass: process.env.BURNER_PASS
-		}
-	});
-
+	// Mail Service
 	app.post('/api/send-mail', (req, res) => {
 		// setup email data with unicode symbols
 		const mailOptions = {
@@ -257,5 +222,32 @@ module.exports = function(app) {
 		});
 
 		res.redirect('/about');
+	});
+
+	// Subscribe
+	// only insert a new subscriber if the email isnt already in the mailing list
+	// TODO: sometimes breaks, need FE to show different messages based on response data
+	app.post('/api/subscribe', (req, res) => {
+		db.task('getInsertUserId', t => {
+			return t
+				.oneOrNone(
+					'SELECT email FROM subscribers WHERE email = $1',
+					req.body.subscriberEmail,
+					u => u && u.email
+				)
+				.then(userEmail => {
+					//if userEmail doesnt exist then run a query to add it
+					return t.none(
+						'INSERT INTO subscribers(email) VALUES($1)',
+						req.body.subscriberEmail
+					);
+				})
+				.then(()=>{
+					res.send('hey')
+				})
+				.catch(err => {
+					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
+				});
+		})
 	});
 };

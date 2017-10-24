@@ -18,15 +18,15 @@ CREATE TABLE posts (
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
-	username character varying,
-	password character varying
+	username TEXT,
+	password TEXT
 );
 
 DROP TABLE IF EXISTS subscribers;
 
 CREATE TABLE subscribers (
-	email character varying,
-	isActivated boolean
+	email TEXT UNIQUE,
+	is_active boolean
 );
 
 
