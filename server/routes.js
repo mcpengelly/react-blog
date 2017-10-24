@@ -12,6 +12,15 @@ const pgpConfig = {
 	port: 5432
 };
 
+// Mailer
+const transporter = mailer.createTransport({
+	service: 'gmail',
+	auth: {
+		user: 'burnermcbernstein@gmail.com',
+		pass: process.env.BURNER_PASS
+	}
+});
+
 const db = pgp(pgpConfig);
 
 let querystring = '';
@@ -153,8 +162,8 @@ module.exports = function(app) {
 					res.send(posts);
 				}
 			})
-			.catch(error => {
-				res.status(HTTP_INTERNAL_SERVER_ERROR).send(error);
+			.catch(err => {
+				res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
 			});
 	});
 
@@ -230,15 +239,7 @@ module.exports = function(app) {
 		}
 	);
 
-	// Mailer
-	const transporter = mailer.createTransport({
-		service: 'gmail',
-		auth: {
-			user: 'burnermcbernstein@gmail.com',
-			pass: process.env.BURNER_PASS
-		}
-	});
-
+	// Mail Service
 	app.post('/api/send-mail', (req, res) => {
 		// setup email data with unicode symbols
 		const mailOptions = {
@@ -257,5 +258,32 @@ module.exports = function(app) {
 		});
 
 		res.redirect('/about');
+	});
+
+	// Subscribe
+	// only insert a new subscriber if the email isnt already in the mailing list
+	// TODO: sometimes breaks, need FE to show different messages based on response data
+	app.post('/api/subscribe', (req, res) => {
+		db.task('getInsertUserId', t => {
+			return t
+				.oneOrNone(
+					'SELECT email FROM subscribers WHERE email = $1',
+					req.body.subscriberEmail,
+					u => u && u.email
+				)
+				.then(userEmail => {
+					//if userEmail doesnt exist then run a query to add it
+					return t.none(
+						'INSERT INTO subscribers(email) VALUES($1)',
+						req.body.subscriberEmail
+					);
+				})
+				.then(()=>{
+					res.send('hey')
+				})
+				.catch(err => {
+					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
+				});
+		})
 	});
 };
