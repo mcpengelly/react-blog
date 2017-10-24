@@ -7,8 +7,12 @@ const server = express();
 
 // middleware
 // Setup logger
-server.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version"' +
-	':status :res[content-length] :response-time ms'));
+server.use(
+	morgan(
+		':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version"' +
+			':status :res[content-length] :response-time ms'
+	)
+);
 
 // Serve static assets
 server.use(express.static(path.resolve(__dirname, '..', 'build')));
@@ -22,9 +26,7 @@ require('./routes.js')(server);
 
 // react: Always return the main index.html, so react-router render the route in the client
 server.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
+	res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
 });
-
-
 
 module.exports = server;

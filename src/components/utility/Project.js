@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { Accordion, Panel } from 'react-bootstrap';
 
 export default class PortfolioItem extends Component {
-
-	render(){
+	render() {
 		return (
 			<Accordion>
 				<Panel
@@ -11,14 +10,10 @@ export default class PortfolioItem extends Component {
 					header={this.props.header}
 					eventKey={this.props.index}
 				>
-
-					<img src={this.props.img} alt='project'></img>
+					<img src={this.props.img} alt="project" />
 					<p>{this.props.description}</p>
-
 				</Panel>
 			</Accordion>
 		);
 	}
-};
-
-
+}

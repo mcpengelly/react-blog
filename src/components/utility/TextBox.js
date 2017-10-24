@@ -2,19 +2,18 @@ import React, { Component } from 'react';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 class TextBox extends Component {
-
-	constructor(props){
+	constructor(props) {
 		super(props);
 		this.state = { value: '' };
 	}
 
-	handleChange(e){
+	handleChange(e) {
 		this.setState({ value: e.target.value });
 	}
 
 	render() {
 		return (
-			<FormGroup style={{ padding: 0, margin: 0  }}>
+			<FormGroup style={{ padding: 0, margin: 0 }}>
 				<ControlLabel>{this.props.caption}</ControlLabel>
 				<FormControl
 					type="text"
@@ -25,7 +24,7 @@ class TextBox extends Component {
 			</FormGroup>
 		);
 	}
-};
+}
 
 // deprecated TODO: use new syntax
 // TextBox.defaultProps = {

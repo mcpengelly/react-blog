@@ -13,21 +13,17 @@ const leftAlign = { textAlign: 'left' };
 const hrStyle = { borderColor: 'lightgrey' };
 
 export default class About extends Component {
-
-	render(){
+	render() {
 		return (
 			<Grid style={style}>
-
 				<Row>
 					<Col sm={12}>
 						<h1>About</h1>
-						<section style={leftAlign}>
-							More info coming soon...
-						</section>
+						<section style={leftAlign}>More info coming soon...</section>
 					</Col>
 				</Row>
 
-				<hr style={hrStyle}/>
+				<hr style={hrStyle} />
 
 				<Row>
 					<center>
@@ -35,15 +31,14 @@ export default class About extends Component {
 					</center>
 				</Row>
 
-				<hr style={hrStyle}/>
+				<hr style={hrStyle} />
 				<Row>
-					<ContactInfo  style={leftAlign}/>
+					<ContactInfo style={leftAlign} />
 				</Row>
-
 			</Grid>
 		);
 	}
-};
+}
 // <Col style={centerStyle} sm={12}>
 // 	<div style={padElements}>
 // 		<ContactInfo />

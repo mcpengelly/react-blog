@@ -1,6 +1,6 @@
 // server/index.js
 
-"use strict";
+'use strict';
 const fs = require('fs');
 const https = require('https');
 
@@ -13,7 +13,7 @@ app.listen(HTTP_PORT, () => {
 });
 
 // Local https
-if(process.env.NODE_ENV === 'dev'){
+if (process.env.NODE_ENV === 'dev') {
 	var sslOptions = {
 		key: fs.readFileSync(__dirname + '/ssl/server.key'),
 		cert: fs.readFileSync(__dirname + '/ssl/server.cert')

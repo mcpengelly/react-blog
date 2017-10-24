@@ -6,20 +6,14 @@ var style = { backgroundColor: 'white' };
 var textStyle = { color: 'black' };
 
 export default class Footer extends Component {
-
-	render(){
+	render() {
 		return (
 			<footer className="footer" style={style}>
 				<SocialMediaIcons style={textStyle} />
 				<small>
-					<p style={textStyle}>
-						{this.props.copyright}
-					</p>
+					<p style={textStyle}>{this.props.copyright}</p>
 				</small>
 			</footer>
 		);
 	}
-};
-
-
-
+}
