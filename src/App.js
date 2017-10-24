@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import NavBar from './components/utility/NavBar';
-import Footer from './components/utility/Footer'
+import Footer from './components/utility/Footer';
 
 /* Background pattern from Subtle Patterns */
 import backgroundImage from './assets/img/escheresque.png';
@@ -15,12 +15,17 @@ const style = {
 };
 
 class App extends Component {
-
 	render() {
 		return (
-			<div className="App" style={{ backgroundImage: "url(" + backgroundImage + ")" }}>
-				<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css"/>
-				<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap-theme.min.css"/>
+			<div className="App" style={{ backgroundImage: 'url(' + backgroundImage + ')' }}>
+				<link
+					rel="stylesheet"
+					href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css"
+				/>
+				<link
+					rel="stylesheet"
+					href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap-theme.min.css"
+				/>
 
 				<div style={style}>
 					<NavBar />
@@ -29,12 +34,9 @@ class App extends Component {
 					<h2>Welcome</h2>
 				</div>
 
-				<div className="App-intro">
-					{this.props.children}
-				</div>
+				<div className="App-intro">{this.props.children}</div>
 
-
-				<Footer copyright="Matt Pengelly 2017"/>
+				<Footer copyright="Matt Pengelly 2017" />
 			</div>
 		);
 	}

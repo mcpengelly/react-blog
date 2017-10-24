@@ -10,7 +10,6 @@ const style = {
 };
 
 export default class Portfolio extends Component {
-
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -21,16 +20,16 @@ export default class Portfolio extends Component {
 	componentDidMount() {
 		// fetch portfolio items
 		fetch('/api/projects')
-			.then((response) => {
+			.then(response => {
 				return response.json();
 			})
-			.then((text) => {
+			.then(text => {
 				// set state to list received from backend
 				this.setState({
 					projectList: text
 				});
 			})
-			.catch((error) => {
+			.catch(error => {
 				throw error;
 			});
 	}
@@ -41,11 +40,10 @@ export default class Portfolio extends Component {
 				<Grid style={style}>
 					<Row>
 						<h1>Projects</h1>
-						<ProjectsContainer projects={this.state.projectList}/>
+						<ProjectsContainer projects={this.state.projectList} />
 					</Row>
 				</Grid>
 			</div>
 		);
 	}
 }
-

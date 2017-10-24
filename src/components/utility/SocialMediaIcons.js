@@ -8,11 +8,17 @@ import A from './A';
 const SocialMediaIcons = () => {
 	return (
 		<div className="social-media-icons">
-			<A linkTo="https://github.com/mcpengelly"><FaGithub /></A>
-			<A linkTo="https://www.linkedin.com/in/matt-pengelly-575ba886"><FaLinkedIn /></A>
-			<A linkTo="https://twitter.com/typycyl"><FaTwitter /></A>
+			<A linkTo="https://github.com/mcpengelly">
+				<FaGithub />
+			</A>
+			<A linkTo="https://www.linkedin.com/in/matt-pengelly-575ba886">
+				<FaLinkedIn />
+			</A>
+			<A linkTo="https://twitter.com/typycyl">
+				<FaTwitter />
+			</A>
 		</div>
 	);
-}
+};
 
 export default SocialMediaIcons;

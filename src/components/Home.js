@@ -11,7 +11,6 @@ const style = {
 };
 
 export default class Home extends Component {
-
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -22,16 +21,16 @@ export default class Home extends Component {
 	componentDidMount() {
 		// request blog posts from server
 		fetch('/api/posts')
-			.then((response) => {
+			.then(response => {
 				return response.json();
 			})
-			.then((text) => {
+			.then(text => {
 				// set state to list received from backend
 				this.setState({
 					blogPosts: text
 				});
 			})
-			.catch((error) => {
+			.catch(error => {
 				throw error;
 			});
 	}
@@ -47,4 +46,4 @@ export default class Home extends Component {
 			</Grid>
 		);
 	}
-};
+}

@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 class TextArea extends Component {
-
-	constructor(props){
+	constructor(props) {
 		super(props);
 		this.state = { value: '' };
 	}
 
-	handleChange(e){
+	handleChange(e) {
 		this.setState({ value: e.target.value });
 	}
 
@@ -26,7 +25,7 @@ class TextArea extends Component {
 			</FormGroup>
 		);
 	}
-};
+}
 
 // deprecated
 // TextArea.defaultProps = {
