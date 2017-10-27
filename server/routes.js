@@ -250,7 +250,7 @@ module.exports = function(app) {
 						from: '"Burna" <burnermcbernstein@gmail.com>', // sender address
 						to: [req.body.subscriberEmail],
 						subject: `Subscriber Confirmation for mattpengelly.com`,
-						html: `Click the button below to confirm your subscription to <strong>mattpengelly.com</strong> and receive updates for new blogposts. If you didn't subscribe please ignore this email.
+						html: `Click the button below to confirm your subscription to <strong>mattpengelly.com</strong> and receive updates for new blogposts. If you didn't subscribe please ignore this email, you will not receive any further emails.
 						<a href="${hostname + path}">Subscribe</a>
 
 						`
@@ -278,11 +278,15 @@ module.exports = function(app) {
 			])
 			.then(sub => {
 				//mail the subscriber a success email
+				const hostname = process.env.HOSTNAME || 'http://localhost:9000';
+				const path = `/api/unsubscribe/${user.id}`;
 				const mailOptions = {
 					from: '"Burna" <burnermcbernstein@gmail.com>', // sender address
 					to: [sub.email],
 					subject: `Successfully added to mattpengelly.com mailing list`,
-					text: `You've been added to mattpengelly.com mailing list, you'll receive an email when new blog posts are available. To Unsubscribe use the button below.`
+					text: `You've been added to mattpengelly.com mailing list, you'll receive an email when new blog posts are available. To Unsubscribe use the button below.
+						<a href="${hostname + path}">Unsubscribe</a>
+					`
 				};
 
 				transporter.sendMail(mailOptions);
