@@ -250,7 +250,8 @@ module.exports = function(app) {
 						from: '"Burna" <burnermcbernstein@gmail.com>', // sender address
 						to: [req.body.subscriberEmail],
 						subject: `Subscriber Confirmation for mattpengelly.com`,
-						html: `Click the button below to confirm your subscription to <strong>mattpengelly.com</strong> and receive updates for new blogposts. If you didn't subscribe please ignore this email, you will not receive any further emails.
+						html: `
+						Click the button below to confirm your subscription to <strong>mattpengelly.com</strong> and receive updates for new blogposts. If you didn't subscribe please ignore this email, you will not receive any further emails.
 						<a href="${hostname + path}">Subscribe</a>
 
 						`
@@ -284,7 +285,7 @@ module.exports = function(app) {
 					from: '"Burna" <burnermcbernstein@gmail.com>', // sender address
 					to: [sub.email],
 					subject: `Successfully added to mattpengelly.com mailing list`,
-					text: `You've been added to mattpengelly.com mailing list, you'll receive an email when new blog posts are available. To Unsubscribe use the button below.
+					html: `You've been added to mattpengelly.com mailing list, you'll receive an email when new blog posts are available. To Unsubscribe use the button below.
 						<a href="${hostname + path}">Unsubscribe</a>
 					`
 				};
