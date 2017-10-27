@@ -1,32 +1,33 @@
 DROP TABLE IF EXISTS projects;
 
 CREATE TABLE projects (
-	id character varying,
-	title character varying,
-	description character varying,
-	img character varying
+	id text,
+	title text,
+	description text,
+	img text
 );
 
 DROP TABLE IF EXISTS posts;
 
 CREATE TABLE posts (
-	id character varying,
-	title character varying,
-	content character varying
+	id text,
+	title text,
+	content text
 );
 
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
-	username TEXT,
-	password TEXT
+	username text,
+	password text
 );
 
 DROP TABLE IF EXISTS subscribers;
 
 CREATE TABLE subscribers (
-	email TEXT UNIQUE,
-	is_active boolean
+	id text,
+	email text,
+	active boolean
 );
 
 

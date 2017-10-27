@@ -47,8 +47,7 @@ passport.use(
 );
 
 module.exports = function(app) {
-
-	function getAll(relation){
+	function getAll(relation) {
 		app.get(`/api/${relation}`, (req, res) => {
 			db
 				.any(`SELECT * from ${relation}`)
@@ -65,7 +64,7 @@ module.exports = function(app) {
 		});
 	}
 
-	function getOneById(relation){
+	function getOneById(relation) {
 		app.get(`/api/${relation}/:id`, (req, res) => {
 			db
 				.one(`SELECT * from ${relation} WHERE id = $1`, [req.params.id])
@@ -79,7 +78,7 @@ module.exports = function(app) {
 		});
 	}
 
-	function deleteById(relation){
+	function deleteById(relation) {
 		app.delete(
 			`/api/${relation}/:id`,
 			passport.authenticate('basic', {
@@ -104,7 +103,6 @@ module.exports = function(app) {
 	getOneById('posts');
 	deleteById('projects');
 	deleteById('posts');
-
 
 	// CREATE new project
 	app.post(
@@ -203,9 +201,9 @@ module.exports = function(app) {
 		}
 	);
 
-	// Mail Service
+	// mailer
+	// emails me on behalf of site user
 	app.post('/api/send-mail', (req, res) => {
-		// setup email data with unicode symbols
 		const mailOptions = {
 			from: '"Burna" <burnermcbernstein@gmail.com>', // sender address
 			to: 'pengelly.mat@gmail.com',
@@ -213,7 +211,6 @@ module.exports = function(app) {
 			text: `${req.body.name || 'Anonymous'} has sent you: ${req.body.message}`
 		};
 
-		// send mail with defined transport object
 		transporter.sendMail(mailOptions, err => {
 			if (err) {
 				throw err;
@@ -224,30 +221,82 @@ module.exports = function(app) {
 		res.redirect('/about');
 	});
 
-	// Subscribe
-	// only insert a new subscriber if the email isnt already in the mailing list
-	// TODO: sometimes breaks, need FE to show different messages based on response data
+	// checks if user is in the mailing list, if not, add him and set active = false
+	// TODO refactor with named functions
 	app.post('/api/subscribe', (req, res) => {
-		db.task('getInsertUserId', t => {
+		db.task('insertIfNotExists', t => {
 			return t
 				.oneOrNone(
-					'SELECT email FROM subscribers WHERE email = $1',
+					'SELECT * FROM subscribers WHERE email = $1',
 					req.body.subscriberEmail,
-					u => u && u.email
+					u => u
 				)
-				.then(userEmail => {
-					//if userEmail doesnt exist then run a query to add it
-					return t.none(
-						'INSERT INTO subscribers(email) VALUES($1)',
-						req.body.subscriberEmail
-					);
+				.then(existingUser => {
+					if (!existingUser) {
+						uid = shortid();
+						return t.one(
+							'INSERT INTO subscribers (id, email, active) VALUES ($1, $2, $3) returning id',
+							[uid, req.body.subscriberEmail, false]
+						);
+					} else {
+						return existingUser;
+					}
 				})
-				.then(()=>{
-					res.send('hey')
+				.then(user => {
+					//mail the subscriber a confirmation email
+					const hostname = process.env.HOSTNAME || 'http://localhost:9000';
+					const path = `/api/confirm/${user.id}`;
+					const mailOptions = {
+						from: '"Burna" <burnermcbernstein@gmail.com>', // sender address
+						to: [req.body.subscriberEmail],
+						subject: `Subscriber Confirmation for mattpengelly.com`,
+						html: `Click the button below to confirm your subscription to <strong>mattpengelly.com</strong> and receive updates for new blogposts. If you didn't subscribe please ignore this email.
+						<a href="${hostname + path}">Subscribe</a>
+
+						`
+					};
+
+					transporter.sendMail(mailOptions);
+				})
+				.then(() => {
+					res.status(202).send('mailing list updated');
 				})
 				.catch(err => {
-					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
+					res.send(err);
 				});
-		})
+		});
+	});
+
+	// lookup subscriber by id and set active = true
+	// jumps to .catch if query doesnt find anything... is there a better way to handle this?
+	// is url params the best way to do this? there might be other ways?
+	// TODO refactor with named functions
+	app.get('/api/confirm/:id', (req, res) => {
+		db
+			.one('UPDATE subscribers SET active = TRUE WHERE id = $1 returning email', [
+				req.params.id
+			])
+			.then(sub => {
+				//mail the subscriber a success email
+				const mailOptions = {
+					from: '"Burna" <burnermcbernstein@gmail.com>', // sender address
+					to: [sub.email],
+					subject: `Successfully added to mattpengelly.com mailing list`,
+					text: `You've been added to mattpengelly.com mailing list, you'll receive an email when new blog posts are available. To Unsubscribe use the button below.`
+				};
+
+				transporter.sendMail(mailOptions);
+			})
+			.then(() => {
+				res.send(`Successfully added as a subscriber!`);
+			})
+			.catch(err => {
+				res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
+			});
+	});
+
+	app.get('/api/unsubscribe/:id', (req, res) => {
+		//TODO: set active to false using subscriber id
+		res.send('unsubscribing now');
 	});
 };
