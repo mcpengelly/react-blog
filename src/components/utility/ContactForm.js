@@ -31,7 +31,7 @@ export default class ContactForm extends Component {
 
 			fetch('/api/subscribe', options).then(() => {
 				this._notificationSystem.addNotification({
-					message: "I'm sending you a confirmation email to make sure you're not a robot",
+					message: "I'm sending you a confirmation email to make sure you're not a robot. Check your email for a confirmation email",
 					level: 'success'
 				});
 

@@ -156,10 +156,6 @@ module.exports = function(app) {
 		}
 	);
 
-	/**
-		blog posts api
-	*/
-
 	// CREATE new blog post
 	app.post(
 		'/api/posts',
@@ -192,7 +188,7 @@ module.exports = function(app) {
 											A new post is up! check it out
 											<a href="${hostname}">here</a>
 
-											Tired of emails? Click unsubscribe below:
+											Tired of emails?
 											<a href="${hostname + path}">Unsubscribe</a>
 										`
 									};
@@ -214,7 +210,7 @@ module.exports = function(app) {
 		}
 	);
 
-	// TODO: allow for partial updates (PATCH?)
+	// TODO: allow for partial updates (PATCH)
 	// UPDATE existing blog post using id
 	app.put(
 		'/api/posts/:id',
@@ -235,8 +231,7 @@ module.exports = function(app) {
 		}
 	);
 
-	// mailer
-	// emails me on behalf of site user
+	// mailer: emails me on behalf of user
 	app.post('/api/send-mail', (req, res) => {
 		const mailOptions = {
 			from: '"Burna" <burnermcbernstein@gmail.com>', // sender address
@@ -307,26 +302,25 @@ module.exports = function(app) {
 	// TODO refactor with named promises?
 	app.get('/api/confirm/:id', (req, res) => {
 		db
-			.one('UPDATE subscribers SET active = TRUE WHERE id = $1 returning email', [
-				req.params.id
-			])
+			.one('UPDATE subscribers SET active = TRUE WHERE id = $1 returning *', [req.params.id])
 			.then(sub => {
-				//mail the subscriber a success email
-				const hostname = process.env.HOSTNAME || 'http://localhost:9000';
-				const path = `/api/unsubscribe/${user.id}`;
-				const mailOptions = {
-					from: '"Burna" <burnermcbernstein@gmail.com>', // sender address
-					to: [sub.email],
-					subject: `Successfully added to mattpengelly.com mailing list`,
-					html: `
-						You've been added to mattpengelly.com mailing list, you'll receive an email when new blog posts are available.
+				if (sub) {
+					//mail the subscriber a success email
+					const hostname = process.env.HOSTNAME || 'http://localhost:9000';
+					const path = `/api/unsubscribe/${sub.id}`;
+					const mailOptions = {
+						from: '"Burna" <burnermcbernstein@gmail.com>', // sender address
+						to: [sub.email],
+						subject: `Successfully added to mattpengelly.com mailing list`,
+						html: `
+							You've been added to mattpengelly.com mailing list, you'll receive an email when new blog posts are available.
 
-						Tired of emails? Click unsubscribe below:
-						<a href="${hostname + path}">Unsubscribe</a>
-					`
-				};
+							Tired of emails? <a href="${hostname + path}">Unsubscribe</a>
+						`
+					};
 
-				transporter.sendMail(mailOptions);
+					transporter.sendMail(mailOptions);
+				}
 			})
 			.then(() => {
 				res.status(HTTP_ACCEPTED).send(`Successfully added as a subscriber!`);
