@@ -28,6 +28,7 @@ let uid;
 
 const HTTP_INTERNAL_SERVER_ERROR = 500;
 const HTTP_CREATED = 201;
+const HTTP_ACCEPTED = 202;
 
 passport.use(
 	new BasicStrategy(function(username, password, done) {
@@ -47,13 +48,14 @@ passport.use(
 );
 
 module.exports = function(app) {
+	//TODO: find a better name for these
 	function getAll(relation) {
 		app.get(`/api/${relation}`, (req, res) => {
 			db
 				.any(`SELECT * from ${relation}`)
 				.then(data => {
 					if (data.length < 1) {
-						res.send('no ${relation} found');
+						res.send(`no ${relation} found`);
 					} else {
 						res.send(data);
 					}
@@ -149,7 +151,6 @@ module.exports = function(app) {
 					res.send(`updated project: ${req.params.id}`);
 				})
 				.catch(err => {
-					console.log(err);
 					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
 				});
 		}
@@ -167,10 +168,43 @@ module.exports = function(app) {
 		}),
 		(req, res) => {
 			uid = shortid.generate();
-			querystring = 'INSERT INTO posts (id, title, content) VALUES ($1, $2, $3)';
+			querystring =
+				'INSERT INTO posts (id, title, content) VALUES ($1, $2, $3) returning title';
 
 			db
-				.none(querystring, [uid, req.body.title, req.body.content])
+				.one(querystring, [uid, req.body.title, req.body.content])
+				.then(post => {
+					// mail all active subscribers
+					db
+						.any('SELECT * FROM subscribers WHERE active = TRUE')
+						.then(activeSubscribers => {
+							// TODO? send 1 volley of emails
+							if (activeSubscribers) {
+								activeSubscribers.forEach(sub => {
+									const hostname =
+										process.env.HOSTNAME || 'http://localhost:9000';
+									const path = `/api/unsubscribe/${sub.id}`;
+									const mailOptions = {
+										from: '"Burna" <burnermcbernstein@gmail.com>',
+										to: sub.email,
+										subject: `New Post, ${post.title} is available at mattpengelly.com`,
+										html: `
+											A new post is up! check it out
+											<a href="${hostname}">here</a>
+
+											Tired of emails? Click unsubscribe below:
+											<a href="${hostname + path}">Unsubscribe</a>
+										`
+									};
+
+									transporter.sendMail(mailOptions);
+								});
+							}
+						})
+						.catch(err => {
+							throw err;
+						});
+				})
 				.then(() => {
 					res.status(HTTP_CREATED).send(`new post with ID: ${uid} created`);
 				})
@@ -215,14 +249,13 @@ module.exports = function(app) {
 			if (err) {
 				throw err;
 			}
-			console.log('mail sent.');
 		});
 
 		res.redirect('/about');
 	});
 
 	// checks if user is in the mailing list, if not, add him and set active = false
-	// TODO refactor with named functions
+	// TODO refactor with named promises?
 	app.post('/api/subscribe', (req, res) => {
 		db.task('insertIfNotExists', t => {
 			return t
@@ -251,16 +284,15 @@ module.exports = function(app) {
 						to: [req.body.subscriberEmail],
 						subject: `Subscriber Confirmation for mattpengelly.com`,
 						html: `
-						Click the button below to confirm your subscription to <strong>mattpengelly.com</strong> and receive updates for new blogposts. If you didn't subscribe please ignore this email, you will not receive any further emails.
-						<a href="${hostname + path}">Subscribe</a>
-
+							Click the button below to confirm your subscription to <strong>mattpengelly.com</strong> and receive updates for new blogposts. If you didn't subscribe please ignore this email, you will not receive any further emails.
+							<a href="${hostname + path}">Subscribe</a>
 						`
 					};
 
 					transporter.sendMail(mailOptions);
 				})
 				.then(() => {
-					res.status(202).send('mailing list updated');
+					res.status(HTTP_ACCEPTED).send('mailing list updated');
 				})
 				.catch(err => {
 					res.send(err);
@@ -269,9 +301,10 @@ module.exports = function(app) {
 	});
 
 	// lookup subscriber by id and set active = true
-	// jumps to .catch if query doesnt find anything... is there a better way to handle this?
+	// jumps to .catch if query doesnt find any subscriber with the correct id
+	// is there a better way to handle this?
 	// is url params the best way to do this? there might be other ways?
-	// TODO refactor with named functions
+	// TODO refactor with named promises?
 	app.get('/api/confirm/:id', (req, res) => {
 		db
 			.one('UPDATE subscribers SET active = TRUE WHERE id = $1 returning email', [
@@ -285,7 +318,10 @@ module.exports = function(app) {
 					from: '"Burna" <burnermcbernstein@gmail.com>', // sender address
 					to: [sub.email],
 					subject: `Successfully added to mattpengelly.com mailing list`,
-					html: `You've been added to mattpengelly.com mailing list, you'll receive an email when new blog posts are available. To Unsubscribe use the button below.
+					html: `
+						You've been added to mattpengelly.com mailing list, you'll receive an email when new blog posts are available.
+
+						Tired of emails? Click unsubscribe below:
 						<a href="${hostname + path}">Unsubscribe</a>
 					`
 				};
@@ -293,7 +329,7 @@ module.exports = function(app) {
 				transporter.sendMail(mailOptions);
 			})
 			.then(() => {
-				res.send(`Successfully added as a subscriber!`);
+				res.status(HTTP_ACCEPTED).send(`Successfully added as a subscriber!`);
 			})
 			.catch(err => {
 				res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
@@ -301,7 +337,17 @@ module.exports = function(app) {
 	});
 
 	app.get('/api/unsubscribe/:id', (req, res) => {
-		//TODO: set active to false using subscriber id
-		res.send('unsubscribing now');
+		db
+			.none('UPDATE subscribers SET active = FALSE WHERE id = $1', [req.params.id])
+			.then(() => {
+				res
+					.status(HTTP_ACCEPTED)
+					.send(
+						"You've been removed from the subscriber list and will no longer receive emails from mattpengelly.com"
+					);
+			})
+			.catch(err => {
+				res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
+			});
 	});
 };
