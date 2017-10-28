@@ -11,5 +11,6 @@ myapp:
     - PGDATABASE=postgres
     - PGUSER=postgres
     - BURNER_PASS=iAmABurner
+    - HOSTNAME=http://mattpengelly.com
   volumes:
     - /var/lib/postgres
