@@ -170,11 +170,11 @@ module.exports = function(app) {
 			db
 				.one(querystring, [uid, req.body.title, req.body.content])
 				.then(post => {
-					// mail all active subscribers
+					// find all active subscribers and email them
 					db
 						.any('SELECT * FROM subscribers WHERE active = TRUE')
 						.then(activeSubscribers => {
-							// TODO? send 1 volley of emails
+							// TODO? send 1 volley of emails instead of many
 							if (activeSubscribers) {
 								activeSubscribers.forEach(sub => {
 									const hostname =
