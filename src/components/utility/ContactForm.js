@@ -133,30 +133,28 @@ export default class ContactForm extends Component {
 							fieldName="name"
 							handleChange={this.onNameChange}
 						/>
-						<br />
 						<TextBox
 							value={this.state.email}
 							caption="Email"
 							fieldName="email"
 							handleChange={this.onEmailChange}
 						/>
-						<br />
 						<TextArea
 							value={this.state.message}
 							caption="Message"
 							fieldName="message"
 							handleChange={this.onMessageChange}
 						/>
-						<br />
 						<Button type="submit" value="Send">
 							Send <MailIcon />
 						</Button>
 						<NotificationSystem ref="notificationSystem" />
 						<br />
-						Want to get an email whenever there are new blog posts? Enter your email and
-						click "Subscribe"
+						<p>
+							Want to get an email whenever there are new blog posts? Enter your email
+							and click "Subscribe"
+						</p>
 						<TextBox
-							ref="subscriberEmail"
 							value={this.state.subscriberEmail}
 							fieldName="subscriberEmail"
 							handleChange={this.onSubscriberEmailChange}
