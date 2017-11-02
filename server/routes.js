@@ -106,6 +106,34 @@ module.exports = function(app) {
 	deleteById('projects');
 	deleteById('posts');
 
+	// a function that creates one database entry
+	function db_createOne(table, data) {
+		const fields = data
+			.map(key => {
+				return key;
+			})
+			.join(',');
+
+		const values = data
+			.map(key => {
+				return '${' + key + '}';
+			})
+			.join(',');
+
+		db
+			.one(`INSERT INTO ${relation} (${fields}) VALUES (${values}) returning id`)
+			.then(id => {
+				console.log(id);
+				res.send(id);
+			})
+			.catch(err => {
+				res.send(err);
+			});
+	}
+	// a function that accepts a reques to create a database entry
+	function createOne(relation, targetKeys) {
+		app.post(`/api/${relation}`, (req, res) => {});
+	}
 	// CREATE new project
 	app.post(
 		'/api/projects',
