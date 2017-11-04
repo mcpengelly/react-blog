@@ -49,7 +49,7 @@ passport.use(
 );
 
 module.exports = function(app) {
-	//TODO: find a better name for these
+	// Generic GET all
 	function getAll(relation) {
 		app.get(`/api/${relation}`, (req, res) => {
 			db
@@ -67,6 +67,7 @@ module.exports = function(app) {
 		});
 	}
 
+	// Generic GET by id
 	function getOneById(relation) {
 		app.get(`/api/${relation}/:id`, (req, res) => {
 			db
@@ -81,6 +82,7 @@ module.exports = function(app) {
 		});
 	}
 
+	// Generic DELETE by id
 	function deleteById(relation) {
 		app.delete(
 			`/api/${relation}/:id`,
@@ -100,27 +102,7 @@ module.exports = function(app) {
 		);
 	}
 
-	// a function that creates one database entry
-	function db_createOne(table, data) {
-		const sortedKeys = Object.keys(data).sort();
-
-		// assumes db columns are snake cased
-		const fields = sortedKeys
-			.map(key => {
-				return changeCase.snakeCase(key);
-			})
-			.join(',');
-
-		const values = sortedKeys
-			.map(key => {
-				return '${' + key + '}';
-			})
-			.join(',');
-
-		return db.one(`INSERT INTO ${table} (${fields}) VALUES (${values}) RETURNING id`, data);
-	}
-
-	// a function that accepts a an API request and
+	// Generic CREATE route
 	function createOne(relation, targetKeys) {
 		app.post(
 			`/api/${relation}`,
@@ -141,7 +123,7 @@ module.exports = function(app) {
 
 				db_createOne(table, filteredData)
 					.then(result => {
-						res.status(201).send('created: ' + result.id);
+						res.json({ msg: `created new ${table}, id: ${result.id}` });
 					})
 					.catch(err => {
 						res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
@@ -150,6 +132,26 @@ module.exports = function(app) {
 		);
 	}
 
+	function db_createOne(table, data) {
+		const sortedKeys = Object.keys(data).sort();
+
+		// assumes db columns are snake cased
+		const fields = sortedKeys
+			.map(key => {
+				return changeCase.snakeCase(key);
+			})
+			.join(',');
+
+		const values = sortedKeys
+			.map(key => {
+				return '${' + key + '}';
+			})
+			.join(',');
+
+		return db.one(`INSERT INTO ${table} (${fields}) VALUES (${values}) RETURNING id`, data);
+	}
+
+	// Generic UPDATE route
 	function updateById(relation, targetKeys) {
 		app.put(
 			`/api/${relation}/:id`,
@@ -171,7 +173,9 @@ module.exports = function(app) {
 
 				db_updateById(table, id, filteredData)
 					.then(result => {
-						res.status(HTTP_ACCEPTED).send('updated: ' + result.id);
+						res
+							.status(HTTP_ACCEPTED)
+							.json({ msg: `updated existing ${table}, id: ${result.id}` });
 					})
 					.catch(err => {
 						res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
@@ -210,6 +214,7 @@ module.exports = function(app) {
 	deleteById('posts');
 	createOne('projects', ['title', 'description', 'img']);
 	updateById('projects', ['title', 'description', 'img']);
+	updateById('posts', ['title', 'content']);
 
 	// CREATE new blog post
 	app.post(
@@ -258,27 +263,6 @@ module.exports = function(app) {
 				})
 				.then(() => {
 					res.status(HTTP_CREATED).send(`new post with ID: ${uid} created`);
-				})
-				.catch(err => {
-					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
-				});
-		}
-	);
-
-	// TODO: allow for partial updates (PATCH)
-	// UPDATE existing blog post using id
-	app.put(
-		'/api/posts/:id',
-		passport.authenticate('basic', {
-			session: false
-		}),
-		(req, res) => {
-			querystring = 'UPDATE posts SET title = $1, content = $2 WHERE id = $3';
-
-			db
-				.none(querystring, [req.body.title, req.body.content, req.params.id])
-				.then(() => {
-					res.send(`updated post: ${req.params.id}`);
 				})
 				.catch(err => {
 					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
