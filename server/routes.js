@@ -1,5 +1,6 @@
 var pgp = require('pg-promise')({});
 const mailer = require('nodemailer');
+const changeCase = require('change-case');
 const shortid = require('shortid');
 const passport = require('passport');
 const BasicStrategy = require('passport-http').BasicStrategy;
@@ -99,90 +100,116 @@ module.exports = function(app) {
 		);
 	}
 
+	// a function that creates one database entry
+	function db_createOne(table, data) {
+		const sortedKeys = Object.keys(data).sort();
+
+		// assumes db columns are snake cased
+		const fields = sortedKeys
+			.map(key => {
+				return changeCase.snakeCase(key);
+			})
+			.join(',');
+
+		const values = sortedKeys
+			.map(key => {
+				return '${' + key + '}';
+			})
+			.join(',');
+
+		return db.one(`INSERT INTO ${table} (${fields}) VALUES (${values}) RETURNING id`, data);
+	}
+
+	// a function that accepts a an API request and
+	function createOne(relation, targetKeys) {
+		app.post(
+			`/api/${relation}`,
+			passport.authenticate('basic', {
+				session: false
+			}),
+			(req, res) => {
+				const data = req.body;
+
+				const table = changeCase.snakeCase(relation);
+				const filteredData = Object.keys(data)
+					.filter(key => targetKeys.includes(key))
+					.reduce((obj, key) => {
+						//set object keys equal to data's values
+						obj[key] = data[key];
+						return obj;
+					}, {});
+
+				db_createOne(table, filteredData)
+					.then(result => {
+						res.status(201).send('created: ' + result.id);
+					})
+					.catch(err => {
+						res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
+					});
+			}
+		);
+	}
+
+	function updateById(relation, targetKeys) {
+		app.put(
+			`/api/${relation}/:id`,
+			passport.authenticate('basic', {
+				session: false
+			}),
+			(req, res) => {
+				const id = req.params.id;
+				const data = req.body;
+
+				const table = changeCase.snakeCase(relation);
+				const filteredData = Object.keys(data)
+					.filter(key => targetKeys.includes(key))
+					.reduce((obj, key) => {
+						//set object keys equal to data's values
+						obj[key] = data[key];
+						return obj;
+					}, {});
+
+				db_updateById(table, id, filteredData)
+					.then(result => {
+						res.status(HTTP_ACCEPTED).send('updated: ' + result.id);
+					})
+					.catch(err => {
+						res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
+					});
+			}
+		);
+	}
+
+	function db_updateById(table, id, data) {
+		const sortedKeys = Object.keys(data).sort();
+
+		// assumes db columns are snake cased
+		const fields = sortedKeys
+			.map(key => {
+				return changeCase.snakeCase(key);
+			})
+			.join(',');
+
+		const values = sortedKeys
+			.map(key => {
+				return '${' + key + '}';
+			})
+			.join(',');
+
+		return db.one(
+			`UPDATE ${table} SET (${fields}) = (${values}) WHERE id = '${id}' RETURNING id`,
+			data
+		);
+	}
+
 	getAll('projects');
 	getAll('posts');
 	getOneById('projects');
 	getOneById('posts');
 	deleteById('projects');
 	deleteById('posts');
-
-	// a function that creates one database entry
-	function db_createOne(table, data) {
-		const fields = data
-			.map(key => {
-				return key;
-			})
-			.join(',');
-
-		const values = data
-			.map(key => {
-				return '${' + key + '}';
-			})
-			.join(',');
-
-		db
-			.one(`INSERT INTO ${relation} (${fields}) VALUES (${values}) returning id`)
-			.then(id => {
-				console.log(id);
-				res.send(id);
-			})
-			.catch(err => {
-				res.send(err);
-			});
-	}
-	// a function that accepts a reques to create a database entry
-	function createOne(relation, targetKeys) {
-		app.post(`/api/${relation}`, (req, res) => {});
-	}
-	// CREATE new project
-	app.post(
-		'/api/projects',
-		passport.authenticate('basic', {
-			session: false
-		}),
-		(req, res) => {
-			uid = shortid();
-			querystring = `
-				INSERT INTO projects (id, title, description, img) VALUES ($1, $2, $3, $4)
-			`;
-
-			db
-				.none(querystring, [uid, req.body.title, req.body.description, req.body.img])
-				.then(() => {
-					res.status(HTTP_CREATED).send(`project created with id: ${uid}`);
-				})
-				.catch(err => {
-					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
-				});
-		}
-	);
-
-	// TODO: allow for partial updates (PATCH?)
-	// UPDATE existing project using id
-	app.put(
-		'/api/projects/:id',
-		passport.authenticate('basic', {
-			session: false
-		}),
-		(req, res) => {
-			querystring = `
-				UPDATE projects SET title = $1, description = $2, img = $3 WHERE id = $4
-			`;
-			db
-				.none(querystring, [
-					req.body.title,
-					req.body.description,
-					req.body.img,
-					req.params.id
-				])
-				.then(() => {
-					res.send(`updated project: ${req.params.id}`);
-				})
-				.catch(err => {
-					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
-				});
-		}
-	);
+	createOne('projects', ['title', 'description', 'img']);
+	updateById('projects', ['title', 'description', 'img']);
 
 	// CREATE new blog post
 	app.post(
