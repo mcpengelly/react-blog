@@ -1,7 +1,6 @@
 var pgp = require('pg-promise')({});
 const mailer = require('nodemailer');
 const changeCase = require('change-case');
-const shortid = require('shortid');
 const passport = require('passport');
 const BasicStrategy = require('passport-http').BasicStrategy;
 
@@ -24,12 +23,12 @@ const transporter = mailer.createTransport({
 
 const db = pgp(pgpConfig);
 
-let querystring = '';
-let uid;
-
+const HOSTNAME = process.env.HOSTNAME || 'http://localhost:9000';
 const HTTP_INTERNAL_SERVER_ERROR = 500;
 const HTTP_CREATED = 201;
 const HTTP_ACCEPTED = 202;
+
+let querystring = '';
 
 passport.use(
 	new BasicStrategy(function(username, password, done) {
@@ -49,7 +48,6 @@ passport.use(
 );
 
 module.exports = function(app) {
-
 	// Generic GET all
 	function getAll(relation) {
 		app.get(`/api/${relation}`, (req, res) => {
@@ -131,13 +129,8 @@ module.exports = function(app) {
 		const sortedKeys = Object.keys(data).sort();
 
 		// assumes db columns are snake cased
-		const fields = sortedKeys
-			.map(_snakeCase)
-			.join(',');
-
-		const values = sortedKeys
-			.map(_prepSQLSelector)
-			.join(',');
+		const fields = sortedKeys.map(_snakeCase).join(',');
+		const values = sortedKeys.map(_prepValueAccessor).join(',');
 
 		return db.one(`INSERT INTO ${table} (${fields}) VALUES (${values}) RETURNING id`, data);
 	}
@@ -173,13 +166,8 @@ module.exports = function(app) {
 		const sortedKeys = Object.keys(data).sort();
 
 		// assumes db columns are snake cased
-		const fields = sortedKeys
-			.map(_snakeCase)
-			.join(',');
-
-		const values = sortedKeys
-			.map(_prepSQLSelector)
-			.join(',');
+		const fields = sortedKeys.map(_snakeCase).join(',');
+		const values = sortedKeys.map(_prepValueAccessor).join(',');
 
 		return db.one(
 			`UPDATE ${table} SET (${fields}) = (${values}) WHERE id = '${id}' RETURNING id`,
@@ -187,7 +175,7 @@ module.exports = function(app) {
 		);
 	}
 
-	function _filterData(data, targetKeys){
+	function _filterData(data, targetKeys) {
 		return Object.keys(data)
 			.filter(key => targetKeys.includes(key))
 			.reduce((obj, key) => {
@@ -197,48 +185,44 @@ module.exports = function(app) {
 			}, {});
 	}
 
-	function _snakeCase(key){
+	function _snakeCase(key) {
 		return changeCase.snakeCase(key);
 	}
 
-	function _prepSQLSelector(key){
+	function _prepValueAccessor(key) {
 		return '${' + key + '}';
 	}
 
 	getAll('projects');
-	getAll('posts');
 	getOneById('projects');
-	getOneById('posts');
 	deleteById('projects');
-	deleteById('posts');
 	createOne('projects', ['title', 'description', 'img']);
 	updateById('projects', ['title', 'description', 'img']);
+
+	getAll('posts');
+	getOneById('posts');
+	deleteById('posts');
 	updateById('posts', ['title', 'content']);
 
 	// CREATE new blog post
-	// TODO fix with id
 	app.post(
 		'/api/posts',
 		passport.authenticate('basic', {
 			session: false
 		}),
 		(req, res) => {
-			uid = shortid.generate();
-			querystring =
-				'INSERT INTO posts (id, title, content) VALUES ($1, $2, $3) returning title';
+			querystring = 'INSERT INTO posts (title, content) VALUES ($1, $2) RETURNING title';
 
 			db
-				.one(querystring, [uid, req.body.title, req.body.content])
+				.one(querystring, [req.body.title, req.body.content])
 				.then(post => {
 					// mail all active subscribers
 					db
 						.any('SELECT * FROM subscribers WHERE active = TRUE')
 						.then(activeSubscribers => {
 							// TODO? send 1 volley of emails
-							if (activeSubscribers) {
+							if (activeSubscribers && activeSubscribers.length) {
 								activeSubscribers.forEach(sub => {
-									const hostname =
-										process.env.HOSTNAME || 'http://localhost:9000';
 									const path = `/api/unsubscribe/${sub.id}`;
 									const mailOptions = {
 										from: '"Burna" <burnermcbernstein@gmail.com>',
@@ -246,23 +230,24 @@ module.exports = function(app) {
 										subject: `New Post, ${post.title} is available at mattpengelly.com`,
 										html: `
 											A new post is up! check it out
-											<a href="${hostname}">here</a>
+											<a href="${HOSTNAME}" target="_blank">
+												Here
+											</a>
 
 											Tired of emails?
-											<a href="${hostname + path}">Unsubscribe</a>
+											<a href="${HOSTNAME + path}" target="_blank">
+												Unsubscribe
+											</a>
 										`
 									};
 
 									transporter.sendMail(mailOptions);
 								});
 							}
-						})
-						.catch(err => {
-							throw err;
 						});
 				})
-				.then(() => {
-					res.status(HTTP_CREATED).send(`new post with ID: ${uid} created`);
+				.then(test => {
+					res.status(HTTP_CREATED).send(`new post created`);
 				})
 				.catch(err => {
 					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
@@ -300,10 +285,9 @@ module.exports = function(app) {
 				)
 				.then(existingUser => {
 					if (!existingUser) {
-						uid = shortid();
 						return t.one(
-							'INSERT INTO subscribers (id, email, active) VALUES ($1, $2, $3) returning id',
-							[uid, req.body.subscriberEmail, false]
+							'INSERT INTO subscribers (email, active) VALUES ($1, $2) returning id',
+							[req.body.subscriberEmail, false]
 						);
 					} else {
 						return existingUser;
@@ -311,7 +295,6 @@ module.exports = function(app) {
 				})
 				.then(user => {
 					//mail the subscriber a confirmation email
-					const hostname = process.env.HOSTNAME || 'http://localhost:9000';
 					const path = `/api/confirm/${user.id}`;
 					const mailOptions = {
 						from: '"Burna" <burnermcbernstein@gmail.com>', // sender address
@@ -319,7 +302,9 @@ module.exports = function(app) {
 						subject: `Subscriber Confirmation for mattpengelly.com`,
 						html: `
 							Click the button below to confirm your subscription to <strong>mattpengelly.com</strong> and receive updates for new blogposts. If you didn't subscribe please ignore this email, you will not receive any further emails.
-							<a href="${hostname + path}">Subscribe</a>
+							<a href="${HOSTNAME + path}" target="_blank">
+								Subscribe
+							</a>
 						`
 					};
 
@@ -345,7 +330,6 @@ module.exports = function(app) {
 			.then(sub => {
 				if (sub) {
 					//mail the subscriber a success email
-					const hostname = process.env.HOSTNAME || 'http://localhost:9000';
 					const path = `/api/unsubscribe/${sub.id}`;
 					const mailOptions = {
 						from: '"Burna" <burnermcbernstein@gmail.com>', // sender address
@@ -354,7 +338,10 @@ module.exports = function(app) {
 						html: `
 							You've been added to mattpengelly.com mailing list, you'll receive an email when new blog posts are available.
 
-							Tired of emails? <a href="${hostname + path}">Unsubscribe</a>
+							Tired of emails?
+							<a href="${HOSTNAME + path}" target="_blank">
+								Unsubscribe
+							</a>
 						`
 					};
 
