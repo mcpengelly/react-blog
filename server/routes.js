@@ -3,13 +3,15 @@ const mailer = require('nodemailer');
 const changeCase = require('change-case');
 const passport = require('passport');
 const BasicStrategy = require('passport-http').BasicStrategy;
+const multer = require('multer');
+const upload = multer({ dest: 'server/assets/img/uploads' });
 
 const pgpConfig = {
 	host: process.env.PGHOST || 'localhost',
 	user: process.env.PGUSER || 'postgres',
 	password: process.env.PGPASS || 'postgres',
 	database: process.env.PGDATABASE || 'postgres',
-	port: 5432
+	port: process.env.PGPORT || 5432
 };
 
 const db = pgp(pgpConfig);
@@ -49,6 +51,27 @@ passport.use(
 );
 
 module.exports = function(app) {
+	// Image accepting endpoint
+	app.post(`/api/projects/image`, upload.single('file'), (req, res) => {
+		const file = req.file;
+		const data = req.body;
+		data.img = file.filename;
+		console.log(data);
+
+		const sortedKeys = Object.keys(data).sort();
+		const fields = sortedKeys.map(_snakeCase).join(',');
+		const values = sortedKeys.map(_prepValueAccessors).join(',');
+
+		db
+			.none(`INSERT INTO projects (${fields}) VALUES (${values})`, data)
+			.then(() => {
+				res.send('uploaded file');
+			})
+			.catch(err => {
+				res.status(HTTP_INTERNAL_SERVER_ERROR).json({ error: err });
+			});
+	});
+
 	// Generic GET all
 	function getAll(relation) {
 		app.get(`/api/${relation}`, (req, res) => {
@@ -114,6 +137,7 @@ module.exports = function(app) {
 
 				const table = changeCase.snakeCase(relation);
 				const filteredData = _filterData(data, targetKeys);
+				console.log(filteredData);
 
 				db_createOne(table, filteredData)
 					.then(result => {
