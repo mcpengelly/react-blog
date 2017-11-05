@@ -20,43 +20,31 @@ export default class ContactForm extends Component {
 
 	addNewSubscriberNotification() {
 		let email = this.refs.subscriberEmail.state.value;
-		if (!email) {
+		if (email) {
+			const options = {
+				method: 'POST',
+				body: JSON.stringify({ subscriberEmail: email }),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			};
+
+			fetch('/api/subscribe', options).then(() => {
+				this._notificationSystem.addNotification({
+					message: "I'm sending you a confirmation email to make sure you're not a robot. Check your email for a confirmation email",
+					level: 'success'
+				});
+
+				// clear input
+				this.refs.subscriberEmail.setState({ value: '' });
+			});
+		} else {
 			this._notificationSystem.addNotification({
 				message: `Sorry that email address doesnt look right.
 					 Please enter a valid email address.`,
 				level: 'error'
 			});
-			return;
 		}
-
-		const options = {
-			method: 'POST',
-			body: { subscriberEmail: email },
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		};
-
-		fetch('/api/subscribe', options)
-			.then(response => {
-				return response.text();
-			})
-			.then(() => {
-				this._notificationSystem.addNotification({
-					message: "Sorry, this isn't available just yet, try checking back later!",
-					level: 'error'
-				});
-
-				//TODO:
-				// display notification
-				// this._notificationSystem.addNotification({
-				// 	message: 'An Email confirmation is being sent to you.',
-				// 	level: 'success'
-				// });
-
-				// clear input
-				this.refs.subscriberEmail.setState({ value: '' });
-			});
 	}
 
 	onSubmitClick(e) {
@@ -66,44 +54,43 @@ export default class ContactForm extends Component {
 		const email = this.refs.email.state.value;
 		const message = this.refs.message.state.value;
 
-		// if no input found ignore submit click
-		let missingAllInput = !name && !email && !message;
-		if (missingAllInput) {
+		// if no input found at all, dont talk to server
+		let valid = !name && !email && !message;
+		if (valid) {
 			this._notificationSystem.addNotification({
 				message: "There isn't anything to send! Try entering a message",
 				level: 'warning'
 			});
-			return; // exit function if missing all fields
+		} else {
+			//es6 property value syntax
+			let data = { name, email, message };
+
+			const options = {
+				method: 'POST',
+				body: JSON.stringify(data),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			};
+
+			// send users email data to backend
+			fetch('/api/send-mail', options)
+				.then(response => {
+					return response.text();
+				})
+				.then(() => {
+					// display notification
+					this._notificationSystem.addNotification({
+						message: 'Email Sent. Thanks for the feedback!',
+						level: 'success'
+					});
+
+					// clear inputs
+					['name', 'email', 'message'].forEach(function(elem) {
+						this.refs[elem].setState({ value: '' });
+					});
+				});
 		}
-
-		//using es6 property value syntax
-		let data = { name, email, message };
-
-		const options = {
-			method: 'POST',
-			body: JSON.stringify(data),
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		};
-
-		// send users email data to backend
-		fetch('/api/send-mail', options)
-			.then(response => {
-				return response.text();
-			})
-			.then(() => {
-				// display notification
-				this._notificationSystem.addNotification({
-					message: 'Email Sent. Thanks for the feedback!',
-					level: 'success'
-				});
-
-				// clear inputs
-				['name', 'email', 'message'].forEach(function(elem) {
-					this.refs[elem].setState({ value: '' });
-				});
-			});
 	}
 
 	//TODO swap state for refs?
