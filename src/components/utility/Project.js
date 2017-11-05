@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import { Accordion, Panel } from 'react-bootstrap';
-// import anImage from '../../assets/img/uploads/e8bf2647c1d549d62756889763f514fc.jpg';
-// import * as images from '../../assets/img/uploads/*.jpg';
 
 export default class PortfolioItem extends Component {
-	constructor(props){
+	constructor(props) {
 		super(props);
-		console.log('__dirname', __dirname);
-		console.log(props.img);
+		console.log('props.img', props.img);
 	}
 	render() {
 		return (
@@ -17,7 +14,11 @@ export default class PortfolioItem extends Component {
 					header={this.props.header}
 					eventKey={this.props.index}
 				>
-					<img src={this.props.img} alt="project"></img>
+					<img
+						style={{ width: '50px', height: '50px' }}
+						src={this.props.img}
+						alt="project"
+					/>
 					<p>{this.props.description}</p>
 				</Panel>
 			</Accordion>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Project from './Project';
 
-const imgPath = '../../assets/img/uploads/';
+const imgPath = '/images/';
 
 export default class ProjectsContainer extends Component {
 	render() {

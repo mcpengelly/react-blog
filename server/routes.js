@@ -137,7 +137,6 @@ module.exports = function(app) {
 
 				const table = changeCase.snakeCase(relation);
 				const filteredData = _filterData(data, targetKeys);
-				console.log(filteredData);
 
 				db_createOne(table, filteredData)
 					.then(result => {
