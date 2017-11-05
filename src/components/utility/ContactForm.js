@@ -97,53 +97,35 @@ export default class ContactForm extends Component {
 		}
 	}
 
-	onNameChange(e) {
+	onHandleChange(e) {
 		this.setState({
-			name: e.target.value
-		});
-	}
-
-	onEmailChange(e) {
-		this.setState({
-			email: e.target.value
-		});
-	}
-
-	onMessageChange(e) {
-		this.setState({
-			message: e.target.value
-		});
-	}
-
-	onSubscriberEmailChange(e) {
-		this.setState({
-			subscriberEmail: e.target.value
+			[e.target.id]: e.target.value
 		});
 	}
 
 	render() {
 		return (
 			<div style={{ width: '50%' }}>
-				<form onSubmit={this.onSubmitClick.bind(this)}>
+				<form onSubmit={this.onSubmitClick}>
 					<FormGroup role="form">
 						<h4>Feel free drop me a email or contact me using the form below</h4>
 						<TextBox
 							value={this.state.name}
 							caption="Name"
 							fieldName="name"
-							handleChange={this.onNameChange}
+							handleChange={this.onHandleChange}
 						/>
 						<TextBox
 							value={this.state.email}
 							caption="Email"
 							fieldName="email"
-							handleChange={this.onEmailChange}
+							handleChange={this.onHandleChange}
 						/>
 						<TextArea
 							value={this.state.message}
 							caption="Message"
 							fieldName="message"
-							handleChange={this.onMessageChange}
+							handleChange={this.onHandleChange}
 						/>
 						<Button type="submit" value="Send">
 							Send <MailIcon />
@@ -157,7 +139,7 @@ export default class ContactForm extends Component {
 						<TextBox
 							value={this.state.subscriberEmail}
 							fieldName="subscriberEmail"
-							handleChange={this.onSubscriberEmailChange}
+							handleChange={this.onHandleChange}
 						/>
 						<br />
 						<Button onClick={this.addNewSubscriberNotification} value="Subscribe">
