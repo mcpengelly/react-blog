@@ -1,18 +1,31 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 DROP TABLE IF EXISTS projects;
 
 CREATE TABLE projects (
-	id text,
+	id uuid DEFAULT uuid_generate_v4 (),
 	title text,
 	description text,
-	img text
+	img text,
+	PRIMARY KEY (id)
 );
 
 DROP TABLE IF EXISTS posts;
 
 CREATE TABLE posts (
-	id text,
+	id uuid DEFAULT uuid_generate_v4 (),
 	title text,
-	content text
+	content text,
+	PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS subscribers;
+
+CREATE TABLE subscribers (
+	id uuid DEFAULT uuid_generate_v4 (),
+	email text,
+	active boolean,
+	PRIMARY KEY (id)
 );
 
 DROP TABLE IF EXISTS users;
@@ -21,15 +34,6 @@ CREATE TABLE users (
 	username text,
 	password text
 );
-
-DROP TABLE IF EXISTS subscribers;
-
-CREATE TABLE subscribers (
-	id text,
-	email text,
-	active boolean
-);
-
 
 # INSERT INTO posts (id, title, content) VALUES ('Placeholder Title', 'placeholder', 'placeholder');
 
