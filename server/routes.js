@@ -12,6 +12,8 @@ const pgpConfig = {
 	port: 5432
 };
 
+const db = pgp(pgpConfig);
+
 // Mailer
 const transporter = mailer.createTransport({
 	service: 'gmail',
@@ -21,8 +23,6 @@ const transporter = mailer.createTransport({
 	}
 });
 
-const db = pgp(pgpConfig);
-
 const HOSTNAME = process.env.HOSTNAME || 'http://localhost:9000';
 const HTTP_INTERNAL_SERVER_ERROR = 500;
 const HTTP_CREATED = 201;
@@ -30,6 +30,7 @@ const HTTP_ACCEPTED = 202;
 
 let querystring = '';
 
+// Basic authentication
 passport.use(
 	new BasicStrategy(function(username, password, done) {
 		db
@@ -130,7 +131,7 @@ module.exports = function(app) {
 
 		// assumes db columns are snake cased
 		const fields = sortedKeys.map(_snakeCase).join(',');
-		const values = sortedKeys.map(_prepValueAccessor).join(',');
+		const values = sortedKeys.map(_prepValueAccessors).join(',');
 
 		return db.one(`INSERT INTO ${table} (${fields}) VALUES (${values}) RETURNING id`, data);
 	}
@@ -167,7 +168,7 @@ module.exports = function(app) {
 
 		// assumes db columns are snake cased
 		const fields = sortedKeys.map(_snakeCase).join(',');
-		const values = sortedKeys.map(_prepValueAccessor).join(',');
+		const values = sortedKeys.map(_prepValueAccessors).join(',');
 
 		return db.one(
 			`UPDATE ${table} SET (${fields}) = (${values}) WHERE id = '${id}' RETURNING id`,
@@ -189,16 +190,18 @@ module.exports = function(app) {
 		return changeCase.snakeCase(key);
 	}
 
-	function _prepValueAccessor(key) {
+	function _prepValueAccessors(key) {
 		return '${' + key + '}';
 	}
 
+	/** projects api **/
 	getAll('projects');
 	getOneById('projects');
 	deleteById('projects');
 	createOne('projects', ['title', 'description', 'img']);
 	updateById('projects', ['title', 'description', 'img']);
 
+	/** posts api **/
 	getAll('posts');
 	getOneById('posts');
 	deleteById('posts');
@@ -211,12 +214,14 @@ module.exports = function(app) {
 			session: false
 		}),
 		(req, res) => {
-			querystring = 'INSERT INTO posts (title, content) VALUES ($1, $2) RETURNING *';
 			let postid;
+
+			querystring = 'INSERT INTO posts (title, content) VALUES ($1, $2) RETURNING *';
 			db
 				.one(querystring, [req.body.title, req.body.content])
 				.then(post => {
 					postId = post.id;
+
 					// mail all active subscribers
 					db
 						.any('SELECT * FROM subscribers WHERE active = TRUE')
