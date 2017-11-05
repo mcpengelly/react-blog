@@ -10,8 +10,16 @@ import TextArea from './TextArea';
 export default class ContactForm extends Component {
 	constructor(props) {
 		super(props);
+		this.state = { name: '', email: '', message: '', subscriberEmail: '' };
+
 		this._notificationSystem = null;
-		// this.state = { name: null, email: null, message: null };
+
+		this.onSubmitClick = this.onSubmitClick.bind(this);
+		this.onNameChange = this.onNameChange.bind(this);
+		this.onEmailChange = this.onEmailChange.bind(this);
+		this.onMessageChange = this.onMessageChange.bind(this);
+		this.onSubscriberEmailChange = this.onSubscriberEmailChange.bind(this);
+		this.addNewSubscriberNotification = this.addNewSubscriberNotification.bind(this);
 	}
 
 	componentDidMount() {
@@ -19,7 +27,7 @@ export default class ContactForm extends Component {
 	}
 
 	addNewSubscriberNotification() {
-		let email = this.refs.subscriberEmail.state.value;
+		let email = this.state.subscriberEmail;
 		if (email) {
 			const options = {
 				method: 'POST',
@@ -31,12 +39,13 @@ export default class ContactForm extends Component {
 
 			fetch('/api/subscribe', options).then(() => {
 				this._notificationSystem.addNotification({
-					message: "I'm sending you a confirmation email to make sure you're not a robot. Check your email for a confirmation email",
+					message:
+						"I'm sending you a confirmation email to make sure you're not a robot. Check your email to confirm subscription.",
 					level: 'success'
 				});
 
 				// clear input
-				this.refs.subscriberEmail.setState({ value: '' });
+				this.setState({ subscriberEmail: '' });
 			});
 		} else {
 			this._notificationSystem.addNotification({
@@ -50,24 +59,21 @@ export default class ContactForm extends Component {
 	onSubmitClick(e) {
 		e.preventDefault();
 
-		const name = this.refs.name.state.value;
-		const email = this.refs.email.state.value;
-		const message = this.refs.message.state.value;
+		const name = this.state.name;
+		const email = this.state.email;
+		const message = this.state.message;
 
 		// if no input found at all, dont talk to server
-		let valid = !name && !email && !message;
-		if (valid) {
+		let empty = !name && !email && !message;
+		if (empty) {
 			this._notificationSystem.addNotification({
 				message: "There isn't anything to send! Try entering a message",
 				level: 'warning'
 			});
 		} else {
-			//es6 property value syntax
-			let data = { name, email, message };
-
 			const options = {
 				method: 'POST',
-				body: JSON.stringify(data),
+				body: JSON.stringify({ name, email, message }),
 				headers: {
 					'Content-Type': 'application/json'
 				}
@@ -86,40 +92,57 @@ export default class ContactForm extends Component {
 					});
 
 					// clear inputs
-					['name', 'email', 'message'].forEach(function(elem) {
-						this.refs[elem].setState({ value: '' });
-					});
+					this.setState({ name: '', email: '', message: '' });
 				});
 		}
 	}
 
-	//TODO swap state for refs?
-	//add keyup handlers for form fields?
+	onHandleChange(e) {
+		this.setState({
+			[e.target.id]: e.target.value
+		});
+	}
+
 	render() {
 		return (
 			<div style={{ width: '50%' }}>
-				<form onSubmit={this.onSubmitClick.bind(this)}>
+				<form onSubmit={this.onSubmitClick}>
 					<FormGroup role="form">
 						<h4>Feel free drop me a email or contact me using the form below</h4>
-						<TextBox ref="name" caption="Name" fieldName="name" />
-						<br />
-						<TextBox ref="email" caption="Email" fieldName="email" />
-						<br />
-						<TextArea ref="message" caption="Message" fieldName="message" />
-						<br />
+						<TextBox
+							value={this.state.name}
+							caption="Name"
+							fieldName="name"
+							handleChange={this.onHandleChange}
+						/>
+						<TextBox
+							value={this.state.email}
+							caption="Email"
+							fieldName="email"
+							handleChange={this.onHandleChange}
+						/>
+						<TextArea
+							value={this.state.message}
+							caption="Message"
+							fieldName="message"
+							handleChange={this.onHandleChange}
+						/>
 						<Button type="submit" value="Send">
 							Send <MailIcon />
 						</Button>
 						<NotificationSystem ref="notificationSystem" />
 						<br />
-						Want to get an email whenever there are new blog posts? Enter your email and
-						click "Subscribe"
-						<TextBox ref="subscriberEmail" fieldName="subscriberEmail" />
+						<p>
+							Want to get an email whenever there are new blog posts? Enter your email
+							and click "Subscribe"
+						</p>
+						<TextBox
+							value={this.state.subscriberEmail}
+							fieldName="subscriberEmail"
+							handleChange={this.onHandleChange}
+						/>
 						<br />
-						<Button
-							onClick={this.addNewSubscriberNotification.bind(this)}
-							value="Subscribe"
-						>
+						<Button onClick={this.addNewSubscriberNotification} value="Subscribe">
 							Subscribe
 						</Button>
 					</FormGroup>
