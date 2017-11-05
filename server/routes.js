@@ -211,11 +211,12 @@ module.exports = function(app) {
 			session: false
 		}),
 		(req, res) => {
-			querystring = 'INSERT INTO posts (title, content) VALUES ($1, $2) RETURNING title';
-
+			querystring = 'INSERT INTO posts (title, content) VALUES ($1, $2) RETURNING *';
+			let postid;
 			db
 				.one(querystring, [req.body.title, req.body.content])
 				.then(post => {
+					postId = post.id;
 					// mail all active subscribers
 					db
 						.any('SELECT * FROM subscribers WHERE active = TRUE')
@@ -246,8 +247,8 @@ module.exports = function(app) {
 							}
 						});
 				})
-				.then(test => {
-					res.status(HTTP_CREATED).send(`new post created`);
+				.then(() => {
+					res.status(HTTP_CREATED).send(`new post created, id: ${postId}`);
 				})
 				.catch(err => {
 					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
@@ -302,6 +303,7 @@ module.exports = function(app) {
 						subject: `Subscriber Confirmation for mattpengelly.com`,
 						html: `
 							Click the button below to confirm your subscription to <strong>mattpengelly.com</strong> and receive updates for new blogposts. If you didn't subscribe please ignore this email, you will not receive any further emails.
+
 							<a href="${HOSTNAME + path}" target="_blank">
 								Subscribe
 							</a>
