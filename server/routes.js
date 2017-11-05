@@ -1,6 +1,6 @@
 var pgp = require('pg-promise')({});
 const mailer = require('nodemailer');
-const shortid = require('shortid');
+const changeCase = require('change-case');
 const passport = require('passport');
 const BasicStrategy = require('passport-http').BasicStrategy;
 
@@ -12,6 +12,8 @@ const pgpConfig = {
 	port: 5432
 };
 
+const db = pgp(pgpConfig);
+
 // Mailer
 const transporter = mailer.createTransport({
 	service: 'gmail',
@@ -21,15 +23,14 @@ const transporter = mailer.createTransport({
 	}
 });
 
-const db = pgp(pgpConfig);
-
-let querystring = '';
-let uid;
-
+const HOSTNAME = process.env.HOSTNAME || 'http://localhost:9000';
 const HTTP_INTERNAL_SERVER_ERROR = 500;
 const HTTP_CREATED = 201;
 const HTTP_ACCEPTED = 202;
 
+let querystring = '';
+
+// Basic authentication
 passport.use(
 	new BasicStrategy(function(username, password, done) {
 		db
@@ -48,7 +49,7 @@ passport.use(
 );
 
 module.exports = function(app) {
-	//TODO: find a better name for these
+	// Generic GET all
 	function getAll(relation) {
 		app.get(`/api/${relation}`, (req, res) => {
 			db
@@ -66,6 +67,7 @@ module.exports = function(app) {
 		});
 	}
 
+	// Generic GET by id
 	function getOneById(relation) {
 		app.get(`/api/${relation}/:id`, (req, res) => {
 			db
@@ -80,6 +82,7 @@ module.exports = function(app) {
 		});
 	}
 
+	// Generic DELETE by id
 	function deleteById(relation) {
 		app.delete(
 			`/api/${relation}/:id`,
@@ -99,62 +102,110 @@ module.exports = function(app) {
 		);
 	}
 
+	// Generic CREATE route
+	function createOne(relation, targetKeys) {
+		app.post(
+			`/api/${relation}`,
+			passport.authenticate('basic', {
+				session: false
+			}),
+			(req, res) => {
+				const data = req.body;
+
+				const table = changeCase.snakeCase(relation);
+				const filteredData = _filterData(data, targetKeys);
+
+				db_createOne(table, filteredData)
+					.then(result => {
+						res.json({ msg: `created new ${table}, id: ${result.id}` });
+					})
+					.catch(err => {
+						res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
+					});
+			}
+		);
+	}
+
+	function db_createOne(table, data) {
+		const sortedKeys = Object.keys(data).sort();
+
+		// assumes db columns are snake cased
+		const fields = sortedKeys.map(_snakeCase).join(',');
+		const values = sortedKeys.map(_prepValueAccessors).join(',');
+
+		return db.one(`INSERT INTO ${table} (${fields}) VALUES (${values}) RETURNING id`, data);
+	}
+
+	// Generic UPDATE route
+	function updateById(relation, targetKeys) {
+		app.put(
+			`/api/${relation}/:id`,
+			passport.authenticate('basic', {
+				session: false
+			}),
+			(req, res) => {
+				const id = req.params.id;
+				const data = req.body;
+
+				const table = changeCase.snakeCase(relation);
+				const filteredData = _filterData(data, targetKeys);
+
+				db_updateById(table, id, filteredData)
+					.then(result => {
+						res
+							.status(HTTP_ACCEPTED)
+							.json({ msg: `updated existing ${table}, id: ${result.id}` });
+					})
+					.catch(err => {
+						res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
+					});
+			}
+		);
+	}
+
+	function db_updateById(table, id, data) {
+		const sortedKeys = Object.keys(data).sort();
+
+		// assumes db columns are snake cased
+		const fields = sortedKeys.map(_snakeCase).join(',');
+		const values = sortedKeys.map(_prepValueAccessors).join(',');
+
+		return db.one(
+			`UPDATE ${table} SET (${fields}) = (${values}) WHERE id = '${id}' RETURNING id`,
+			data
+		);
+	}
+
+	function _filterData(data, targetKeys) {
+		return Object.keys(data)
+			.filter(key => targetKeys.includes(key))
+			.reduce((obj, key) => {
+				//set object keys equal to data's values
+				obj[key] = data[key];
+				return obj;
+			}, {});
+	}
+
+	function _snakeCase(key) {
+		return changeCase.snakeCase(key);
+	}
+
+	function _prepValueAccessors(key) {
+		return '${' + key + '}';
+	}
+
+	/** projects api **/
 	getAll('projects');
-	getAll('posts');
 	getOneById('projects');
-	getOneById('posts');
 	deleteById('projects');
+	createOne('projects', ['title', 'description', 'img']);
+	updateById('projects', ['title', 'description', 'img']);
+
+	/** posts api **/
+	getAll('posts');
+	getOneById('posts');
 	deleteById('posts');
-
-	// CREATE new project
-	app.post(
-		'/api/projects',
-		passport.authenticate('basic', {
-			session: false
-		}),
-		(req, res) => {
-			uid = shortid();
-			querystring = `
-				INSERT INTO projects (id, title, description, img) VALUES ($1, $2, $3, $4)
-			`;
-
-			db
-				.none(querystring, [uid, req.body.title, req.body.description, req.body.img])
-				.then(() => {
-					res.status(HTTP_CREATED).send(`project created with id: ${uid}`);
-				})
-				.catch(err => {
-					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
-				});
-		}
-	);
-
-	// TODO: allow for partial updates (PATCH?)
-	// UPDATE existing project using id
-	app.put(
-		'/api/projects/:id',
-		passport.authenticate('basic', {
-			session: false
-		}),
-		(req, res) => {
-			querystring = `
-				UPDATE projects SET title = $1, description = $2, img = $3 WHERE id = $4
-			`;
-			db
-				.none(querystring, [
-					req.body.title,
-					req.body.description,
-					req.body.img,
-					req.params.id
-				])
-				.then(() => {
-					res.send(`updated project: ${req.params.id}`);
-				})
-				.catch(err => {
-					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
-				});
-		}
-	);
+	updateById('posts', ['title', 'content']);
 
 	// CREATE new blog post
 	app.post(
@@ -163,22 +214,21 @@ module.exports = function(app) {
 			session: false
 		}),
 		(req, res) => {
-			uid = shortid.generate();
-			querystring =
-				'INSERT INTO posts (id, title, content) VALUES ($1, $2, $3) returning title';
+			let postid;
 
+			querystring = 'INSERT INTO posts (title, content) VALUES ($1, $2) RETURNING *';
 			db
-				.one(querystring, [uid, req.body.title, req.body.content])
+				.one(querystring, [req.body.title, req.body.content])
 				.then(post => {
+					postId = post.id;
+
 					// mail all active subscribers
 					db
 						.any('SELECT * FROM subscribers WHERE active = TRUE')
 						.then(activeSubscribers => {
 							// TODO? send 1 volley of emails
-							if (activeSubscribers) {
+							if (activeSubscribers && activeSubscribers.length) {
 								activeSubscribers.forEach(sub => {
-									const hostname =
-										process.env.HOSTNAME || 'http://localhost:9000';
 									const path = `/api/unsubscribe/${sub.id}`;
 									const mailOptions = {
 										from: '"Burna" <burnermcbernstein@gmail.com>',
@@ -186,44 +236,24 @@ module.exports = function(app) {
 										subject: `New Post, ${post.title} is available at mattpengelly.com`,
 										html: `
 											A new post is up! check it out
-											<a href="${hostname}">here</a>
+											<a href="${HOSTNAME}" target="_blank">
+												Here
+											</a>
 
 											Tired of emails?
-											<a href="${hostname + path}">Unsubscribe</a>
+											<a href="${HOSTNAME + path}" target="_blank">
+												Unsubscribe
+											</a>
 										`
 									};
 
 									transporter.sendMail(mailOptions);
 								});
 							}
-						})
-						.catch(err => {
-							throw err;
 						});
 				})
 				.then(() => {
-					res.status(HTTP_CREATED).send(`new post with ID: ${uid} created`);
-				})
-				.catch(err => {
-					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
-				});
-		}
-	);
-
-	// TODO: allow for partial updates (PATCH)
-	// UPDATE existing blog post using id
-	app.put(
-		'/api/posts/:id',
-		passport.authenticate('basic', {
-			session: false
-		}),
-		(req, res) => {
-			querystring = 'UPDATE posts SET title = $1, content = $2 WHERE id = $3';
-
-			db
-				.none(querystring, [req.body.title, req.body.content, req.params.id])
-				.then(() => {
-					res.send(`updated post: ${req.params.id}`);
+					res.status(HTTP_CREATED).send(`new post created, id: ${postId}`);
 				})
 				.catch(err => {
 					res.status(HTTP_INTERNAL_SERVER_ERROR).send(err);
@@ -261,10 +291,9 @@ module.exports = function(app) {
 				)
 				.then(existingUser => {
 					if (!existingUser) {
-						uid = shortid();
 						return t.one(
-							'INSERT INTO subscribers (id, email, active) VALUES ($1, $2, $3) returning id',
-							[uid, req.body.subscriberEmail, false]
+							'INSERT INTO subscribers (email, active) VALUES ($1, $2) returning id',
+							[req.body.subscriberEmail, false]
 						);
 					} else {
 						return existingUser;
@@ -272,7 +301,6 @@ module.exports = function(app) {
 				})
 				.then(user => {
 					//mail the subscriber a confirmation email
-					const hostname = process.env.HOSTNAME || 'http://localhost:9000';
 					const path = `/api/confirm/${user.id}`;
 					const mailOptions = {
 						from: '"Burna" <burnermcbernstein@gmail.com>', // sender address
@@ -280,7 +308,10 @@ module.exports = function(app) {
 						subject: `Subscriber Confirmation for mattpengelly.com`,
 						html: `
 							Click the button below to confirm your subscription to <strong>mattpengelly.com</strong> and receive updates for new blogposts. If you didn't subscribe please ignore this email, you will not receive any further emails.
-							<a href="${hostname + path}">Subscribe</a>
+
+							<a href="${HOSTNAME + path}" target="_blank">
+								Subscribe
+							</a>
 						`
 					};
 
@@ -306,7 +337,6 @@ module.exports = function(app) {
 			.then(sub => {
 				if (sub) {
 					//mail the subscriber a success email
-					const hostname = process.env.HOSTNAME || 'http://localhost:9000';
 					const path = `/api/unsubscribe/${sub.id}`;
 					const mailOptions = {
 						from: '"Burna" <burnermcbernstein@gmail.com>', // sender address
@@ -315,7 +345,10 @@ module.exports = function(app) {
 						html: `
 							You've been added to mattpengelly.com mailing list, you'll receive an email when new blog posts are available.
 
-							Tired of emails? <a href="${hostname + path}">Unsubscribe</a>
+							Tired of emails?
+							<a href="${HOSTNAME + path}" target="_blank">
+								Unsubscribe
+							</a>
 						`
 					};
 
