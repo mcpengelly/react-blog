@@ -49,6 +49,7 @@ passport.use(
 );
 
 module.exports = function(app) {
+
 	// Generic GET all
 	function getAll(relation) {
 		app.get(`/api/${relation}`, (req, res) => {
@@ -113,13 +114,7 @@ module.exports = function(app) {
 				const data = req.body;
 
 				const table = changeCase.snakeCase(relation);
-				const filteredData = Object.keys(data)
-					.filter(key => targetKeys.includes(key))
-					.reduce((obj, key) => {
-						//set object keys equal to data's values
-						obj[key] = data[key];
-						return obj;
-					}, {});
+				const filteredData = _filterData(data, targetKeys);
 
 				db_createOne(table, filteredData)
 					.then(result => {
@@ -137,15 +132,11 @@ module.exports = function(app) {
 
 		// assumes db columns are snake cased
 		const fields = sortedKeys
-			.map(key => {
-				return changeCase.snakeCase(key);
-			})
+			.map(_snakeCase)
 			.join(',');
 
 		const values = sortedKeys
-			.map(key => {
-				return '${' + key + '}';
-			})
+			.map(_prepSQLSelector)
 			.join(',');
 
 		return db.one(`INSERT INTO ${table} (${fields}) VALUES (${values}) RETURNING id`, data);
@@ -163,13 +154,7 @@ module.exports = function(app) {
 				const data = req.body;
 
 				const table = changeCase.snakeCase(relation);
-				const filteredData = Object.keys(data)
-					.filter(key => targetKeys.includes(key))
-					.reduce((obj, key) => {
-						//set object keys equal to data's values
-						obj[key] = data[key];
-						return obj;
-					}, {});
+				const filteredData = _filterData(data, targetKeys);
 
 				db_updateById(table, id, filteredData)
 					.then(result => {
@@ -189,21 +174,35 @@ module.exports = function(app) {
 
 		// assumes db columns are snake cased
 		const fields = sortedKeys
-			.map(key => {
-				return changeCase.snakeCase(key);
-			})
+			.map(_snakeCase)
 			.join(',');
 
 		const values = sortedKeys
-			.map(key => {
-				return '${' + key + '}';
-			})
+			.map(_prepSQLSelector)
 			.join(',');
 
 		return db.one(
 			`UPDATE ${table} SET (${fields}) = (${values}) WHERE id = '${id}' RETURNING id`,
 			data
 		);
+	}
+
+	function _filterData(data, targetKeys){
+		return Object.keys(data)
+			.filter(key => targetKeys.includes(key))
+			.reduce((obj, key) => {
+				//set object keys equal to data's values
+				obj[key] = data[key];
+				return obj;
+			}, {});
+	}
+
+	function _snakeCase(key){
+		return changeCase.snakeCase(key);
+	}
+
+	function _prepSQLSelector(key){
+		return '${' + key + '}';
 	}
 
 	getAll('projects');
@@ -217,6 +216,7 @@ module.exports = function(app) {
 	updateById('posts', ['title', 'content']);
 
 	// CREATE new blog post
+	// TODO fix with id
 	app.post(
 		'/api/posts',
 		passport.authenticate('basic', {
