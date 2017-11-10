@@ -4,7 +4,6 @@ import { Accordion, Panel } from 'react-bootstrap';
 export default class PortfolioItem extends Component {
 	constructor(props) {
 		super(props);
-		console.log('props.img', props.img);
 	}
 	render() {
 		return (
