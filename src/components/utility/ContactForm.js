@@ -13,12 +13,8 @@ export default class ContactForm extends Component {
 		this.state = { name: '', email: '', message: '', subscriberEmail: '' };
 
 		this._notificationSystem = null;
-
 		this.onSubmitClick = this.onSubmitClick.bind(this);
-		this.onNameChange = this.onNameChange.bind(this);
-		this.onEmailChange = this.onEmailChange.bind(this);
-		this.onMessageChange = this.onMessageChange.bind(this);
-		this.onSubscriberEmailChange = this.onSubscriberEmailChange.bind(this);
+		this.onHandleChange = this.onHandleChange.bind(this);
 		this.addNewSubscriberNotification = this.addNewSubscriberNotification.bind(this);
 	}
 
