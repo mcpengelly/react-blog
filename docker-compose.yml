@@ -1,9 +1,7 @@
-db:
-  image: postgres
 myapp:
   build: .
   ports:
-   - "80:9000"
+   - "8001:9000"
   links:
     - db
   environment:
@@ -14,3 +12,17 @@ myapp:
     - HOSTNAME=http://mattpengelly.com
   volumes:
     - /var/lib/postgres
+nginx:
+  restart: always
+  build: ./nginx/
+  ports:
+    - "80:80"
+  volumes:
+    - /www/public
+  volumes_from:
+    - myapp
+  links:
+    - myapp:myapp
+
+db:
+  image: postgres

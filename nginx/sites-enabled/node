@@ -1,0 +1,21 @@
+server {
+
+  listen 80;
+  server_name localhost;
+  access_log /var/log/nginx/nginx-access.log;
+  charset utf-8;
+
+  location /public {
+    alias /src/app/public;
+  }
+
+  client_max_body_size 100m;
+
+  location / {
+    proxy_pass http://myapp:9000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+
+}
