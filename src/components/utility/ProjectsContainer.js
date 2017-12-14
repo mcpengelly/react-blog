@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 import Project from './Project';
 
+const imgPath = '/uploads/';
+
 export default class ProjectsContainer extends Component {
 	render() {
 		const projectList = this.props.projects.map((project, index) => {
@@ -9,7 +11,7 @@ export default class ProjectsContainer extends Component {
 				<Project
 					index={index}
 					header={project.title}
-					img={project.img}
+					img={imgPath + project.img}
 					description={project.description}
 				/>
 			);

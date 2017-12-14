@@ -16,6 +16,7 @@ server.use(
 
 // Serve static assets
 server.use(express.static(path.resolve(__dirname, '..', 'build')));
+// server.use('/images', express.static(path.resolve(__dirname, 'assets/img', 'uploads')));
 
 // req body middleware
 server.use(bodyParser.urlencoded({ extended: true }));
