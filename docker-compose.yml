@@ -1,29 +1,33 @@
-myapp:
-  build: .
-  ports:
-   - "8001:9000"
-  links:
-    - db
-  environment:
-    - PGHOST=db
-    - PGDATABASE=postgres
-    - PGUSER=postgres
-    - BURNER_PASS=iAmABurner
-    - HOSTNAME=http://mattpengelly.com
-  volumes:
-    - /var/lib/postgres
+version: '2'
 
-nginx:
-  restart: always
-  build: ./nginx/
-  ports:
-    - "80:80"
-  volumes:
-    - /www/public
-  volumes_from:
-    - myapp
-  links:
-    - myapp:myapp
+services:
+  myapp:
+    build: .
+    environment:
+      PGHOST: db
+      PGDATABASE: postgres
+      PGUSER: postgres
+      BURNER_PASS: iAmABurner
+      VIRTUAL_HOST: www.mattpengelly.com
+      LETSENCRYPT_HOST: www.mattpengelly.com
+      LETSENCRYPT_EMAIL: admin@mattpengelly.com
+  db:
+    image: postgres
 
-db:
-  image: postgres
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/etc/nginx/vhost.d"
+      - "/usr/share/nginx/html"
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+      - "/etc/nginx/certs"
+
+  letsencrypt-nginx-proxy-companion:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    volumes_from:
+      - "nginx-proxy"
