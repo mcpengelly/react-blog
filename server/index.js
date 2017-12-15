@@ -5,7 +5,7 @@ const fs = require('fs');
 const https = require('https');
 
 const app = require('./app');
-const HTTP_PORT = process.env.PORT || 9000;
+const HTTP_PORT = process.env.PORT || 80;
 const HTTPS_PORT = process.env.HTTPS_PORT || 443;
 
 app.listen(HTTP_PORT, () => {
