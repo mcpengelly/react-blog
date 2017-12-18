@@ -8,8 +8,8 @@ services:
       PGDATABASE: postgres
       PGUSER: postgres
       BURNER_PASS: iAmABurner
-      VIRTUAL_HOST: www.mattpengelly.com
-      LETSENCRYPT_HOST: www.mattpengelly.com
+      VIRTUAL_HOST: www.mattpengelly.com,mattpengelly.com
+      LETSENCRYPT_HOST: www.mattpengelly.com,mattpengelly.com
       LETSENCRYPT_EMAIL: admin@mattpengelly.com
   db:
     image: postgres
