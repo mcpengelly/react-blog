@@ -48,7 +48,7 @@ export default class ContactForm extends Component {
     } else {
       this._notificationSystem.addNotification({
         message: `Sorry that email address doesnt look right.
-					 Please enter a valid email address.`,
+           Please enter a valid email address.`,
         level: 'error'
       })
     }

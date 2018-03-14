@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Grid, Row, Col } from 'react-bootstrap'
 
 import ContactForm from './utility/ContactForm'
 import ContactInfo from './utility/ContactInfo'
@@ -15,27 +14,17 @@ const hrStyle = { borderColor: 'lightgrey' }
 export default class About extends Component {
   render () {
     return (
-      <Grid style={style}>
-        <Row>
-          <Col sm={12}>
-            <h1>About</h1>
-            <section style={leftAlign}>More info coming soon...</section>
-          </Col>
-        </Row>
+      <div>
+        <h1>About</h1>
+        <section style={leftAlign}>More info coming soon...</section>
+
+        <center>
+          <ContactForm />
+        </center>
 
         <hr style={hrStyle} />
-
-        <Row>
-          <center>
-            <ContactForm />
-          </center>
-        </Row>
-
-        <hr style={hrStyle} />
-        <Row>
-          <ContactInfo style={leftAlign} />
-        </Row>
-      </Grid>
+        <ContactInfo style={leftAlign} />
+      </div>
     )
   }
 }

@@ -1,14 +1,7 @@
 import React, { Component } from 'react'
-import { Grid, Row, Col } from 'react-bootstrap'
 import 'whatwg-fetch' // fetch
 
 import BlogContainer from './utility/BlogContainer'
-
-const style = {
-  margin: '0 auto',
-  maxWidth: '55em',
-  backgroundColor: 'white'
-}
 
 export default class Home extends Component {
   constructor (props) {

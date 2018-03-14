@@ -1,10 +1,15 @@
 import React, { Component } from 'react'
-import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap'
 
 class TextArea extends Component {
   render () {
-    return (
-      <FormGroup>
+    return <div />
+  }
+}
+
+export default TextArea
+
+{
+  /*      <FormGroup>
         <ControlLabel>{this.props.caption}</ControlLabel>
         <FormControl
           componentClass='textarea'
@@ -13,9 +18,5 @@ class TextArea extends Component {
           value={this.props.value}
           onChange={this.props.handleChange}
         />
-      </FormGroup>
-    )
-  }
+      </FormGroup> */
 }
-
-export default TextArea

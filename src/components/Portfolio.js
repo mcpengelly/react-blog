@@ -1,13 +1,6 @@
 import React, { Component } from 'react'
-import { Grid, Row } from 'react-bootstrap'
 
 import ProjectsContainer from './utility/ProjectsContainer'
-
-const style = {
-  margin: '0 auto',
-  maxWidth: '55em',
-  backgroundColor: 'white'
-}
 
 export default class Portfolio extends Component {
   constructor (props) {
@@ -37,12 +30,8 @@ export default class Portfolio extends Component {
   render () {
     return (
       <div>
-        <Grid style={style}>
-          <Row>
-            <h1>Projects</h1>
-            <ProjectsContainer projects={this.state.projectList} />
-          </Row>
-        </Grid>
+        <h1>Projects</h1>
+        <ProjectsContainer projects={this.state.projectList} />
       </div>
     )
   }

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Navbar, NavItem, Nav } from 'react-bootstrap'
 import { Link } from 'react-router'
 
 const style = {
@@ -8,8 +7,12 @@ const style = {
 
 export default class NavBar extends Component {
   render () {
-    return (
-      <Navbar>
+    return <div />
+  }
+}
+
+{
+  /*      <Navbar>
         <Navbar.Header>
           <Navbar.Brand>
             <a style={style} href='https://github.com/mcpengelly'>
@@ -34,7 +37,5 @@ export default class NavBar extends Component {
             </Link>
           </NavItem>
         </Nav>
-      </Navbar>
-    )
-  }
+      </Navbar> */
 }

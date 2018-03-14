@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
-import { Accordion, Panel } from 'react-bootstrap'
 
 export default class PortfolioItem extends Component {
-  constructor (props) {
-    super(props)
-  }
   render () {
-    return (
-      <Accordion>
+    return <div />
+  }
+}
+
+{
+  /*      <Accordion>
         <Panel
           key={this.props.index}
           header={this.props.header}
@@ -20,7 +20,5 @@ export default class PortfolioItem extends Component {
           />
           <p>{this.props.description}</p>
         </Panel>
-      </Accordion>
-    )
-  }
+      </Accordion> */
 }
