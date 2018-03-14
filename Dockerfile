@@ -17,5 +17,6 @@ RUN npm run build
 
 # Expose ports
 EXPOSE 80
+EXPOSE 443
 
 CMD ["node", "server"]
