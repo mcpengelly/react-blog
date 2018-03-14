@@ -3,7 +3,6 @@ import './App.css'
 
 import NavBar from './components/utility/NavBar'
 import Footer from './components/utility/Footer'
-import Button from 'material-ui/Button'
 
 /* Background pattern from Subtle Patterns */
 import backgroundImage from './assets/img/escheresque.png'
@@ -30,9 +29,6 @@ class App extends Component {
           rel='stylesheet'
           href='https://fonts.googleapis.com/icon?family=Material+Icons'
         />
-        <Button variant='raised' color='primary'>
-          Hello World
-        </Button>
 
         <div style={style}>
           <NavBar />
