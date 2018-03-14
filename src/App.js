@@ -3,6 +3,7 @@ import './App.css'
 
 import NavBar from './components/utility/NavBar'
 import Footer from './components/utility/Footer'
+import Button from 'material-ui/Button'
 
 /* Background pattern from Subtle Patterns */
 import backgroundImage from './assets/img/escheresque.png'
@@ -21,11 +22,20 @@ class App extends Component {
         className='App'
         style={{ backgroundImage: 'url(' + backgroundImage + ')' }}
       >
+        <link
+          rel='stylesheet'
+          href='https://fonts.googleapis.com/css?family=Roboto:300,400,500'
+        />
+        <link
+          rel='stylesheet'
+          href='https://fonts.googleapis.com/icon?family=Material+Icons'
+        />
+        <Button variant='raised' color='primary'>
+          Hello World
+        </Button>
+
         <div style={style}>
           <NavBar />
-        </div>
-        <div className='App-header'>
-          <h2>Welcome</h2>
         </div>
 
         <div className='App-intro'>{this.props.children}</div>
