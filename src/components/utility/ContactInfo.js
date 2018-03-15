@@ -7,8 +7,8 @@ const SOFlair = () => {
         src='http://stackoverflow.com/users/flair/7664140.png'
         width='256'
         height='74'
-        alt='profile for Matt Pengelly at Stack Overflow, Q&amp;A for professional and enthusiast programmers'
-        title='profile for Matt Pengelly at Stack Overflow, Q&amp;A for professional and enthusiast programmers'
+        alt='profile for Matt Pengelly at Stack Overflow'
+        title='profile for Matt Pengelly at Stack Overflow'
       />
     </a>
   )

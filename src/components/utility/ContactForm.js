@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import { Button, FormGroup } from 'react-bootstrap'
 import MailIcon from 'react-icons/lib/fa/envelope-o'
 import NotificationSystem from 'react-notification-system'
 import 'whatwg-fetch' // fetch
-
-import TextBox from './TextBox'
-import TextArea from './TextArea'
+import TextField from 'material-ui/TextField'
+import Button from 'material-ui/Button'
+import Icon from 'material-ui/Icon'
 
 export default class ContactForm extends Component {
   constructor (props) {
@@ -96,6 +95,7 @@ export default class ContactForm extends Component {
   }
 
   onHandleChange (e) {
+    console.log(e.target.value)
     this.setState({
       [e.target.id]: e.target.value
     })
@@ -103,53 +103,80 @@ export default class ContactForm extends Component {
 
   render () {
     return (
-      <div style={{ width: '50%' }}>
+      <div>
         <form onSubmit={this.onSubmitClick}>
-          <FormGroup role='form'>
-            <h4>
-              Feel free drop me a email or contact me using the form below
-            </h4>
-            <TextBox
-              value={this.state.name}
-              caption='Name'
-              fieldName='name'
-              handleChange={this.onHandleChange}
-            />
-            <TextBox
-              value={this.state.email}
-              caption='Email'
-              fieldName='email'
-              handleChange={this.onHandleChange}
-            />
-            <TextArea
-              value={this.state.message}
-              caption='Message'
-              fieldName='message'
-              handleChange={this.onHandleChange}
-            />
-            <Button type='submit' value='Send'>
-              Send <MailIcon />
-            </Button>
-            <NotificationSystem ref='notificationSystem' />
-            <br />
-            <p>
-              Want to get an email whenever there are new blog posts? Enter your
-              email and click "Subscribe"
-            </p>
-            <TextBox
-              value={this.state.subscriberEmail}
-              fieldName='subscriberEmail'
-              handleChange={this.onHandleChange}
-            />
-            <br />
-            <Button
-              onClick={this.addNewSubscriberNotification}
-              value='Subscribe'
-            >
-              Subscribe
-            </Button>
-          </FormGroup>
+          <h4>Feel free drop me a email or contact me using the form below</h4>
+
+          <TextField
+            label='Name'
+            value={this.state.name}
+            handleChange={this.onHandleChange}
+          />
+          <TextField
+            label='Email'
+            value={this.state.email}
+            handleChange={this.onHandleChange}
+          />
+
+          <TextField
+            label='Message'
+            value={this.state.message}
+            handleChange={this.onHandleChange}
+          />
+          <Button type='submit' variant='raised' color='primary'>
+            Send
+            <Icon>send</Icon>
+          </Button>
+          <Button type='submit' value='Send'>
+            Send <MailIcon />
+          </Button>
+          <NotificationSystem ref='notificationSystem' />
+          <br />
+          <p>
+            Want to get an email whenever there are new blog posts? Enter your
+            email and click "Subscribe"
+          </p>
+          <TextField
+            label='Message'
+            value={this.state.subscriberEmail}
+            handleChange={this.onHandleChange}
+          />
+          <br />
+          <Button
+            onClick={this.addNewSubscriberNotification}
+            type='submit'
+            variant='raised'
+            color='primary'
+          >
+            Subscribe
+          </Button>
+          <Button onClick={this.addNewSubscriberNotification} value='Subscribe'>
+            Subscribe
+          </Button>
         </form>
+        {/* <TextBox
+          value={this.state.subscriberEmail}
+          fieldName='subscriberEmail'
+          handleChange={this.onHandleChange}
+        /> */}
+        {/*            <TextBox
+          value={this.state.name}
+          caption='Name'
+          fieldName='name'
+          handleChange={this.onHandleChange}
+        /> */}
+        {/*            <TextBox
+          value={this.state.email}
+          caption='Email'
+          fieldName='email'
+          handleChange={this.onHandleChange}
+        /> */}
+        {/*            <TextArea
+          value={this.state.message}
+          caption='Message'
+          fieldName='message'
+          handleChange={this.onHandleChange}
+        /> */}
       </div>
     )
   }
