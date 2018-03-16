@@ -8,7 +8,7 @@ import Typography from 'material-ui/Typography'
 const styles = theme => ({
   card: {
     minWidth: 275,
-    maxWidth: 825,
+    maxWidth: 875,
     margin: 'auto'
   },
   bullet: {
@@ -32,7 +32,6 @@ const styles = theme => ({
 
 function BlogSummary (props) {
   const { classes } = props
-  const bull = <span className={classes.bullet}>•</span>
 
   return (
     <Card className={classes.card}>
@@ -43,11 +42,11 @@ function BlogSummary (props) {
       />
       <CardContent>
         <Typography className={classes.title}>Word of the Day</Typography>
-        <Typography variant='headline' component='h2'>
+        <Typography variant='headline'>
           {props.title}
         </Typography>
         <Typography className={classes.pos}>adjective</Typography>
-        <Typography component='p'>
+        <Typography variant='body'>
           {props.content}
           <br />
         </Typography>

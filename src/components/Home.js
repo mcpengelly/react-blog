@@ -3,6 +3,15 @@ import 'whatwg-fetch' // fetch
 
 import BlogContainer from './utility/BlogContainer'
 
+// enable this versus in child component, container styles should be top level.
+// const styles = {
+//   card: {
+//     minWidth: 275,
+//     maxWidth: 875,
+//     margin: 'auto'
+//   }
+// }
+
 export default class Home extends Component {
   constructor (props) {
     super(props)
@@ -13,7 +22,12 @@ export default class Home extends Component {
 
   componentDidMount () {
     const lorem = `
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec aliquet semper dui. Ut pretium felis accumsan ante tempor, id aliquet est pretium. Etiam facilisis odio vitae semper molestie. Phasellus vestibulum pretium cursus. Ut maximus feugiat commodo. Donec sed lobortis felis. Nullam eros dolor, luctus ut sem sit amet, commodo pellentesque libero. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      Donec aliquet semper dui. Ut pretium felis accumsan ante tempor,
+      id aliquet est pretium. Etiam facilisis odio vitae semper molestie.
+      Phasellus vestibulum pretium cursus. Ut maximus feugiat commodo.
+      Donec sed lobortis felis. Nullam eros dolor, luctus ut sem sit amet,
+      commodo pellentesque libero. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     `
     // request blog posts from server
     fetch('/api/posts')

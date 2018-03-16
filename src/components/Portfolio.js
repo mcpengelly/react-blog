@@ -11,9 +11,7 @@ export default class Portfolio extends Component {
   }
 
   componentDidMount () {
-    const lorem = `
-      It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
-    `
+    const lorem = 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.'
 
     // fetch portfolio items
     fetch('/api/projects')
@@ -24,7 +22,12 @@ export default class Portfolio extends Component {
         // set state to list received from backend
         text = [
           { index: '1', description: lorem, title: 'Project Number One' },
-          { index: '2', description: lorem, title: 'Project Number Two' }
+          { index: '2', description: lorem, title: 'Project Number Two' },
+          { index: '3', description: lorem, title: 'Project Number Three' },
+          { index: '4', description: lorem, title: 'Project Number Four' },
+          { index: '5', description: lorem, title: 'Project Number Five' },
+          { index: '6', description: lorem, title: 'Project Number Six' },
+          { index: '7', description: lorem, title: 'Project Number Seven' }
         ] // for testing only
         this.setState({
           projectList: text
@@ -36,11 +39,6 @@ export default class Portfolio extends Component {
   }
 
   render () {
-    return (
-      <div>
-        <h1>Projects</h1>
-        <ProjectsContainer projects={this.state.projectList} />
-      </div>
-    )
+    return <ProjectsContainer projects={this.state.projectList} />
   }
 }

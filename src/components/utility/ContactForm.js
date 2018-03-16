@@ -5,18 +5,20 @@ import 'whatwg-fetch' // fetch
 import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button'
 import Icon from 'material-ui/Icon'
+import Typography from 'material-ui/Typography'
 
 export default class ContactForm extends Component {
   constructor (props) {
     super(props)
     this.state = { name: '', email: '', message: '', subscriberEmail: '' }
 
-    this._notificationSystem = null
     this.onSubmitClick = this.onSubmitClick.bind(this)
     this.onHandleChange = this.onHandleChange.bind(this)
     this.addNewSubscriberNotification = this.addNewSubscriberNotification.bind(
       this
     )
+
+    this._notificationSystem = null
   }
 
   componentDidMount () {
@@ -94,89 +96,69 @@ export default class ContactForm extends Component {
     }
   }
 
-  onHandleChange (e) {
-    console.log(e.target.value)
-    this.setState({
-      [e.target.id]: e.target.value
-    })
+  onHandleChange (name) {
+    return e => {
+      this.setState({
+        [name]: e.target.value
+      })
+    }
   }
 
   render () {
     return (
       <div>
         <form onSubmit={this.onSubmitClick}>
-          <h4>Feel free drop me a email or contact me using the form below</h4>
+          <Typography variant='title'>
+            Feel free drop me a email or contact me using the form below
+          </Typography>
 
           <TextField
             label='Name'
+            autoComplete='name'
             value={this.state.name}
-            handleChange={this.onHandleChange}
+            onChange={this.onHandleChange('name')}
           />
           <TextField
             label='Email'
+            autoComplete='email'
             value={this.state.email}
-            handleChange={this.onHandleChange}
+            onChange={this.onHandleChange('email')}
           />
-
           <TextField
             label='Message'
+            multiline
+            rows='4'
             value={this.state.message}
-            handleChange={this.onHandleChange}
+            onChange={this.onHandleChange('message')}
           />
           <Button type='submit' variant='raised' color='primary'>
             Send
-            <Icon>send</Icon>
+            <MailIcon />
           </Button>
-          <Button type='submit' value='Send'>
-            Send <MailIcon />
-          </Button>
+
           <NotificationSystem ref='notificationSystem' />
           <br />
-          <p>
+
+          <Typography variant='body1'>
             Want to get an email whenever there are new blog posts? Enter your
-            email and click "Subscribe"
-          </p>
+            email and click "Subscribe". Don't worry, you can unsubscribe
+            anytime via the emails I send you.
+          </Typography>
           <TextField
-            label='Message'
+            label='Email'
+            autoComplete='email'
             value={this.state.subscriberEmail}
-            handleChange={this.onHandleChange}
+            onChange={this.onHandleChange('subscriberEmail')}
           />
           <br />
           <Button
             onClick={this.addNewSubscriberNotification}
-            type='submit'
             variant='raised'
             color='primary'
           >
             Subscribe
           </Button>
-          <Button onClick={this.addNewSubscriberNotification} value='Subscribe'>
-            Subscribe
-          </Button>
         </form>
-        {/* <TextBox
-          value={this.state.subscriberEmail}
-          fieldName='subscriberEmail'
-          handleChange={this.onHandleChange}
-        /> */}
-        {/*            <TextBox
-          value={this.state.name}
-          caption='Name'
-          fieldName='name'
-          handleChange={this.onHandleChange}
-        /> */}
-        {/*            <TextBox
-          value={this.state.email}
-          caption='Email'
-          fieldName='email'
-          handleChange={this.onHandleChange}
-        /> */}
-        {/*            <TextArea
-          value={this.state.message}
-          caption='Message'
-          fieldName='message'
-          handleChange={this.onHandleChange}
-        /> */}
       </div>
     )
   }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Typography from 'material-ui/Typography'
 
 const SOFlair = () => {
   return (
@@ -18,7 +19,7 @@ export default class ContactInfo extends Component {
   render () {
     return (
       <div>
-        <h4>Contact Information:</h4>
+        <Typography variant='title'>Contact Information: </Typography>
         <address>
           Github: mcpengelly<br />
           <a href='mailto:pengelly.mat@gmail.com'>pengelly.mat@gmail.com</a>

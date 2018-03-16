@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router'
 import { withStyles } from 'material-ui/styles'
@@ -26,7 +26,7 @@ const styles = {
   }
 }
 
-class MenuAppBar extends React.Component {
+class MenuAppBar extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -54,7 +54,7 @@ class MenuAppBar extends React.Component {
     this.setState({ anchorEl: null })
   }
 
-  handleNavMenu (event) {
+  handleNavMenu () {
     this.setState({ anchorNavEl: event.currentTarget })
   }
 
@@ -92,6 +92,9 @@ class MenuAppBar extends React.Component {
             >
               <MenuIcon />
             </IconButton>
+            <a href='https://github.com/mcpengelly'>
+              <FaGithub size={28} />
+            </a>
             <Menu
               id='menu-appbar'
               anchorEl={anchorNavEl}
@@ -106,25 +109,34 @@ class MenuAppBar extends React.Component {
               open={openNavigation}
               onClose={this.handleNavClose}
             >
-              <MenuItem component={Link} to='/'>
+              <MenuItem
+                component={Link}
+                onClick={this.handleNavClose}
+                to='/'
+              >
                 Home
               </MenuItem>
-              <MenuItem component={Link} to='/about'>
+              <MenuItem
+                component={Link}
+                onClick={this.handleNavClose}
+                to='/about'
+              >
                 About
               </MenuItem>
-              <MenuItem component={Link} to='/portfolio'>
+              <MenuItem
+                component={Link}
+                onClick={this.handleNavClose}
+                to='/portfolio'
+              >
                 Projects
               </MenuItem>
             </Menu>
-            <a href='https://github.com/mcpengelly'>
-              <FaGithub size={28} />
-            </a>
             <Typography
               variant='title'
               color='inherit'
               className={classes.flex}
             >
-              Title
+              {this.state.pageTitle}
             </Typography>
             {auth && (
               <div>

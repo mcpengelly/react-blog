@@ -18,8 +18,7 @@ import MoreVertIcon from 'material-ui-icons/MoreVert'
 
 const styles = theme => ({
   card: {
-    maxWidth: 400,
-    margin: 'auto'
+    maxWidth: 400
   },
   media: {
     height: 194
@@ -57,70 +56,57 @@ class PortfolioItem extends Component {
     const { classes } = this.props
 
     return (
-      <div>
-        <Card className={classes.card}>
-          <CardHeader
-            avatar={
-              <Avatar aria-label='Recipe' className={classes.avatar}>
-                R
-              </Avatar>
-            }
-            action={
-              <IconButton>
-                <MoreVertIcon />
-              </IconButton>
-            }
-            title={this.props.title}
-            subheader={''}
-          />
-          <CardMedia
-            className={classes.media}
-            image='/static/images/cards/paella.jpg'
-            title='bing'
-          />
-          <CardContent>
-            <Typography component='p'>{this.props.description}</Typography>
-          </CardContent>
-          <CardActions className={classes.actions} disableActionSpacing>
-            <IconButton
-              className={classnames(classes.expand, {
-                [classes.expandOpen]: this.state.expanded
-              })}
-              onClick={this.handleExpandClick}
-              aria-expanded={this.state.expanded}
-              aria-label='Show more'
-            >
-              <ExpandMoreIcon />
+      <Card className={classes.card}>
+        <CardHeader
+          avatar={
+            <Avatar aria-label='Recipe' className={classes.avatar}>
+              R
+            </Avatar>
+          }
+          action={
+            <IconButton>
+              <MoreVertIcon />
             </IconButton>
-          </CardActions>
-          <Collapse in={this.state.expanded} timeout='auto' unmountOnExit>
-            <CardContent>
-              <Typography paragraph variant='body2'>
-                Method:
-              </Typography>
-              <Typography paragraph>
-                Heat 1/2 cup of the broth in a pot until simmering, add saffron
-                and set aside for 10 minutes.
-              </Typography>
-              <Typography paragraph>
-                Heat oil in a (14- to 16-inch) paella pan or a large, deep
-                skillet over medium-high heat. Add chicken, shrimp and chorizo,
-                and cook, stirring occasionally until lightly browned, 6 to 8
-                minutes.
-              </Typography>
-              <Typography paragraph>
-                Add rice and stir very gently to distribute. Top with artichokes
-                and peppers, and cook without stirring, until most of the liquid
-                is absorbed, 15 to 18 minutes.
-              </Typography>
-              <Typography>
-                Set aside off of the heat to let rest for 10 minutes, and then
-                serve.
-              </Typography>
-            </CardContent>
-          </Collapse>
-        </Card>
-      </div>
+          }
+          title={this.props.title}
+          subheader={''}
+        />
+        <CardMedia
+          className={classes.media}
+          image='/static/images/cards/paella.jpg'
+          title='bing'
+        />
+        <CardContent>
+          <Typography variant='body1'>{this.props.description}</Typography>
+        </CardContent>
+        <CardActions className={classes.actions} disableActionSpacing>
+          <IconButton
+            className={classnames(classes.expand, {
+              [classes.expandOpen]: this.state.expanded
+            })}
+            onClick={this.handleExpandClick}
+            aria-expanded={this.state.expanded}
+            aria-label='Show more'
+          >
+            <ExpandMoreIcon />
+          </IconButton>
+        </CardActions>
+        <Collapse in={this.state.expanded} timeout='auto' unmountOnExit>
+          <CardContent>
+            <Typography paragraph variant='body2'>
+              Method:
+            </Typography>
+            <Typography paragraph>
+              Heat 1/2 cup of the broth in a pot until simmering, add saffron
+              and set aside for 10 minutes.
+            </Typography>
+            <Typography>
+              Set aside off of the heat to let rest for 10 minutes, and then
+              serve.
+            </Typography>
+          </CardContent>
+        </Collapse>
+      </Card>
     )
   }
 }
