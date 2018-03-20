@@ -7,13 +7,6 @@ import Footer from './components/utility/Footer'
 /* Background pattern from Subtle Patterns */
 import backgroundImage from './assets/img/escheresque.png'
 
-const style = {
-  position: 'fixed',
-  zIndex: 2,
-  width: '100%',
-  height: '2%'
-}
-
 class App extends Component {
   render () {
     return (
@@ -21,14 +14,10 @@ class App extends Component {
         className='App'
         style={{ backgroundImage: 'url(' + backgroundImage + ')' }}
       >
-        <div style={style}>
+        <div className='App-body'>
           <NavBar />
+          {this.props.children}
         </div>
-        <div className='App-header'>
-          <h2>Welcome</h2>
-        </div>
-
-        <div className='App-intro'>{this.props.children}</div>
 
         <Footer copyright='Matt Pengelly 2017' />
       </div>

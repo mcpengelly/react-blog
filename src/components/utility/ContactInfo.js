@@ -1,4 +1,12 @@
 import React, { Component } from 'react'
+import Typography from 'material-ui/Typography'
+import { withStyles } from 'material-ui/styles'
+
+const styles = {
+  container: {
+    padding: 25
+  }
+}
 
 const SOFlair = () => {
   return (
@@ -7,18 +15,18 @@ const SOFlair = () => {
         src='http://stackoverflow.com/users/flair/7664140.png'
         width='256'
         height='74'
-        alt='profile for Matt Pengelly at Stack Overflow, Q&amp;A for professional and enthusiast programmers'
-        title='profile for Matt Pengelly at Stack Overflow, Q&amp;A for professional and enthusiast programmers'
+        alt='profile for Matt Pengelly at Stack Overflow'
+        title='profile for Matt Pengelly at Stack Overflow'
       />
     </a>
   )
 }
 
-export default class ContactInfo extends Component {
+class ContactInfo extends Component {
   render () {
     return (
-      <div>
-        <h4>Contact Information:</h4>
+      <div className={this.props.classes.container}>
+        <Typography variant='title'>Contact Information: </Typography>
         <address>
           Github: mcpengelly<br />
           <a href='mailto:pengelly.mat@gmail.com'>pengelly.mat@gmail.com</a>
@@ -30,3 +38,5 @@ export default class ContactInfo extends Component {
     )
   }
 }
+
+export default withStyles(styles)(ContactInfo)
