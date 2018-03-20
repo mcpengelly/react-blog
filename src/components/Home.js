@@ -31,15 +31,15 @@ export default class Home extends Component {
     `
     // request blog posts from server
     fetch('/api/posts')
-      // .then(response => {
-      //   return response.json()
-      // })
+      .then(response => {
+        return response.json()
+      })
       .then(text => {
         // set state to list received from backend
-        text = [
-          { index: '1', content: lorem, title: 'Title Number One' },
-          { index: '2', content: lorem, title: 'Title Number Two' }
-        ] // for testing only
+        // text = [
+        //   { index: '1', content: lorem, title: 'Title Number One' },
+        //   { index: '2', content: lorem, title: 'Title Number Two' }
+        // ] // for testing only
         this.setState({
           blogPosts: text
         })

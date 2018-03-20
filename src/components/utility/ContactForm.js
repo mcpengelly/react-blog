@@ -6,8 +6,26 @@ import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button'
 import Icon from 'material-ui/Icon'
 import Typography from 'material-ui/Typography'
+import { withStyles } from 'material-ui/styles'
 
-export default class ContactForm extends Component {
+const styles = {
+  container: {
+    padding: 25
+  },
+  textField: {
+    margin: 10,
+    width: 200
+  },
+  textArea: {
+    margin: 10,
+    width: 400
+  },
+  submitButton: {
+    margin: 10
+  }
+}
+
+class ContactForm extends Component {
   constructor (props) {
     super(props)
     this.state = { name: '', email: '', message: '', subscriberEmail: '' }
@@ -105,61 +123,76 @@ export default class ContactForm extends Component {
   }
 
   render () {
+    const { classes } = this.props
+
     return (
-      <div>
-        <form onSubmit={this.onSubmitClick}>
-          <Typography variant='title'>
-            Feel free drop me a email or contact me using the form below
-          </Typography>
+      <form className={classes.container} onSubmit={this.onSubmitClick}>
+        <Typography className={classes.titles} variant='title'>
+          Feel free drop me a email or contact me using the form below
+        </Typography>
 
-          <TextField
-            label='Name'
-            autoComplete='name'
-            value={this.state.name}
-            onChange={this.onHandleChange('name')}
-          />
-          <TextField
-            label='Email'
-            autoComplete='email'
-            value={this.state.email}
-            onChange={this.onHandleChange('email')}
-          />
-          <TextField
-            label='Message'
-            multiline
-            rows='4'
-            value={this.state.message}
-            onChange={this.onHandleChange('message')}
-          />
-          <Button type='submit' variant='raised' color='primary'>
-            Send
-            <MailIcon />
-          </Button>
+        <TextField
+          className={classes.textField}
+          label='Name'
+          autoComplete='name'
+          value={this.state.name}
+          onChange={this.onHandleChange('name')}
+        />
+        <br />
+        <TextField
+          className={classes.textField}
+          label='Email'
+          autoComplete='email'
+          value={this.state.email}
+          onChange={this.onHandleChange('email')}
+        />
+        <br />
+        <TextField
+          className={classes.textArea}
+          label='Message'
+          multiline
+          rows='4'
+          value={this.state.message}
+          onChange={this.onHandleChange('message')}
+        />
+        <br />
+        <Button
+          className={classes.submitButton}
+          type='submit'
+          variant='raised'
+          color='primary'
+        >
+          Send
+          <MailIcon />
+        </Button>
 
-          <NotificationSystem ref='notificationSystem' />
-          <br />
+        <NotificationSystem ref='notificationSystem' />
+        <br />
 
-          <Typography variant='body1'>
-            Want to get an email whenever there are new blog posts? Enter your
-            email and click "Subscribe". Don't worry, you can unsubscribe
-            anytime via the emails I send you.
-          </Typography>
-          <TextField
-            label='Email'
-            autoComplete='email'
-            value={this.state.subscriberEmail}
-            onChange={this.onHandleChange('subscriberEmail')}
-          />
-          <br />
-          <Button
-            onClick={this.addNewSubscriberNotification}
-            variant='raised'
-            color='primary'
-          >
-            Subscribe
-          </Button>
-        </form>
-      </div>
+        <Typography className={classes.titles} variant='title'>
+          Want to get an email whenever there are new blog posts? Enter your
+          email and click "Subscribe". Don't worry, you can unsubscribe anytime
+          via the emails I send you.
+        </Typography>
+        <TextField
+          className={classes.textField}
+          label='Email'
+          autoComplete='email'
+          value={this.state.subscriberEmail}
+          onChange={this.onHandleChange('subscriberEmail')}
+        />
+        <br />
+        <Button
+          className={classes.submitButton}
+          onClick={this.addNewSubscriberNotification}
+          variant='raised'
+          color='primary'
+        >
+          Subscribe
+        </Button>
+      </form>
     )
   }
 }
+
+export default withStyles(styles)(ContactForm)

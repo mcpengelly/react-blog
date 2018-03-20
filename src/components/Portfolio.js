@@ -11,7 +11,8 @@ export default class Portfolio extends Component {
   }
 
   componentDidMount () {
-    const lorem = 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.'
+    const lorem =
+      'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.'
 
     // fetch portfolio items
     fetch('/api/projects')
@@ -19,6 +20,7 @@ export default class Portfolio extends Component {
       //   return response.json()
       // })
       .then(text => {
+        console.log(text)
         // set state to list received from backend
         text = [
           { index: '1', description: lorem, title: 'Project Number One' },

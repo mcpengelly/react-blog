@@ -1,19 +1,17 @@
-import React, { Component } from 'react'
-
+import React from 'react'
 import SocialMediaIcons from './SocialMediaIcons'
 
-var style = { backgroundColor: 'white' }
-var textStyle = { color: 'black' }
+const footerStyle = { backgroundColor: 'white' }
 
-export default class Footer extends Component {
-  render () {
-    return (
-      <footer className='footer' style={style}>
-        <SocialMediaIcons style={textStyle} />
-        <small>
-          <p style={textStyle}>{this.props.copyright}</p>
-        </small>
-      </footer>
-    )
-  }
+function Footer (props) {
+  return (
+    <footer className='footer' style={footerStyle}>
+      <SocialMediaIcons />
+      <small>
+        <p>{props.copyright}</p>
+      </small>
+    </footer>
+  )
 }
+
+export default Footer

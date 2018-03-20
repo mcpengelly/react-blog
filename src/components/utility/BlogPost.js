@@ -9,7 +9,8 @@ const styles = theme => ({
   card: {
     minWidth: 275,
     maxWidth: 875,
-    margin: 'auto'
+    margin: 'auto',
+    padding: 10
   },
   bullet: {
     display: 'inline-block',
@@ -42,9 +43,7 @@ function BlogSummary (props) {
       />
       <CardContent>
         <Typography className={classes.title}>Word of the Day</Typography>
-        <Typography variant='headline'>
-          {props.title}
-        </Typography>
+        <Typography variant='headline'>{props.title}</Typography>
         <Typography className={classes.pos}>adjective</Typography>
         <Typography variant='body'>
           {props.content}

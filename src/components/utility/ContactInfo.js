@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
 import Typography from 'material-ui/Typography'
+import { withStyles } from 'material-ui/styles'
+
+const styles = {
+  container: {
+    padding: 25
+  }
+}
 
 const SOFlair = () => {
   return (
@@ -15,10 +22,10 @@ const SOFlair = () => {
   )
 }
 
-export default class ContactInfo extends Component {
+class ContactInfo extends Component {
   render () {
     return (
-      <div>
+      <div className={this.props.classes.container}>
         <Typography variant='title'>Contact Information: </Typography>
         <address>
           Github: mcpengelly<br />
@@ -31,3 +38,5 @@ export default class ContactInfo extends Component {
     )
   }
 }
+
+export default withStyles(styles)(ContactInfo)

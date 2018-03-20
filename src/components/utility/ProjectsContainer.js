@@ -8,7 +8,8 @@ import { withStyles } from 'material-ui/styles'
 const imgPath = '/uploads/'
 
 const styles = theme => ({
-  dev: {
+  container: {
+    padding: 25,
     maxWidth: 875,
     minWidth: 250,
     margin: 'auto'
@@ -50,7 +51,7 @@ class ProjectsContainer extends Component {
     })
 
     return (
-      <div className={classes.dev}>
+      <div className={classes.container}>
         <Grid container className={classes.root}>
           <Grid item xs={12}>
             <Grid

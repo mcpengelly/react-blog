@@ -3,22 +3,33 @@ import FaGithub from 'react-icons/lib/fa/github'
 import FaLinkedIn from 'react-icons/lib/fa/linkedin'
 import FaTwitter from 'react-icons/lib/fa/twitter'
 
-import A from './A'
+import { withStyles } from 'material-ui/styles'
 
-const SocialMediaIcons = () => {
+const styles = {
+  socMedIcons: {
+    padding: '5px'
+  }
+}
+
+const SocialMediaIcons = props => {
+  const { classes } = props
+
   return (
     <div className='social-media-icons'>
-      <A linkTo='https://github.com/mcpengelly'>
+      <a className={classes.socMedIcons} href='https://github.com/mcpengelly'>
         <FaGithub />
-      </A>
-      <A linkTo='https://www.linkedin.com/in/matt-pengelly-575ba886'>
+      </a>
+      <a
+        className={classes.socMedIcons}
+        href='https://www.linkedin.com/in/matt-pengelly-575ba886'
+      >
         <FaLinkedIn />
-      </A>
-      <A linkTo='https://twitter.com/typycyl'>
+      </a>
+      <a className={classes.socMedIcons} href='https://twitter.com/typycyl'>
         <FaTwitter />
-      </A>
+      </a>
     </div>
   )
 }
 
-export default SocialMediaIcons
+export default withStyles(styles)(SocialMediaIcons)

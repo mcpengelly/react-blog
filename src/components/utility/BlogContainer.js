@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import BlogPost from './BlogPost'
 
-export default class BlogContainer extends Component {
+class BlogContainer extends Component {
   render () {
     const blogPosts = this.props.posts.map((post, index) => {
       return (
@@ -17,3 +17,5 @@ export default class BlogContainer extends Component {
     return <div>{blogPosts}</div>
   }
 }
+
+export default BlogContainer
