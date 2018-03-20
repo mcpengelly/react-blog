@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
-import { Grid, Row, Col } from 'react-bootstrap'
 import 'whatwg-fetch' // fetch
 
 import BlogContainer from './utility/BlogContainer'
 
-const style = {
-  margin: '0 auto',
-  maxWidth: '55em',
-  backgroundColor: 'white'
-}
+// enable this versus in child component, container styles should be top level.
+// const styles = {
+//   card: {
+//     minWidth: 275,
+//     maxWidth: 875,
+//     margin: 'auto'
+//   }
+// }
 
 export default class Home extends Component {
   constructor (props) {
@@ -19,6 +21,14 @@ export default class Home extends Component {
   }
 
   componentDidMount () {
+    const lorem = `
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      Donec aliquet semper dui. Ut pretium felis accumsan ante tempor,
+      id aliquet est pretium. Etiam facilisis odio vitae semper molestie.
+      Phasellus vestibulum pretium cursus. Ut maximus feugiat commodo.
+      Donec sed lobortis felis. Nullam eros dolor, luctus ut sem sit amet,
+      commodo pellentesque libero. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    `
     // request blog posts from server
     fetch('/api/posts')
       .then(response => {
@@ -26,6 +36,10 @@ export default class Home extends Component {
       })
       .then(text => {
         // set state to list received from backend
+        // text = [
+        //   { index: '1', content: lorem, title: 'Title Number One' },
+        //   { index: '2', content: lorem, title: 'Title Number Two' }
+        // ] // for testing only
         this.setState({
           blogPosts: text
         })

@@ -1,41 +1,35 @@
 import React, { Component } from 'react'
-import { Grid, Row, Col } from 'react-bootstrap'
+import Typography from 'material-ui/Typography'
+import Divider from 'material-ui/Divider'
+import Paper from 'material-ui/Paper'
+import { withStyles } from 'material-ui/styles'
 
 import ContactForm from './utility/ContactForm'
 import ContactInfo from './utility/ContactInfo'
 
-const style = {
-  margin: '0 auto',
-  maxWidth: '55em',
-  backgroundColor: 'white'
+const styles = {
+  root: {
+    minWidth: 275,
+    maxWidth: 875
+  },
+  container: {
+    paddingTop: 25,
+    maxWidth: 875,
+    margin: 'auto'
+  }
 }
-const leftAlign = { textAlign: 'left' }
-const hrStyle = { borderColor: 'lightgrey' }
 
-export default class About extends Component {
+class About extends Component {
   render () {
+    const { classes } = this.props
     return (
-      <Grid style={style}>
-        <Row>
-          <Col sm={12}>
-            <h1>About</h1>
-            <section style={leftAlign}>More info coming soon...</section>
-          </Col>
-        </Row>
-
-        <hr style={hrStyle} />
-
-        <Row>
-          <center>
-            <ContactForm />
-          </center>
-        </Row>
-
-        <hr style={hrStyle} />
-        <Row>
-          <ContactInfo style={leftAlign} />
-        </Row>
-      </Grid>
+      <Paper className={classes.container}>
+        <Typography variant='title'>More info coming soon!</Typography>
+        <ContactForm />
+        <Divider />
+        <ContactInfo />
+      </Paper>
     )
   }
 }
+export default withStyles(styles)(About)

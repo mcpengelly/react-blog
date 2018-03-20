@@ -13,7 +13,7 @@
 	color: var(--white);
 	background-color: var(--navy-blue);
 	/*background-image: url('./assets/img/nasa-earth.jpg');*/
-	min-height: 200px;
+	/*min-height: 200px;*/
 
 	/* Full height */
 	height: 100%;
@@ -22,7 +22,7 @@
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
-	padding: 20px;
+	/*padding: 20px;*/
 }
 
 .App-intro {
