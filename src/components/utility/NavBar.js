@@ -12,6 +12,7 @@ import Switch from 'material-ui/Switch'
 import { FormControlLabel, FormGroup } from 'material-ui/Form'
 import Menu, { MenuItem } from 'material-ui/Menu'
 import FaGithub from 'react-icons/lib/fa/github'
+import Icon from 'material-ui/Icon'
 
 const styles = {
   root: {
@@ -54,7 +55,7 @@ class MenuAppBar extends Component {
     this.setState({ anchorEl: null })
   }
 
-  handleNavMenu () {
+  handleNavMenu (event) {
     this.setState({ anchorNavEl: event.currentTarget })
   }
 
@@ -109,26 +110,22 @@ class MenuAppBar extends Component {
               open={openNavigation}
               onClose={this.handleNavClose}
             >
-              <MenuItem
-                component={Link}
-                onClick={this.handleNavClose}
-                to='/'
-              >
-                Home
+              <MenuItem component={Link} onClick={this.handleNavClose} to='/'>
+                <Icon>home</Icon> - Home
               </MenuItem>
               <MenuItem
                 component={Link}
                 onClick={this.handleNavClose}
                 to='/about'
               >
-                About
+                <Icon>info</Icon> - About
               </MenuItem>
               <MenuItem
                 component={Link}
                 onClick={this.handleNavClose}
                 to='/portfolio'
               >
-                Projects
+                <Icon>folder</Icon> - Projects
               </MenuItem>
             </Menu>
             <Typography
@@ -141,7 +138,7 @@ class MenuAppBar extends Component {
             {auth && (
               <div>
                 <IconButton
-                  aria-owns={open ? 'menu-appbar' : null}
+                  aria-owns={openProfile ? 'menu-appbar' : null}
                   aria-haspopup='true'
                   onClick={this.handleMenu}
                   color='inherit'

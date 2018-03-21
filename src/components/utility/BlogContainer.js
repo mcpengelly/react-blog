@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import BlogPost from './BlogPost'
+import BlogSummary from './BlogSummary'
 
 class BlogContainer extends Component {
   render () {
     const blogPosts = this.props.posts.map((post, index) => {
       return (
-        <BlogPost
+        <BlogSummary
           key={index}
           id={post.id}
           title={post.title}

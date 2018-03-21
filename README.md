@@ -1,1 +1,3 @@
-under construction
+# Running app locally
+- TODO
+
