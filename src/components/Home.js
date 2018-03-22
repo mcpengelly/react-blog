@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import 'whatwg-fetch' // fetch
-
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import BlogContainer from './utility/BlogContainer'
+import BlogPost from './utility/BlogPost'
 
 // enable this versus in child component, container styles should be top level.
 // const styles = {
@@ -50,6 +51,11 @@ export default class Home extends Component {
   }
 
   render () {
-    return <BlogContainer posts={this.state.blogPosts} />
+    return (
+      <div>
+        <Route path={`${this.props.match.url}:id`} component={BlogPost} />
+        <BlogContainer posts={this.state.blogPosts} />
+      </div>
+    )
   }
 }

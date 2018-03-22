@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router'
 import { withStyles } from 'material-ui/styles'
 import AppBar from 'material-ui/AppBar'
 import Toolbar from 'material-ui/Toolbar'
@@ -11,8 +10,9 @@ import AccountCircle from 'material-ui-icons/AccountCircle'
 import Switch from 'material-ui/Switch'
 import { FormControlLabel, FormGroup } from 'material-ui/Form'
 import Menu, { MenuItem } from 'material-ui/Menu'
-import FaGithub from 'react-icons/lib/fa/github'
 import Icon from 'material-ui/Icon'
+import { Link } from 'react-router-dom'
+import FaGithub from 'react-icons/lib/fa/github'
 
 const styles = {
   root: {
