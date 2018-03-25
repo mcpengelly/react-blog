@@ -12,7 +12,7 @@ import './index.css'
 ReactDOM.render(
   <Router>
     <App>
-      <Route path='/blog' component={Home} />
+      <Route path='/' component={Home} />
       <Route path='/about' component={About} />
       <Route path='/portfolio' component={Portfolio} />
     </App>

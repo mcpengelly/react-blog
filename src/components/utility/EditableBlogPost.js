@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 class EditableBlogPost extends Component {
   constructor () {
@@ -72,6 +73,7 @@ class EditableBlogPost extends Component {
         >
           Submit
         </Button>
+        <Route path={`${this.props.url}/edit`} component={EditableBlogPost} />
       </form>
     )
   }

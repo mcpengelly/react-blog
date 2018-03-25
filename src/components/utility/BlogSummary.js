@@ -2,9 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from 'material-ui/styles'
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card'
-import { BrowserRouter as Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 const styles = theme => ({
   card: {
@@ -46,16 +47,17 @@ function BlogSummary (props) {
         <Typography className={classes.title}>Word of the Day</Typography>
         <Typography variant='headline'>{props.title}</Typography>
         <Typography className={classes.pos}>adjective</Typography>
-        <Typography variant='body'>
+        <Typography variant='body1'>
           {props.content}
           <br />
         </Typography>
       </CardContent>
       <CardActions>
         <Button size='small'>
-          <Link to={'/blog/' + props.id}>See More...</Link>
+          <Link to={`/${props.id}`}>See More...</Link>
         </Button>
       </CardActions>
+      <Route path={`{props.match.url}/${props.id}`} />
     </Card>
   )
 }

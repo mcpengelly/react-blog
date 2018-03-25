@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
-import Card, { CardContent, CardMedia } from 'material-ui/Card'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import Card, { CardContent, CardMedia, CardActions } from 'material-ui/Card'
+import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
 import { withStyles } from 'material-ui/styles'
 import EditableBlogPost from './EditableBlogPost'
@@ -64,9 +65,13 @@ class BlogPost extends Component {
           <Typography className={classes.pos}>adjective</Typography>
           <Typography variant='body1'>{this.state.content}</Typography>
         </CardContent>
+        <CardActions>
+          <Button size='small'>
+            <Link to={`${this.props.match.url}/edit`}>Edit</Link>
+          </Button>
+        </CardActions>
 
         <Route
-          exact
           path={`${this.props.match.url}/edit`}
           component={EditableBlogPost}
         />
