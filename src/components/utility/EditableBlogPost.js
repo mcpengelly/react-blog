@@ -33,7 +33,6 @@ class EditableBlogPost extends Component {
       }
     }
 
-    // send users email data to backend
     fetch('/api/posts', options)
       .then(response => {
         return response.text()
@@ -43,7 +42,7 @@ class EditableBlogPost extends Component {
         console.log(text)
 
         // clear inputs
-        this.setState({ title: '', content: '' })
+        // this.setState({ title: '', content: '' })
 
         // navigate home
         // location.href = 'https://localhost:3000/'
@@ -53,7 +52,7 @@ class EditableBlogPost extends Component {
   render () {
     return (
       <form onSubmit={this.onSubmitClick}>
-        <h1>HEYYYYY</h1>
+        <h1>TEST</h1>
         <TextField
           label='Blog Post Title'
           value={this.state.title}

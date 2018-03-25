@@ -8,10 +8,6 @@ import ContactForm from './utility/ContactForm'
 import ContactInfo from './utility/ContactInfo'
 
 const styles = {
-  root: {
-    minWidth: 275,
-    maxWidth: 875
-  },
   container: {
     paddingTop: 25,
     maxWidth: 875,

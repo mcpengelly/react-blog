@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import MailIcon from 'react-icons/lib/fa/envelope-o'
 import NotificationSystem from 'react-notification-system'
 import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button'

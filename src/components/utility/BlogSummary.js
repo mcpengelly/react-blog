@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from 'material-ui/styles'
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card'
+import { BrowserRouter as Link } from 'react-router-dom'
 import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
 
@@ -52,7 +53,7 @@ function BlogSummary (props) {
       </CardContent>
       <CardActions>
         <Button size='small'>
-          <a href={'/' + props.id}>See More...</a>
+          <Link to={'/blog/' + props.id}>See More...</Link>
         </Button>
       </CardActions>
     </Card>

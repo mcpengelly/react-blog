@@ -110,7 +110,11 @@ class MenuAppBar extends Component {
               open={openNavigation}
               onClose={this.handleNavClose}
             >
-              <MenuItem component={Link} onClick={this.handleNavClose} to='/'>
+              <MenuItem
+                component={Link}
+                onClick={this.handleNavClose}
+                to='/blog'
+              >
                 <Icon>home</Icon> - Home
               </MenuItem>
               <MenuItem
