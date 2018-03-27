@@ -66,8 +66,12 @@ class BlogPost extends Component {
           <Typography variant='body1'>{this.state.content}</Typography>
         </CardContent>
         <CardActions>
-          <Button size='small'>
-            <Link to={`${this.props.match.url}/edit`}>Edit</Link>
+          <Button
+            size='small'
+            component={Link}
+            to={`${this.props.match.url}/edit`}
+          >
+            Edit
           </Button>
         </CardActions>
       </Card>

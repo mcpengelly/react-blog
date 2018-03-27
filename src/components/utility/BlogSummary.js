@@ -53,8 +53,8 @@ function BlogSummary (props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size='small'>
-          <Link to={`/${props.id}`}>See More...</Link>
+        <Button size='small' component={Link} to={`/${props.id}`}>
+          See More...
         </Button>
       </CardActions>
     </Card>

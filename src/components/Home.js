@@ -29,6 +29,7 @@ export default class Home extends Component {
       // })
       .then(text => {
         console.log(text)
+
         text = [
           {
             id: 1,
@@ -45,7 +46,8 @@ export default class Home extends Component {
             title: 'testing 123',
             content: 'something was typed in here'
           }
-        ]
+        ] // testing data
+
         this.setState({
           blogPosts: text
         })
