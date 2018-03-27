@@ -5,7 +5,7 @@ import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card'
 import { Link } from 'react-router-dom'
 import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 const styles = theme => ({
   card: {
@@ -57,7 +57,6 @@ function BlogSummary (props) {
           <Link to={`/${props.id}`}>See More...</Link>
         </Button>
       </CardActions>
-      <Route path={`{props.match.url}/${props.id}`} />
     </Card>
   )
 }

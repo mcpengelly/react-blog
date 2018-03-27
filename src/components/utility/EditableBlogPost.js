@@ -73,7 +73,6 @@ class EditableBlogPost extends Component {
         >
           Submit
         </Button>
-        <Route path={`${this.props.url}/edit`} component={EditableBlogPost} />
       </form>
     )
   }
