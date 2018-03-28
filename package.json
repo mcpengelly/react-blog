@@ -40,6 +40,7 @@
     "react": "^15.4.2",
     "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.2",
+    "react-dropzone": "^4.2.9",
     "react-flexbox-grid": "^0.10.2",
     "react-icons": "^2.2.3",
     "react-notification-system": "^0.2.14",
@@ -49,6 +50,7 @@
     "react-sticky": "^5.0.5",
     "request": "^2.80.0",
     "shortid": "^2.2.8",
+    "uuidv4": "^1.0.0",
     "whatwg-fetch": "^2.0.3"
   },
   "scripts": {

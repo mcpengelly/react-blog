@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom'
+// eslint-disable-next-line
+import { BrowserRouter as Router } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Card, { CardContent, CardMedia, CardActions } from 'material-ui/Card'
 import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
 import { withStyles } from 'material-ui/styles'
-import EditableBlogPost from './EditableBlogPost'
 
 const styles = theme => ({
   card: {
@@ -33,7 +34,7 @@ class BlogPost extends Component {
     this.state = { title: '', content: '' }
   }
 
-  onComponentWasMounted () {
+  componentDidMount () {
     fetch(`/api/posts/${this.props.id}`)
       .then(res => {
         return res.json()

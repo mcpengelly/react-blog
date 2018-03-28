@@ -9,52 +9,32 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import uuidv4 from 'uuidv4'
 import Dropzone from 'react-dropzone'
 
-// TODO: use/leverage draftjs RTE for adding styles to blog posts with html
-// TODO: make image upload part of the preview
-// TODO: navigate home after submission
-// TODO: some code duplication exists between BlogPost and EditableBlogPost via the Preview, could refactor this
-
 const styles = theme => ({
   card: {
-    minWidth: 275,
-    maxWidth: 875,
-    margin: 'auto',
-    padding: 10
+    maxWidth: 400
   },
   media: {
-    height: 200,
-    margin: 25
+    height: 194
   },
-  title: {
-    marginBottom: 16,
-    fontSize: 14,
-    color: theme.palette.text.secondary
+  actions: {
+    display: 'flex'
   },
-  pos: {
-    marginBottom: 12,
-    color: theme.palette.text.secondary
+  expand: {
+    transform: 'rotate(0deg)',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest
+    }),
+    marginLeft: 'auto'
   },
-  form: {
-    width: '100%',
-    marginTop: 25,
-    marginBottom: 25
+  expandOpen: {
+    transform: 'rotate(180deg)'
   },
-  textfield: {
-    width: '40%'
-  },
-  textarea: {
-    width: '80%'
-  },
-  fileUploader: {
-    marginTop: 25,
-    width: '60%',
-    height: 100,
-    border: '1px solid black',
-    margin: 'auto'
+  avatar: {
+    backgroundColor: red[500]
   }
 })
 
-class EditableBlogPost extends Component {
+class EditableProject extends Component {
   constructor (props) {
     super(props)
 
@@ -62,9 +42,8 @@ class EditableBlogPost extends Component {
 
     this.state = {
       id: '',
-      title: 'a',
-      content: 'a',
-      catchPhrase: '',
+      title: '',
+      description: '',
       isNew: false,
       file: [{ preview: '/placeholder' }]
     }
@@ -84,8 +63,7 @@ class EditableBlogPost extends Component {
     let data = {
       id: this.state.id,
       title: this.state.title,
-      content: this.state.content,
-      catchPhrase: this.state.catchPhrase
+      description: this.state.description
     }
 
     const options = {
@@ -96,7 +74,7 @@ class EditableBlogPost extends Component {
       }
     }
 
-    fetch('/api/posts', options)
+    fetch('/api/projects', options)
       .then(response => {
         return response.text()
       })
@@ -108,8 +86,7 @@ class EditableBlogPost extends Component {
         this.setState({
           id: '',
           title: '',
-          content: '',
-          catchPhrase: '',
+          description: '',
           file: [{ preview: '/placeholder' }]
         })
 
@@ -130,20 +107,19 @@ class EditableBlogPost extends Component {
 
     // if its not a new record then fetch existing data from backend
     if (!this.state.isNew) {
-      fetch('/api/posts')
+      fetch('/api/projects')
         .then(response => {
           return response.text()
         })
         .then(text => {
           console.log(text)
 
-          const { id, title, content, catchPhrase } = text
+          const { id, title, description } = text
 
           this.setState({
             id: id || uuidv4(),
             title: title || '',
-            content: content || '',
-            catchPhrase: catchPhrase || ''
+            description: description || ''
           })
         })
     }
@@ -159,25 +135,18 @@ class EditableBlogPost extends Component {
           <form className={classes.form} onSubmit={this.onSubmitClick}>
             <TextField
               className={classes.textfield}
-              label='Blog Post Title'
+              label='Project Title'
               value={this.state.title}
               onChange={this.onHandleChange('title')}
             />
             <br />
             <TextField
-              className={classes.textfield}
-              label='Catch phrase'
-              value={this.state.catchPhrase}
-              onChange={this.onHandleChange('catchPhrase')}
-            />
-            <br />
-            <TextField
               className={classes.textarea}
-              label='Blog Post Content'
+              label='Project Description'
               multiline
               rows='8'
-              value={this.state.content}
-              onChange={this.onHandleChange('content')}
+              value={this.state.description}
+              onChange={this.onHandleChange('description')}
             />
             <br />
             <Dropzone
@@ -189,39 +158,57 @@ class EditableBlogPost extends Component {
               </Typography>
             </Dropzone>
             <br />
-            <Button
-              onClick={this.addNewSubscriberNotification}
-              variant='raised'
-              color='primary'
-            >
+            <Button variant='raised' color='primary'>
               Submit
             </Button>
           </form>
         </CardActions>
         <Divider />
         <Typography variant='headline'>Preview</Typography>
-        <CardMedia
-          className={classes.media}
-          image={this.state.file[0].preview}
-          title='bang'
-        />
-        <CardContent>
-          <Typography className={classes.title}>
-            {this.state.title || 'Title'}
-          </Typography>
-          <Typography variant='headline'>
-            {this.state.title || 'Title'}
-          </Typography>
-          <Typography className={classes.pos}>
-            {this.state.catchPhrase || 'CatchPhrase'}
-          </Typography>
-          <Typography variant='body1'>
-            {this.state.content || 'Content'}
-          </Typography>
-        </CardContent>
+        <Card className={classes.card}>
+          <CardHeader
+            avatar={
+              <Avatar aria-label='Recipe' className={classes.avatar}>
+                R
+              </Avatar>
+            }
+            action={
+              <IconButton>
+                <MoreVertIcon />
+              </IconButton>
+            }
+            title={this.state.title}
+            subheader={''}
+          />
+          <CardMedia
+            className={classes.media}
+            image={this.state.file[0].preview}
+            title='bing'
+          />
+          <CardContent>
+            <Typography variant='body1'>{this.state.description}</Typography>
+          </CardContent>
+          <CardActions className={classes.actions} disableActionSpacing>
+            <IconButton
+              className={classnames(classes.expand, {
+                [classes.expandOpen]: this.state.expanded
+              })}
+              onClick={this.handleExpandClick}
+              aria-expanded={this.state.expanded}
+              aria-label='Show more'
+            >
+              <ExpandMoreIcon />
+            </IconButton>
+          </CardActions>
+          <Collapse in={this.state.expanded} timeout='auto' unmountOnExit>
+            <CardContent>
+              <Typography paragraph>{this.state.description}</Typography>
+            </CardContent>
+          </Collapse>
+        </Card>
       </Card>
     )
   }
 }
 
-export default withStyles(styles)(EditableBlogPost)
+export default withStyles(styles)(EditableProject)

@@ -1,17 +1,11 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+// eslint-disable-next-line
+import { BrowserRouter as Router } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
+
 import BlogContainer from './utility/BlogContainer'
 import BlogPost from './utility/BlogPost'
 import EditableBlogPost from './utility/EditableBlogPost'
-
-// enable this versus in child component, container styles should be top level.
-// const styles = {
-//   card: {
-//     minWidth: 275,
-//     maxWidth: 875,
-//     margin: 'auto'
-//   }
-// }
 
 export default class Home extends Component {
   constructor (props) {
@@ -28,7 +22,7 @@ export default class Home extends Component {
       //   return response.json()
       // })
       .then(text => {
-        console.log(text)
+        // console.log(text)
 
         text = [
           {
@@ -60,8 +54,16 @@ export default class Home extends Component {
   render () {
     return (
       <Switch>
-        <Route exact path='/:id' component={BlogPost} />
-        <Route path='/:id/edit' component={EditableBlogPost} />
+        <Route
+          exact
+          path={`${this.props.match.url}/:id`}
+          component={BlogPost}
+        />
+        <Route
+          exact
+          path={`${this.props.match.url}/:id/edit`}
+          component={EditableBlogPost}
+        />
         <BlogContainer posts={this.state.blogPosts} />
       </Switch>
     )

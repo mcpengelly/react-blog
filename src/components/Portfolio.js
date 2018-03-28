@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 
 import ProjectsContainer from './utility/ProjectsContainer'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 
 export default class Portfolio extends Component {
   constructor (props) {
@@ -29,6 +31,20 @@ export default class Portfolio extends Component {
   }
 
   render () {
-    return <ProjectsContainer projects={this.state.projectList} />
+    return (
+      <Switch>
+        <ProjectsContainer projects={this.state.projectList} />
+        <Route
+          exact
+          path={`${this.props.match.url}/:id`}
+          component={SingleProject}
+        />
+        <Route
+          exact
+          path={`${this.props.match.url}/:id/edit`}
+          component={EditableProject}
+        />
+      </Switch>
+    )
   }
 }

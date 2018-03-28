@@ -10,7 +10,7 @@ import ContactInfo from './utility/ContactInfo'
 const styles = {
   container: {
     paddingTop: 25,
-    maxWidth: 875,
+    maxWidth: 900,
     margin: 'auto'
   }
 }
