@@ -15,6 +15,8 @@ import Typography from 'material-ui/Typography'
 import red from 'material-ui/colors/red'
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
 import MoreVertIcon from 'material-ui-icons/MoreVert'
+import { BrowserRouter as Router, Link } from 'react-router-dom'
+import Button from 'material-ui/Button'
 
 const styles = theme => ({
   card: {
@@ -90,6 +92,13 @@ class PortfolioItem extends Component {
           >
             <ExpandMoreIcon />
           </IconButton>
+          <Button
+            size='small'
+            component={Link}
+            to={`/projects/${this.props.id}`}
+          >
+            See more...
+          </Button>
         </CardActions>
         <Collapse in={this.state.expanded} timeout='auto' unmountOnExit>
           <CardContent>

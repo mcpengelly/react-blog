@@ -15,6 +15,8 @@ import Typography from 'material-ui/Typography'
 import red from 'material-ui/colors/red'
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
 import MoreVertIcon from 'material-ui-icons/MoreVert'
+import Button from 'material-ui/Button'
+import { BrowserRouter as Router, Link } from 'react-router-dom'
 
 const styles = theme => ({
   card: {
@@ -103,15 +105,15 @@ class SingleProject extends Component {
             aria-expanded={this.state.expanded}
             aria-label='Show more'
           >
+            <Button
+              size='small'
+              component={Link}
+              to={`/projects/${this.props.id}/edit`}
+            >
+              Edit
+            </Button>
             <ExpandMoreIcon />
           </IconButton>
-          <Button
-            size='small'
-            component={Link}
-            to={`${this.props.match.url}/edit`}
-          >
-            Edit
-          </Button>
         </CardActions>
         <Collapse in={this.state.expanded} timeout='auto' unmountOnExit>
           <CardContent>

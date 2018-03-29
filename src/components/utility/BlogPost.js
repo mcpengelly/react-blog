@@ -35,7 +35,7 @@ class BlogPost extends Component {
   }
 
   componentDidMount () {
-    fetch(`/api/posts/${this.props.id}`)
+    fetch(`/api/posts/${this.props.match.params.id}`)
       .then(res => {
         return res.json()
       })
@@ -50,7 +50,7 @@ class BlogPost extends Component {
   }
 
   render () {
-    console.log(this.props.match.url)
+    console.log(this.props.match.params.id)
     const { classes } = this.props
 
     return (

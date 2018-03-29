@@ -1,13 +1,26 @@
 import React, { Component } from 'react'
 import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button'
-import Card, { CardContent, CardMedia, CardActions } from 'material-ui/Card'
 import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
 import Divider from 'material-ui/Divider'
 import { BrowserRouter as Router } from 'react-router-dom'
 import uuidv4 from 'uuidv4'
 import Dropzone from 'react-dropzone'
+
+import classnames from 'classnames'
+import Card, {
+  CardHeader,
+  CardMedia,
+  CardContent,
+  CardActions
+} from 'material-ui/Card'
+import Collapse from 'material-ui/transitions/Collapse'
+import Avatar from 'material-ui/Avatar'
+import IconButton from 'material-ui/IconButton'
+import red from 'material-ui/colors/red'
+import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
+import MoreVertIcon from 'material-ui-icons/MoreVert'
 
 const styles = theme => ({
   card: {

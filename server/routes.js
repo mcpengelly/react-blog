@@ -166,9 +166,6 @@ module.exports = function (app) {
   function updateById (relation, targetKeys) {
     app.put(
       `/api/${relation}/:id`,
-      passport.authenticate('basic', {
-        session: false
-      }),
       (req, res) => {
         const id = req.params.id
         const data = req.body
@@ -236,9 +233,6 @@ module.exports = function (app) {
   // CREATE new blog post
   app.post(
     '/api/posts',
-    passport.authenticate('basic', {
-      session: false
-    }),
     (req, res) => {
       let postid
 

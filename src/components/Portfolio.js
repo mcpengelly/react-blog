@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import ProjectsContainer from './utility/ProjectsContainer'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
+import SingleProject from './utility/SingleProject'
+import EditableProject from './utility/EditableProject'
 
 export default class Portfolio extends Component {
   constructor (props) {

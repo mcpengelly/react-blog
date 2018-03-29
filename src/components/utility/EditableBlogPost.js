@@ -57,15 +57,14 @@ const styles = theme => ({
 class EditableBlogPost extends Component {
   constructor (props) {
     super(props)
-
-    console.log('document.referer', document.referrer)
+    console.log('this.props.isNew', this.props.isNew)
 
     this.state = {
       id: '',
-      title: 'a',
-      content: 'a',
+      title: '',
+      content: '',
       catchPhrase: '',
-      isNew: false,
+      isNew: this.props.isNew || false,
       file: [{ preview: '/placeholder' }]
     }
   }
@@ -88,6 +87,9 @@ class EditableBlogPost extends Component {
       catchPhrase: this.state.catchPhrase
     }
 
+    // hit different endpoints with POST/PUT based on if its new or not
+    const url = this.state.isNew ? '/api/posts' : `/api/posts/${this.state.id}`
+
     const options = {
       method: this.state.isNew ? 'POST' : 'PUT',
       body: JSON.stringify(data),
@@ -96,7 +98,7 @@ class EditableBlogPost extends Component {
       }
     }
 
-    fetch('/api/posts', options)
+    fetch(url, options)
       .then(response => {
         return response.text()
       })
@@ -126,21 +128,22 @@ class EditableBlogPost extends Component {
   }
 
   componentDidMount () {
-    console.log('document.referer', document.referrer)
+    console.log(this.state.isNew)
 
     // if its not a new record then fetch existing data from backend
     if (!this.state.isNew) {
-      fetch('/api/posts')
+      fetch(`/api/posts/${this.props.match.params.id}`)
         .then(response => {
-          return response.text()
+          return response.json()
         })
         .then(text => {
-          console.log(text)
+          console.log('text', text)
 
           const { id, title, content, catchPhrase } = text
 
+          console.log('title', title)
           this.setState({
-            id: id || uuidv4(),
+            id: id,
             title: title || '',
             content: content || '',
             catchPhrase: catchPhrase || ''
@@ -156,7 +159,7 @@ class EditableBlogPost extends Component {
     return (
       <Card className={classes.card}>
         <CardActions>
-          <form className={classes.form} onSubmit={this.onSubmitClick}>
+          <form className={classes.form}>
             <TextField
               className={classes.textfield}
               label='Blog Post Title'
@@ -190,7 +193,7 @@ class EditableBlogPost extends Component {
             </Dropzone>
             <br />
             <Button
-              onClick={this.addNewSubscriberNotification}
+              onClick={this.onSubmitClick.bind(this)}
               variant='raised'
               color='primary'
             >
