@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 
 import ProjectsContainer from './utility/ProjectsContainer'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
+import SingleProject from './utility/SingleProject'
+import EditableProject from './utility/EditableProject'
 
 export default class Portfolio extends Component {
   constructor (props) {
@@ -11,36 +15,38 @@ export default class Portfolio extends Component {
   }
 
   componentDidMount () {
-    const lorem =
-      'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.'
-
     // fetch portfolio items
     fetch('/api/projects')
-      // .then(response => {
-      //   return response.json()
-      // })
+      .then(response => {
+        return response.json()
+      })
       .then(text => {
         console.log(text)
-        // set state to list received from backend
-        text = [
-          { index: '1', description: lorem, title: 'Project Number One' },
-          { index: '2', description: lorem, title: 'Project Number Two' },
-          { index: '3', description: lorem, title: 'Project Number Three' },
-          { index: '4', description: lorem, title: 'Project Number Four' },
-          { index: '5', description: lorem, title: 'Project Number Five' },
-          { index: '6', description: lorem, title: 'Project Number Six' },
-          { index: '7', description: lorem, title: 'Project Number Seven' }
-        ] // for testing only
+
         this.setState({
           projectList: text
         })
       })
       .catch(error => {
-        throw new Error(error)
+        throw error
       })
   }
 
   render () {
-    return <ProjectsContainer projects={this.state.projectList} />
+    return (
+      <Switch>
+        <ProjectsContainer projects={this.state.projectList} />
+        <Route
+          exact
+          path={`${this.props.match.url}/:id`}
+          component={SingleProject}
+        />
+        <Route
+          exact
+          path={`${this.props.match.url}/:id/edit`}
+          component={EditableProject}
+        />
+      </Switch>
+    )
   }
 }

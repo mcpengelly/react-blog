@@ -14,11 +14,15 @@ class App extends Component {
         className='App'
         style={{ backgroundImage: 'url(' + backgroundImage + ')' }}
       >
+        <link
+          rel='stylesheet'
+          href='https://fonts.googleapis.com/icon?family=Material+Icons'
+        />
+
         <div className='App-body'>
           <NavBar />
           {this.props.children}
         </div>
-
         <Footer copyright='Matt Pengelly 2017' />
       </div>
     )

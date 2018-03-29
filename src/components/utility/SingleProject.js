@@ -15,8 +15,8 @@ import Typography from 'material-ui/Typography'
 import red from 'material-ui/colors/red'
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
 import MoreVertIcon from 'material-ui-icons/MoreVert'
-import { BrowserRouter as Router, Link } from 'react-router-dom'
 import Button from 'material-ui/Button'
+import { BrowserRouter as Router, Link } from 'react-router-dom'
 
 const styles = theme => ({
   card: {
@@ -43,15 +43,30 @@ const styles = theme => ({
   }
 })
 
-class PortfolioItem extends Component {
+class SingleProject extends Component {
   constructor () {
     super()
-    this.state = { expanded: false }
+    this.state = { expanded: false, id: '', title: '', description: '' }
     this.handleExpandClick = this.handleExpandClick.bind(this)
   }
 
   handleExpandClick () {
     this.setState({ expanded: !this.state.expanded })
+  }
+
+  componentDidMount () {
+    fetch(`/api/projects/${this.props.id}`)
+      .then(res => {
+        return res.json()
+      })
+      .then(blogPost => {
+        console.log('blogPost', blogPost)
+
+        this.setState({
+          title: blogPost.title,
+          content: blogPost.content
+        })
+      })
   }
 
   render () {
@@ -70,7 +85,7 @@ class PortfolioItem extends Component {
               <MoreVertIcon />
             </IconButton>
           }
-          title={this.props.title}
+          title={this.state.title}
           subheader={''}
         />
         <CardMedia
@@ -79,7 +94,7 @@ class PortfolioItem extends Component {
           title='bing'
         />
         <CardContent>
-          <Typography variant='body1'>{this.props.description}</Typography>
+          <Typography variant='body1'>{this.state.description}</Typography>
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
           <IconButton
@@ -90,15 +105,15 @@ class PortfolioItem extends Component {
             aria-expanded={this.state.expanded}
             aria-label='Show more'
           >
+            <Button
+              size='small'
+              component={Link}
+              to={`/projects/${this.props.id}/edit`}
+            >
+              Edit
+            </Button>
             <ExpandMoreIcon />
           </IconButton>
-          <Button
-            size='small'
-            component={Link}
-            to={`/projects/${this.props.id}`}
-          >
-            See more...
-          </Button>
         </CardActions>
         <Collapse in={this.state.expanded} timeout='auto' unmountOnExit>
           <CardContent>
@@ -120,8 +135,8 @@ class PortfolioItem extends Component {
   }
 }
 
-PortfolioItem.propTypes = {
+SingleProject.propTypes = {
   classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(PortfolioItem)
+export default withStyles(styles)(SingleProject)

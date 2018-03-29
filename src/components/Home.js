@@ -1,16 +1,11 @@
 import React, { Component } from 'react'
-import 'whatwg-fetch' // fetch
+// eslint-disable-next-line
+import { BrowserRouter as Router } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 
 import BlogContainer from './utility/BlogContainer'
-
-// enable this versus in child component, container styles should be top level.
-// const styles = {
-//   card: {
-//     minWidth: 275,
-//     maxWidth: 875,
-//     margin: 'auto'
-//   }
-// }
+import BlogPost from './utility/BlogPost'
+import EditableBlogPost from './utility/EditableBlogPost'
 
 export default class Home extends Component {
   constructor (props) {
@@ -21,25 +16,32 @@ export default class Home extends Component {
   }
 
   componentDidMount () {
-    const lorem = `
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      Donec aliquet semper dui. Ut pretium felis accumsan ante tempor,
-      id aliquet est pretium. Etiam facilisis odio vitae semper molestie.
-      Phasellus vestibulum pretium cursus. Ut maximus feugiat commodo.
-      Donec sed lobortis felis. Nullam eros dolor, luctus ut sem sit amet,
-      commodo pellentesque libero. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-    `
     // request blog posts from server
     fetch('/api/posts')
       .then(response => {
         return response.json()
       })
       .then(text => {
-        // set state to list received from backend
+        console.log(text)
+
         // text = [
-        //   { index: '1', content: lorem, title: 'Title Number One' },
-        //   { index: '2', content: lorem, title: 'Title Number Two' }
-        // ] // for testing only
+        //   {
+        //     id: 1,
+        //     title: 'testing 123',
+        //     content: 'something was typed in here'
+        //   },
+        //   {
+        //     id: 2,
+        //     title: 'testing 123',
+        //     content: 'something was typed in here'
+        //   },
+        //   {
+        //     id: 3,
+        //     title: 'testing 123',
+        //     content: 'something was typed in here'
+        //   }
+        // ] // testing data
+
         this.setState({
           blogPosts: text
         })
@@ -50,6 +52,27 @@ export default class Home extends Component {
   }
 
   render () {
-    return <BlogContainer posts={this.state.blogPosts} />
+    return (
+      <Switch>
+        <Route
+          exact
+          path={`${this.props.match.url}/:id`}
+          component={BlogPost}
+        />
+        <Route
+          exact
+          path={`${this.props.match.url}/:id/edit`}
+          component={EditableBlogPost}
+        />
+        <Route
+          exact
+          path={`${this.props.match.url}/new/post`}
+          render={() => {
+            return <EditableBlogPost isNew />
+          }}
+        />
+        <BlogContainer posts={this.state.blogPosts} />
+      </Switch>
+    )
   }
 }

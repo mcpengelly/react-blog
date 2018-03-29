@@ -1,9 +1,11 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { withStyles } from 'material-ui/styles'
-import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card'
+import React, { Component } from 'react'
+// eslint-disable-next-line
+import { BrowserRouter as Router } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import Card, { CardContent, CardMedia, CardActions } from 'material-ui/Card'
 import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
+import { withStyles } from 'material-ui/styles'
 
 const styles = theme => ({
   card: {
@@ -11,11 +13,6 @@ const styles = theme => ({
     maxWidth: 875,
     margin: 'auto',
     padding: 10
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)'
   },
   media: {
     height: 200
@@ -31,34 +28,56 @@ const styles = theme => ({
   }
 })
 
-function BlogSummary (props) {
-  const { classes } = props
+class BlogPost extends Component {
+  constructor () {
+    super()
+    this.state = { title: '', content: '' }
+  }
 
-  return (
-    <Card className={classes.card}>
-      <CardMedia
-        className={classes.media}
-        image='/static/images/cards/contemplative-reptile.jpg'
-        title='bang'
-      />
-      <CardContent>
-        <Typography className={classes.title}>Word of the Day</Typography>
-        <Typography variant='headline'>{props.title}</Typography>
-        <Typography className={classes.pos}>adjective</Typography>
-        <Typography variant='body'>
-          {props.content}
-          <br />
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size='small'>See More...</Button>
-      </CardActions>
-    </Card>
-  )
+  componentDidMount () {
+    fetch(`/api/posts/${this.props.match.params.id}`)
+      .then(res => {
+        return res.json()
+      })
+      .then(blogPost => {
+        console.log('blogPost', blogPost)
+
+        this.setState({
+          title: blogPost.title,
+          content: blogPost.content
+        })
+      })
+  }
+
+  render () {
+    console.log(this.props.match.params.id)
+    const { classes } = this.props
+
+    return (
+      <Card className={classes.card}>
+        <CardMedia
+          className={classes.media}
+          image='/static/images/cards/contemplative-reptile.jpg'
+          title='bang'
+        />
+        <CardContent>
+          <Typography className={classes.title}>{this.state.title}</Typography>
+          <Typography variant='headline'>{this.state.title}</Typography>
+          <Typography className={classes.pos}>adjective</Typography>
+          <Typography variant='body1'>{this.state.content}</Typography>
+        </CardContent>
+        <CardActions>
+          <Button
+            size='small'
+            component={Link}
+            to={`${this.props.match.url}/edit`}
+          >
+            Edit
+          </Button>
+        </CardActions>
+      </Card>
+    )
+  }
 }
 
-BlogSummary.propTypes = {
-  classes: PropTypes.object.isRequired
-}
-
-export default withStyles(styles)(BlogSummary)
+export default withStyles(styles)(BlogPost)

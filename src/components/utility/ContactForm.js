@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import MailIcon from 'react-icons/lib/fa/envelope-o'
 import NotificationSystem from 'react-notification-system'
-import 'whatwg-fetch' // fetch
 import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button'
 import Icon from 'material-ui/Icon'
@@ -162,13 +160,11 @@ class ContactForm extends Component {
           variant='raised'
           color='primary'
         >
-          Send
-          <MailIcon />
+          Send<Icon>send</Icon>
         </Button>
 
         <NotificationSystem ref='notificationSystem' />
         <br />
-
         <Typography className={classes.titles} variant='title'>
           Want to get an email whenever there are new blog posts? Enter your
           email and click "Subscribe". Don't worry, you can unsubscribe anytime
