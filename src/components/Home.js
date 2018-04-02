@@ -3,11 +3,57 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
 
-import BlogContainer from './utility/BlogContainer'
+import BlogSummaryContainer from './utility/BlogSummaryContainer'
 import BlogPost from './utility/BlogPost'
 import EditableBlogPost from './utility/EditableBlogPost'
+import { CircularProgress } from 'material-ui/Progress'
 
-export default class Home extends Component {
+function withBlogPostData (WrappedComponent) {
+  return class BlogPostContainer extends React.Component {
+    constructor () {
+      super()
+      this.state = {
+        title: '',
+        content: '',
+        catchPhrase: '',
+        pageIsReady: false
+      }
+    }
+
+    componentDidMount () {
+      fetch(`/api/posts/${this.props.match.params.id}`)
+        .then(res => {
+          return res.json()
+        })
+        .then(blogPost => {
+          this.setState({
+            title: blogPost.title,
+            content: blogPost.content,
+            catchPhrase: blogPost.catchPhrase,
+            img: blogPost.img,
+            pageIsReady: true
+          })
+        })
+    }
+
+    render () {
+      if (!this.state.pageIsReady) {
+        return <CircularProgress />
+      }
+
+      return (
+        <WrappedComponent
+          id={this.props.match.params.id}
+          title={this.state.title}
+          content={this.state.content}
+          catchPhrase={this.state.catchPhrase}
+        />
+      )
+    }
+  }
+}
+
+class Home extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -22,26 +68,6 @@ export default class Home extends Component {
         return response.json()
       })
       .then(text => {
-        console.log(text)
-
-        // text = [
-        //   {
-        //     id: 1,
-        //     title: 'testing 123',
-        //     content: 'something was typed in here'
-        //   },
-        //   {
-        //     id: 2,
-        //     title: 'testing 123',
-        //     content: 'something was typed in here'
-        //   },
-        //   {
-        //     id: 3,
-        //     title: 'testing 123',
-        //     content: 'something was typed in here'
-        //   }
-        // ] // testing data
-
         this.setState({
           blogPosts: text
         })
@@ -56,13 +82,20 @@ export default class Home extends Component {
       <Switch>
         <Route
           exact
+          path={`${this.props.match.url}`}
+          render={() => {
+            return <BlogSummaryContainer posts={this.state.blogPosts} />
+          }}
+        />
+        <Route
+          exact
           path={`${this.props.match.url}/:id`}
-          component={BlogPost}
+          component={withBlogPostData(BlogPost)}
         />
         <Route
           exact
           path={`${this.props.match.url}/:id/edit`}
-          component={EditableBlogPost}
+          component={withBlogPostData(EditableBlogPost)}
         />
         <Route
           exact
@@ -71,8 +104,9 @@ export default class Home extends Component {
             return <EditableBlogPost isNew />
           }}
         />
-        <BlogContainer posts={this.state.blogPosts} />
       </Switch>
     )
   }
 }
+
+export default Home

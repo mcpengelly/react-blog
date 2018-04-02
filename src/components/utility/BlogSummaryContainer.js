@@ -7,12 +7,18 @@ import { Link } from 'react-router-dom'
 
 const styles = {
   floatButton: {
-    postiion: 'sticky',
-    top: '10%'
+    margin: 0,
+    top: 'auto',
+    right: '2%',
+    bottom: '10%',
+    left: 'auto',
+    position: 'fixed'
   }
 }
-class BlogContainer extends Component {
+class BlogSummaryContainer extends Component {
   render () {
+    const { classes } = this.props
+
     const blogPosts = this.props.posts.map((post, index) => {
       return (
         <BlogSummary
@@ -20,11 +26,11 @@ class BlogContainer extends Component {
           id={post.id}
           title={post.title}
           content={post.content}
+          catchPhrase={post.catchPhrase}
+          img={post.img}
         />
       )
     })
-
-    const { classes } = this.props
 
     return (
       <div>
@@ -44,4 +50,4 @@ class BlogContainer extends Component {
   }
 }
 
-export default withStyles(styles)(BlogContainer)
+export default withStyles(styles)(BlogSummaryContainer)

@@ -8,6 +8,8 @@ import Divider from 'material-ui/Divider'
 import { BrowserRouter as Router } from 'react-router-dom'
 import uuidv4 from 'uuidv4'
 import Dropzone from 'react-dropzone'
+import BlogPost from './BlogPost'
+import Paper from 'material-ui/Paper'
 
 // TODO: use/leverage draftjs RTE for adding styles to blog posts with html
 // TODO: make image upload part of the preview
@@ -57,14 +59,15 @@ const styles = theme => ({
 class EditableBlogPost extends Component {
   constructor (props) {
     super(props)
-    console.log('this.props.isNew', this.props.isNew)
+
+    const { title, catchPhrase, content, isNew } = props
 
     this.state = {
-      id: '',
+      id: props.id || '',
       title: '',
       content: '',
       catchPhrase: '',
-      isNew: this.props.isNew || false,
+      isNew: isNew || false,
       file: [{ preview: '/placeholder' }]
     }
   }
@@ -104,7 +107,7 @@ class EditableBlogPost extends Component {
       })
       .then(text => {
         // whats our response?
-        console.log(text)
+        // console.log(text)
 
         // clear inputs
         this.setState({
@@ -127,34 +130,20 @@ class EditableBlogPost extends Component {
     // maybe post/put request here?
   }
 
-  componentDidMount () {
-    console.log(this.state.isNew)
-
+  componentWillMount (props) {
+    const { title, catchPhrase, content } = this.props
     // if its not a new record then fetch existing data from backend
-    if (!this.state.isNew) {
-      fetch(`/api/posts/${this.props.match.params.id}`)
-        .then(response => {
-          return response.json()
-        })
-        .then(text => {
-          console.log('text', text)
-
-          const { id, title, content, catchPhrase } = text
-
-          console.log('title', title)
-          this.setState({
-            id: id,
-            title: title || '',
-            content: content || '',
-            catchPhrase: catchPhrase || ''
-          })
-        })
-    }
+    // if (!this.props.isNew) {
+    this.setState({
+      title,
+      catchPhrase,
+      content
+    })
+    // }
   }
 
   render () {
     const { classes } = this.props
-    console.log(this.state)
 
     return (
       <Card className={classes.card}>
@@ -203,28 +192,21 @@ class EditableBlogPost extends Component {
         </CardActions>
         <Divider />
         <Typography variant='headline'>Preview</Typography>
-        <CardMedia
-          className={classes.media}
-          image={this.state.file[0].preview}
-          title='bang'
+        <BlogPost
+          title={this.state.title}
+          catchPhrase={this.state.catchPhrase}
+          content={this.state.content}
+          img={this.state.file[0].preview}
         />
-        <CardContent>
-          <Typography className={classes.title}>
-            {this.state.title || 'Title'}
-          </Typography>
-          <Typography variant='headline'>
-            {this.state.title || 'Title'}
-          </Typography>
-          <Typography className={classes.pos}>
-            {this.state.catchPhrase || 'CatchPhrase'}
-          </Typography>
-          <Typography variant='body1'>
-            {this.state.content || 'Content'}
-          </Typography>
-        </CardContent>
       </Card>
     )
   }
 }
-
+/*
+  <CardMedia
+    className={classes.media}
+    image={this.state.file[0].preview}
+    title='bang'
+  />
+*/
 export default withStyles(styles)(EditableBlogPost)

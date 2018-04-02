@@ -35,7 +35,13 @@ export default class Portfolio extends Component {
   render () {
     return (
       <Switch>
-        <ProjectsContainer projects={this.state.projectList} />
+        <Route
+          exact
+          path={`${this.props.match.url}`}
+          render={() => {
+            return <ProjectsContainer projects={this.state.projectList} />
+          }}
+        />
         <Route
           exact
           path={`${this.props.match.url}/:id`}
