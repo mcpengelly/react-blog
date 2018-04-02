@@ -87,7 +87,8 @@ class EditableBlogPost extends Component {
       id: this.state.id,
       title: this.state.title,
       content: this.state.content,
-      catchPhrase: this.state.catchPhrase
+      catchPhrase: this.state.catchPhrase,
+      file: this.state.file
     }
 
     // hit different endpoints with POST/PUT based on if its new or not

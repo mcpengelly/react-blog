@@ -4,7 +4,7 @@ const changeCase = require('change-case')
 const passport = require('passport')
 const BasicStrategy = require('passport-http').BasicStrategy
 const multer = require('multer')
-const upload = multer({ dest: 'server/assets/img/uploads' })
+const upload = multer({ dest: 'server/uploads/' })
 
 const pgpConfig = {
   host: process.env.PGHOST || 'localhost',
@@ -228,16 +228,22 @@ module.exports = function (app) {
   getAll('posts')
   getOneById('posts')
   deleteById('posts')
-  updateById('posts', ['title', 'content'])
+  updateById('posts', ['title', 'content', 'catchPhrase'])
 
   // CREATE new blog post
   app.post(
     '/api/posts',
+    upload.single('file'), // uncomment when ready for testing
     (req, res) => {
       let postid
 
+      // if(req.file){
+
+      // }
+      // save the string path to the db?
+
       querystring =
-        'INSERT INTO posts (title, content) VALUES ($1, $2) RETURNING *'
+        'INSERT INTO posts (title, content, catch_phrase) VALUES ($1, $2, $3) RETURNING *'
       db
         .one(querystring, [req.body.title, req.body.content])
         .then(post => {
@@ -258,15 +264,15 @@ module.exports = function (app) {
                       post.title
                     } is available at mattpengelly.com`,
                     html: `
-                        A new post is up! check it out
-                        <a href="${HOSTNAME}" target="_blank">
-                            Here
-                        </a>
+                      A new post is up! check it out
+                      <a href="${HOSTNAME}" target="_blank">
+                          Here
+                      </a>
 
-                        Tired of emails?
-                        <a href="${HOSTNAME + path}" target="_blank">
-                            Unsubscribe
-                        </a>
+                      Tired of emails?
+                      <a href="${HOSTNAME + path}" target="_blank">
+                          Unsubscribe
+                      </a>
                     `
                   }
 
@@ -330,12 +336,12 @@ module.exports = function (app) {
             to: [req.body.subscriberEmail],
             subject: `Subscriber Confirmation for mattpengelly.com`,
             html: `
-                            Click the button below to confirm your subscription to <strong>mattpengelly.com</strong> and receive updates for new blogposts. If you didn't subscribe please ignore this email, you will not receive any further emails.
+                Click the button below to confirm your subscription to <strong>mattpengelly.com</strong> and receive updates for new blogposts. If you didn't subscribe please ignore this email, you will not receive any further emails.
 
-                            <a href="${HOSTNAME + path}" target="_blank">
-                                Subscribe
-                            </a>
-                        `
+                <a href="${HOSTNAME + path}" target="_blank">
+                    Subscribe
+                </a>
+            `
           }
 
           transporter.sendMail(mailOptions)
@@ -368,13 +374,13 @@ module.exports = function (app) {
             to: [sub.email],
             subject: `Successfully added to mattpengelly.com mailing list`,
             html: `
-                            You've been added to mattpengelly.com mailing list, you'll receive an email when new blog posts are available.
+                You've been added to mattpengelly.com mailing list, you'll receive an email when new blog posts are available.
 
-                            Tired of emails?
-                            <a href="${HOSTNAME + path}" target="_blank">
-                                Unsubscribe
-                            </a>
-                        `
+                Tired of emails?
+                <a href="${HOSTNAME + path}" target="_blank">
+                    Unsubscribe
+                </a>
+            `
           }
 
           transporter.sendMail(mailOptions)

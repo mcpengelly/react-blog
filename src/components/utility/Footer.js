@@ -1,11 +1,17 @@
 import React from 'react'
 import SocialMediaIcons from './SocialMediaIcons'
+import { withStyles } from 'material-ui/styles'
 
-const footerStyle = { backgroundColor: 'white' }
+const styles = {
+  footer: {
+    // backgroundColor: 'white',
+    padding: 10
+  }
+}
 
 function Footer (props) {
   return (
-    <footer className='footer' style={footerStyle}>
+    <footer className={props.classes.footer}>
       <SocialMediaIcons />
       <small>
         <p>{props.copyright}</p>
@@ -14,4 +20,4 @@ function Footer (props) {
   )
 }
 
-export default Footer
+export default withStyles(styles)(Footer)
