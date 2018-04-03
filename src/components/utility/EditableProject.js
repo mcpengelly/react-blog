@@ -21,13 +21,26 @@ import IconButton from 'material-ui/IconButton'
 import red from 'material-ui/colors/red'
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
 import MoreVertIcon from 'material-ui-icons/MoreVert'
+import SingleProject from './SingleProject'
 
 const styles = theme => ({
   card: {
-    maxWidth: 400
+    maxWidth: 875,
+    margin: 'auto',
+    paddingBottom: 25
+  },
+  innerCard: {
+    maxWidth: 400,
+    maxHeight: '80%',
+    marginTop: 25,
+    margin: 'auto'
+  },
+  form: {
+    width: '100%',
+    margin: 'auto'
   },
   media: {
-    height: 194
+    height: 200
   },
   actions: {
     display: 'flex'
@@ -44,14 +57,25 @@ const styles = theme => ({
   },
   avatar: {
     backgroundColor: red[500]
+  },
+  textfield: {
+    width: '40%'
+  },
+  textarea: {
+    width: '80%'
+  },
+  fileUploader: {
+    marginTop: 25,
+    width: '60%',
+    height: 100,
+    border: '1px solid black',
+    margin: 'auto'
   }
 })
 
 class EditableProject extends Component {
   constructor (props) {
     super(props)
-
-    console.log('document.referer', document.referrer)
 
     this.state = {
       id: '',
@@ -116,26 +140,26 @@ class EditableProject extends Component {
   }
 
   componentDidMount () {
-    console.log('document.referer', document.referrer)
+    console.log('this.props', this.props)
 
     // if its not a new record then fetch existing data from backend
-    if (!this.state.isNew) {
-      fetch('/api/projects')
-        .then(response => {
-          return response.text()
-        })
-        .then(text => {
-          console.log(text)
+    // if (!this.state.isNew) {
+    //   fetch('/api/projects')
+    //     .then(response => {
+    //       return response.text()
+    //     })
+    //     .then(text => {
+    //       console.log(text)
 
-          const { id, title, description } = text
+    //       const { id, title, description } = text
 
-          this.setState({
-            id: id || uuidv4(),
-            title: title || '',
-            description: description || ''
-          })
-        })
-    }
+    //       this.setState({
+    //         id: id || uuidv4(),
+    //         title: title || '',
+    //         description: description || ''
+    //       })
+    //     })
+    // }
   }
 
   render () {
@@ -177,8 +201,11 @@ class EditableProject extends Component {
           </form>
         </CardActions>
         <Divider />
+
         <Typography variant='headline'>Preview</Typography>
-        <Card className={classes.card}>
+
+        {/* <SingleProject title={this.state.title} description={this.state.description} /> */}
+        <Card className={classes.innerCard}>
           <CardHeader
             avatar={
               <Avatar aria-label='Recipe' className={classes.avatar}>

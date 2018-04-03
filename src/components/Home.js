@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
 
-import BlogSummaryContainer from './utility/BlogSummaryContainer'
+import BlogSummaryList from './utility/BlogSummaryList'
 import BlogPost from './utility/BlogPost'
 import EditableBlogPost from './utility/EditableBlogPost'
 import { CircularProgress } from 'material-ui/Progress'
@@ -84,7 +84,7 @@ class Home extends Component {
           exact
           path={`${this.props.match.url}`}
           render={() => {
-            return <BlogSummaryContainer posts={this.state.blogPosts} />
+            return <BlogSummaryList posts={this.state.blogPosts} />
           }}
         />
         <Route

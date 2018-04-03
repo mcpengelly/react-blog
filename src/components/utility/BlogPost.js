@@ -6,6 +6,7 @@ import Card, { CardContent, CardMedia, CardActions } from 'material-ui/Card'
 import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
 import { withStyles } from 'material-ui/styles'
+import FloatingButton from './FloatingButton'
 
 const styles = theme => ({
   card: {
@@ -48,11 +49,36 @@ class BlogPost extends Component {
           <Button size='small' component={Link} to={`${this.props.id}/edit`}>
             Edit
           </Button>
+          <FloatingButton
+            url={`${this.props.id}/edit`}
+            color='primary'
+            iconName='edit_icon'
+            translation='translateX(-120%)'
+          />
+          <FloatingButton
+            url='/blog'
+            color='secondary'
+            iconName='delete_icon'
+            onClick={this.onDeleteClick.bind(this)}
+          />
         </CardActions>
       </Card>
     )
   }
+
+  onDeleteClick () {
+    const options = { method: 'DELETE' }
+
+    fetch(`/api/posts/${this.props.id}`, options)
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        throw err
+      })
+  }
 }
+
 // style={{ backgroundImage: 'url(' + backgroundImage + ')' }} // probably not
 
 export default withStyles(styles)(BlogPost)

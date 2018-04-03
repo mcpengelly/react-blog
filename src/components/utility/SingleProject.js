@@ -55,18 +55,19 @@ class SingleProject extends Component {
   }
 
   componentDidMount () {
-    fetch(`/api/projects/${this.props.id}`)
-      .then(res => {
-        return res.json()
-      })
-      .then(blogPost => {
-        console.log('blogPost', blogPost)
+    // fetch(`/api/projects/${this.props.id}`)
+    //   .then(res => {
+    //     return res.json()
+    //   })
+    //   .then(blogPost => {
+    //     console.log('blogPost', blogPost)
 
-        this.setState({
-          title: blogPost.title,
-          content: blogPost.content
-        })
-      })
+    //     this.setState({
+    //       title: blogPost.title,
+    //       content: blogPost.content
+    //     })
+    //   })
+    console.log('this.props', this.props)
   }
 
   render () {
@@ -85,7 +86,7 @@ class SingleProject extends Component {
               <MoreVertIcon />
             </IconButton>
           }
-          title={this.state.title}
+          title={this.props.title}
           subheader={''}
         />
         <CardMedia
@@ -94,7 +95,7 @@ class SingleProject extends Component {
           title='bing'
         />
         <CardContent>
-          <Typography variant='body1'>{this.state.description}</Typography>
+          <Typography variant='body1'>{this.props.description}</Typography>
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
           <IconButton
@@ -118,15 +119,8 @@ class SingleProject extends Component {
         <Collapse in={this.state.expanded} timeout='auto' unmountOnExit>
           <CardContent>
             <Typography paragraph variant='body2'>
-              Method:
-            </Typography>
-            <Typography paragraph>
-              Heat 1/2 cup of the broth in a pot until simmering, add saffron
-              and set aside for 10 minutes.
-            </Typography>
-            <Typography>
-              Set aside off of the heat to let rest for 10 minutes, and then
-              serve.
+              Method: Heat 1/2 cup of the broth in a pot until simmering, add
+              saffron and set aside for 10 minutes.
             </Typography>
           </CardContent>
         </Collapse>

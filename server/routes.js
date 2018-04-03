@@ -109,9 +109,6 @@ module.exports = function (app) {
   function deleteById (relation) {
     app.delete(
       `/api/${relation}/:id`,
-      passport.authenticate('basic', {
-        session: false
-      }),
       (req, res) => {
         db
           .none(`DELETE FROM ${relation} WHERE id = $1`, [req.params.id])

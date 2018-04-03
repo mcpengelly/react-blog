@@ -20,8 +20,10 @@ const styles = theme => ({
   card: {
     minWidth: 275,
     maxWidth: 875,
-    margin: 'auto',
-    padding: 10
+    margin: 'auto'
+  },
+  container: {
+    marginTop: 25
   },
   media: {
     height: 200,
@@ -193,12 +195,14 @@ class EditableBlogPost extends Component {
         </CardActions>
         <Divider />
         <Typography variant='headline'>Preview</Typography>
-        <BlogPost
-          title={this.state.title}
-          catchPhrase={this.state.catchPhrase}
-          content={this.state.content}
-          img={this.state.file[0].preview}
-        />
+        <div className={classes.container}>
+          <BlogPost
+            title={this.state.title}
+            catchPhrase={this.state.catchPhrase}
+            content={this.state.content}
+            img={this.state.file[0].preview}
+          />
+        </div>
       </Card>
     )
   }
