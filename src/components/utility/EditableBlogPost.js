@@ -85,9 +85,10 @@ class EditableBlogPost extends Component {
 
   onSubmitClick (e) {
     e.preventDefault()
+    console.log('this.state', this.state)
 
     let data = {
-      id: this.state.id,
+      id: !this.state.isNew ? this.state.id : uuidv4(),
       title: this.state.title,
       content: this.state.content,
       catchPhrase: this.state.catchPhrase,

@@ -19,7 +19,7 @@ let upload = multer({ storage: storage })
 
 const pgpConfig = {
   host: process.env.PGHOST || 'localhost',
-  user: process.env.PGUSER || 'postgres',
+  user: process.env.PGUSER || 'mapengel', // postgres
   password: process.env.PGPASS || 'postgres',
   database: process.env.PGDATABASE || 'postgres',
   port: process.env.PGPORT || 5432
@@ -169,7 +169,10 @@ module.exports = function (app) {
 
   // Generic UPDATE route
   function updateById (relation, targetKeys) {
-    app.put(`/api/${relation}/:id`, (req, res) => {
+    app.put(`/api/${relation}/:id`,
+      upload.single('file'),
+      (req, res) => {
+
       const id = req.params.id
       const data = req.body
       if(req.file){
@@ -194,12 +197,10 @@ module.exports = function (app) {
   function db_updateById (table, id, data) {
     const sortedKeys = Object.keys(data).sort()
 
-
     // assumes db columns are snake cased
     const fields = sortedKeys.map(_snakeCase).join(',')
     const values = sortedKeys.map(_prepValueAccessors).join(',')
     console.log(`UPDATE ${table} SET (${fields}) = (${values}) WHERE id = '${id}'`)
-
 
     return db.one(
       `UPDATE ${table} SET (${fields}) = (${values}) WHERE id = '${id}' RETURNING id`,
@@ -319,7 +320,6 @@ module.exports = function (app) {
   })
 
   // checks if user is in the mailing list, if not, add him and set active = false
-  // TODO refactor with named promises?
   app.post('/api/subscribe', (req, res) => {
     db.task('insertIfNotExists', t => {
       return t
