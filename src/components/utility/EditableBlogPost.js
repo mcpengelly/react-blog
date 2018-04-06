@@ -6,6 +6,7 @@ import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
 import Divider from 'material-ui/Divider'
 import { BrowserRouter as Router } from 'react-router-dom'
+import { Redirect } from 'react-router'
 import uuidv4 from 'uuidv4'
 import Dropzone from 'react-dropzone'
 import BlogPost from './BlogPost'
@@ -14,7 +15,6 @@ import Paper from 'material-ui/Paper'
 // TODO: use/leverage draftjs RTE for adding styles to blog posts with html
 // TODO: make image upload part of the preview
 // TODO: navigate home after submission
-// TODO: some code duplication exists between BlogPost and EditableBlogPost via the Preview, could refactor this
 
 const styles = theme => ({
   card: {
@@ -70,7 +70,8 @@ class EditableBlogPost extends Component {
       content: '',
       catchPhrase: '',
       isNew: isNew || false,
-      file: [{ preview: '/placeholder' }]
+      file: [{ preview: '' }],
+      redirect: false
     }
   }
 
@@ -90,39 +91,46 @@ class EditableBlogPost extends Component {
       title: this.state.title,
       content: this.state.content,
       catchPhrase: this.state.catchPhrase,
-      file: this.state.file
+      file: this.state.file[0] // should do this better
+    }
+
+    // for sending multipart/form-data
+    let formData = new FormData()
+    for (let name in data) {
+      formData.append(name, data[name])
     }
 
     // hit different endpoints with POST/PUT based on if its new or not
     const url = this.state.isNew ? '/api/posts' : `/api/posts/${this.state.id}`
-
     const options = {
       method: this.state.isNew ? 'POST' : 'PUT',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      body: formData
     }
+
+    // const options = {
+    //   method: this.state.isNew ? 'POST' : 'PUT',
+    //   body: JSON.stringify(data),
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data'
+    //   }
+    // }
 
     fetch(url, options)
       .then(response => {
         return response.text()
       })
       .then(text => {
-        // whats our response?
-        // console.log(text)
-
+        console.log('text', text)
         // clear inputs
         this.setState({
           id: '',
           title: '',
           content: '',
           catchPhrase: '',
-          file: [{ preview: '/placeholder' }]
+          file: [{ preview: '' }],
+          img: '',
+          redirect: true
         })
-
-        // navigate home
-        // location.href = 'https://localhost:3000/'
       })
   }
 
@@ -130,23 +138,28 @@ class EditableBlogPost extends Component {
     this.setState({
       file: acceptedFiles
     })
-    // maybe post/put request here?
   }
 
-  componentWillMount (props) {
-    const { title, catchPhrase, content } = this.props
+  componentDidMount (props) {
+    const { isNew, title, catchPhrase, content, img } = this.props
+
     // if its not a new record then fetch existing data from backend
-    // if (!this.props.isNew) {
-    this.setState({
-      title,
-      catchPhrase,
-      content
-    })
-    // }
+    if (!isNew) {
+      this.setState({
+        title,
+        catchPhrase,
+        content,
+        img
+      })
+    }
   }
 
   render () {
     const { classes } = this.props
+
+    if (this.state.redirect) {
+      return <Redirect to='/blog' />
+    }
 
     return (
       <Card className={classes.card}>
@@ -200,18 +213,12 @@ class EditableBlogPost extends Component {
             title={this.state.title}
             catchPhrase={this.state.catchPhrase}
             content={this.state.content}
-            img={this.state.file[0].preview}
+            img={this.state.img}
           />
         </div>
       </Card>
     )
   }
 }
-/*
-  <CardMedia
-    className={classes.media}
-    image={this.state.file[0].preview}
-    title='bang'
-  />
-*/
+
 export default withStyles(styles)(EditableBlogPost)

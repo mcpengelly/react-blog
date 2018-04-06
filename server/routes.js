@@ -4,7 +4,18 @@ const changeCase = require('change-case')
 const passport = require('passport')
 const BasicStrategy = require('passport-http').BasicStrategy
 const multer = require('multer')
-const upload = multer({ dest: 'server/uploads/' })
+const path = require('path')
+
+let storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.resolve(__dirname, '../', 'build'))
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname)
+  }
+})
+let upload = multer({ storage: storage })
+// const upload = multer({ dest: 'uploads/' })
 
 const pgpConfig = {
   host: process.env.PGHOST || 'localhost',
@@ -52,25 +63,25 @@ passport.use(
 
 module.exports = function (app) {
   // Image accepting endpoint
-  app.post(`/api/projects/image`, upload.single('file'), (req, res) => {
-    const file = req.file
-    const data = req.body
-    data.img = file.filename
-    console.log(data)
+  // app.post(`/api/projects/image`, upload.single('file'), (req, res) => {
+  //   const file = req.file
+  //   const data = req.body
+  //   data.img = file.filename
+  //   console.log(data)
 
-    const sortedKeys = Object.keys(data).sort()
-    const fields = sortedKeys.map(_snakeCase).join(',')
-    const values = sortedKeys.map(_prepValueAccessors).join(',')
+  //   const sortedKeys = Object.keys(data).sort()
+  //   const fields = sortedKeys.map(_snakeCase).join(',')
+  //   const values = sortedKeys.map(_prepValueAccessors).join(',')
 
-    db
-      .none(`INSERT INTO projects (${fields}) VALUES (${values})`, data)
-      .then(() => {
-        res.send('uploaded file')
-      })
-      .catch(err => {
-        res.status(HTTP_INTERNAL_SERVER_ERROR).json({ error: err })
-      })
-  })
+  //   db
+  //     .none(`INSERT INTO projects (${fields}) VALUES (${values})`, data)
+  //     .then(() => {
+  //       res.send('uploaded file')
+  //     })
+  //     .catch(err => {
+  //       res.status(HTTP_INTERNAL_SERVER_ERROR).json({ error: err })
+  //     })
+  // })
 
   // Generic GET all
   function getAll (relation) {
@@ -107,19 +118,16 @@ module.exports = function (app) {
 
   // Generic DELETE by id
   function deleteById (relation) {
-    app.delete(
-      `/api/${relation}/:id`,
-      (req, res) => {
-        db
-          .none(`DELETE FROM ${relation} WHERE id = $1`, [req.params.id])
-          .then(() => {
-            res.send(`${relation} ID: ${req.params.id} has been deleted`)
-          })
-          .catch(err => {
-            res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
-          })
-      }
-    )
+    app.delete(`/api/${relation}/:id`, (req, res) => {
+      db
+        .none(`DELETE FROM ${relation} WHERE id = $1`, [req.params.id])
+        .then(() => {
+          res.send(`${relation} ID: ${req.params.id} has been deleted`)
+        })
+        .catch(err => {
+          res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
+        })
+    })
   }
 
   // Generic CREATE route
@@ -161,34 +169,37 @@ module.exports = function (app) {
 
   // Generic UPDATE route
   function updateById (relation, targetKeys) {
-    app.put(
-      `/api/${relation}/:id`,
-      (req, res) => {
-        const id = req.params.id
-        const data = req.body
-
-        const table = changeCase.snakeCase(relation)
-        const filteredData = _filterData(data, targetKeys)
-
-        db_updateById(table, id, filteredData)
-          .then(result => {
-            res
-              .status(HTTP_ACCEPTED)
-              .json({ msg: `updated existing ${table}, id: ${result.id}` })
-          })
-          .catch(err => {
-            res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
-          })
+    app.put(`/api/${relation}/:id`, (req, res) => {
+      const id = req.params.id
+      const data = req.body
+      if(req.file){
+        data.img = req.file.originalname
       }
-    )
+
+      const table = changeCase.snakeCase(relation)
+      const filteredData = _filterData(data, targetKeys)
+
+      db_updateById(table, id, filteredData)
+        .then(result => {
+          res
+            .status(HTTP_ACCEPTED)
+            .json({ msg: `updated existing ${table}, id: ${result.id}` })
+        })
+        .catch(err => {
+          res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
+        })
+    })
   }
 
   function db_updateById (table, id, data) {
     const sortedKeys = Object.keys(data).sort()
 
+
     // assumes db columns are snake cased
     const fields = sortedKeys.map(_snakeCase).join(',')
     const values = sortedKeys.map(_prepValueAccessors).join(',')
+    console.log(`UPDATE ${table} SET (${fields}) = (${values}) WHERE id = '${id}'`)
+
 
     return db.one(
       `UPDATE ${table} SET (${fields}) = (${values}) WHERE id = '${id}' RETURNING id`,
@@ -225,42 +236,45 @@ module.exports = function (app) {
   getAll('posts')
   getOneById('posts')
   deleteById('posts')
-  updateById('posts', ['title', 'content', 'catchPhrase'])
+  updateById('posts', ['title', 'content', 'catchPhrase', 'img'])
 
   // CREATE new blog post
-  app.post(
-    '/api/posts',
-    upload.single('file'), // uncomment when ready for testing
-    (req, res) => {
-      let postid
+  app.post('/api/posts', upload.single('file'), (req, res) => {
+    let postid
 
-      // if(req.file){
+    console.log('req.body', req.body)
+    console.log('req.file', req.file)
 
-      // }
-      // save the string path to the db?
+    // save the string path to the db?
 
-      querystring =
-        'INSERT INTO posts (title, content, catch_phrase) VALUES ($1, $2, $3) RETURNING *'
-      db
-        .one(querystring, [req.body.title, req.body.content])
-        .then(post => {
-          postId = post.id
+    querystring =
+      'INSERT INTO posts (title, content, catch_phrase, img) VALUES ($1, $2, $3, $4) RETURNING *'
 
-          // mail all active subscribers
-          db
-            .any('SELECT * FROM subscribers WHERE active = TRUE')
-            .then(activeSubscribers => {
-              // TODO? send 1 volley of emails
-              if (activeSubscribers && activeSubscribers.length) {
-                activeSubscribers.forEach(sub => {
-                  const path = `/api/unsubscribe/${sub.id}`
-                  const mailOptions = {
-                    from: '"Burna" <burnermcbernstein@gmail.com>',
-                    to: sub.email,
-                    subject: `New Post, ${
-                      post.title
-                    } is available at mattpengelly.com`,
-                    html: `
+    db
+      .one(querystring, [
+        req.body.title,
+        req.body.content,
+        req.body.catchPhrase,
+        req.file.originalname
+      ])
+      .then(post => {
+        postId = post.id
+
+        // mail all active subscribers
+        db
+          .any('SELECT * FROM subscribers WHERE active = TRUE')
+          .then(activeSubscribers => {
+            // TODO? send 1 volley of emails
+            if (activeSubscribers && activeSubscribers.length) {
+              activeSubscribers.forEach(sub => {
+                const path = `/api/unsubscribe/${sub.id}`
+                const mailOptions = {
+                  from: '"Burna" <burnermcbernstein@gmail.com>',
+                  to: sub.email,
+                  subject: `New Post, ${
+                    post.title
+                  } is available at mattpengelly.com`,
+                  html: `
                       A new post is up! check it out
                       <a href="${HOSTNAME}" target="_blank">
                           Here
@@ -271,21 +285,20 @@ module.exports = function (app) {
                           Unsubscribe
                       </a>
                     `
-                  }
+                }
 
-                  transporter.sendMail(mailOptions)
-                })
-              }
-            })
-        })
-        .then(() => {
-          res.status(HTTP_CREATED).send(`new post created, id: ${postId}`)
-        })
-        .catch(err => {
-          res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
-        })
-    }
-  )
+                transporter.sendMail(mailOptions)
+              })
+            }
+          })
+      })
+      .then(() => {
+        res.status(HTTP_CREATED).send(`new post created, id: ${postId}`)
+      })
+      .catch(err => {
+        res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
+      })
+  })
 
   // mailer: emails me on behalf of user
   app.post('/api/send-mail', (req, res) => {

@@ -7,6 +7,7 @@ import Divider from 'material-ui/Divider'
 import { BrowserRouter as Router } from 'react-router-dom'
 import uuidv4 from 'uuidv4'
 import Dropzone from 'react-dropzone'
+import { Redirect } from 'react-router'
 
 import classnames from 'classnames'
 import Card, {
@@ -82,7 +83,8 @@ class EditableProject extends Component {
       title: '',
       description: '',
       isNew: false,
-      file: [{ preview: '/placeholder' }]
+      file: [{ preview: '/placeholder' }],
+      redirect: false
     }
   }
 
@@ -116,19 +118,14 @@ class EditableProject extends Component {
         return response.text()
       })
       .then(text => {
-        // whats our response?
-        console.log(text)
-
-        // clear inputs
+        // clear inputs, redirect
         this.setState({
           id: '',
           title: '',
           description: '',
-          file: [{ preview: '/placeholder' }]
+          file: [{ preview: '/placeholder' }],
+          redirect: true
         })
-
-        // navigate home
-        // location.href = 'https://localhost:3000/'
       })
   }
 
@@ -165,6 +162,10 @@ class EditableProject extends Component {
   render () {
     const { classes } = this.props
     console.log(this.state)
+
+    if (this.state.redirect) {
+      return <Redirect to='/portfolio' />
+    }
 
     return (
       <Card className={classes.card}>

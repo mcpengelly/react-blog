@@ -33,14 +33,14 @@ const styles = theme => ({
 })
 
 function BlogSummary (props) {
-  const { classes, title, content, catchPhrase, id } = props
+  const { classes, title, content, catchPhrase, id, img } = props
 
   return (
     <Card className={classes.card}>
       <CardMedia
         className={classes.media}
-        image='/static/images/cards/contemplative-reptile.jpg'
-        title='bang'
+        image={`http://localhost:4000/${img}`}
+        title={img}
       />
       <CardContent>
         <Typography variant='headline'>{title}</Typography>

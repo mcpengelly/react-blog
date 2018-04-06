@@ -57,7 +57,6 @@ export default class Portfolio extends Component {
   }
 
   componentDidMount () {
-    // fetch portfolio items
     fetch('/api/projects')
       .then(response => {
         return response.json()

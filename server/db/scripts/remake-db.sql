@@ -16,6 +16,8 @@ CREATE TABLE posts (
 	id uuid DEFAULT uuid_generate_v4 (),
 	title text,
 	content text,
+	catch_phrase text,
+	img text,
 	PRIMARY KEY (id)
 );
 

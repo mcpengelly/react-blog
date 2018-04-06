@@ -8,6 +8,11 @@ import Typography from 'material-ui/Typography'
 import { withStyles } from 'material-ui/styles'
 import FloatingButton from './FloatingButton'
 
+// import anImage from '../../uploads/2db9bd44506e38561a91328a5990560e'
+// what if i have more then one?
+// how should i properly host images? /public?
+// where do i dynamically save files from the backend?
+
 const styles = theme => ({
   card: {
     minWidth: 275,
@@ -32,14 +37,19 @@ const styles = theme => ({
 class BlogPost extends Component {
   render () {
     const { classes, title, content, catchPhrase, img } = this.props
-    console.log('image', img)
+    console.log('img', img)
 
     return (
       <Card className={classes.card}>
-        <CardMedia className={classes.media} image={`${img}`} title='bang' />
+        <CardMedia
+          className={classes.media}
+          image={`http://localhost:4000/${img}`}
+          title={img}
+        />
         <CardContent>
-          <Typography className={classes.title}>{title || 'title'}</Typography>
-          <Typography variant='headline'>{title || 'title'}</Typography>
+          <Typography className={classes.title} variant='headline'>
+            {title || 'title'}
+          </Typography>
           <Typography className={classes.pos}>
             {catchPhrase || 'catchPhrase'}
           </Typography>
@@ -78,7 +88,5 @@ class BlogPost extends Component {
       })
   }
 }
-
-// style={{ backgroundImage: 'url(' + backgroundImage + ')' }} // probably not
 
 export default withStyles(styles)(BlogPost)

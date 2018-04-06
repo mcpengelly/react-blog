@@ -47,6 +47,7 @@ function withBlogPostData (WrappedComponent) {
           title={this.state.title}
           content={this.state.content}
           catchPhrase={this.state.catchPhrase}
+          img={this.state.img}
         />
       )
     }
@@ -62,7 +63,6 @@ class Home extends Component {
   }
 
   componentDidMount () {
-    // request blog posts from server
     fetch('/api/posts')
       .then(response => {
         return response.json()
