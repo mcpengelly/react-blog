@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button'
-import Card, { CardContent, CardMedia, CardActions } from 'material-ui/Card'
+import Card, { CardActions } from 'material-ui/Card'
 import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
 import Divider from 'material-ui/Divider'
@@ -10,7 +10,6 @@ import { Redirect } from 'react-router'
 import uuidv4 from 'uuidv4'
 import Dropzone from 'react-dropzone'
 import BlogPost from './BlogPost'
-import Paper from 'material-ui/Paper'
 
 // TODO: use/leverage draftjs RTE for adding styles to blog posts with html
 // TODO: make image upload part of the preview
@@ -62,7 +61,7 @@ class EditableBlogPost extends Component {
   constructor (props) {
     super(props)
 
-    const { id, title, content, catchPhrase, isNew } = props
+    const { id, isNew } = props
 
     this.state = {
       id: id || '',
@@ -107,14 +106,6 @@ class EditableBlogPost extends Component {
       body: formData
     }
 
-    // const options = {
-    //   method: this.state.isNew ? 'POST' : 'PUT',
-    //   body: JSON.stringify(data),
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data'
-    //   }
-    // }
-
     fetch(url, options)
       .then(response => {
         return response.text()
@@ -141,11 +132,12 @@ class EditableBlogPost extends Component {
   }
 
   componentDidMount (props) {
-    const { isNew, title, catchPhrase, content, img } = this.props
+    const { isNew, id, title, catchPhrase, content, img } = this.props
 
     // if its not a new record then fetch existing data from backend
     if (!isNew) {
       this.setState({
+        id,
         title,
         catchPhrase,
         content,
@@ -223,3 +215,13 @@ class EditableBlogPost extends Component {
 }
 
 export default withStyles(styles)(EditableBlogPost)
+
+/*
+// const options = {
+//   method: this.state.isNew ? 'POST' : 'PUT',
+//   body: JSON.stringify(data),
+//   headers: {
+//     'Content-Type': 'multipart/form-data'
+//   }
+// }
+*/

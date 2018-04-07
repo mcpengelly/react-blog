@@ -5,7 +5,6 @@ import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
 import Divider from 'material-ui/Divider'
 import { BrowserRouter as Router } from 'react-router-dom'
-import uuidv4 from 'uuidv4'
 import Dropzone from 'react-dropzone'
 import { Redirect } from 'react-router'
 
@@ -22,7 +21,6 @@ import IconButton from 'material-ui/IconButton'
 import red from 'material-ui/colors/red'
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
 import MoreVertIcon from 'material-ui-icons/MoreVert'
-import SingleProject from './SingleProject'
 
 const styles = theme => ({
   card: {
@@ -136,32 +134,8 @@ class EditableProject extends Component {
     // maybe post/put request here?
   }
 
-  componentDidMount () {
-    console.log('this.props', this.props)
-
-    // if its not a new record then fetch existing data from backend
-    // if (!this.state.isNew) {
-    //   fetch('/api/projects')
-    //     .then(response => {
-    //       return response.text()
-    //     })
-    //     .then(text => {
-    //       console.log(text)
-
-    //       const { id, title, description } = text
-
-    //       this.setState({
-    //         id: id || uuidv4(),
-    //         title: title || '',
-    //         description: description || ''
-    //       })
-    //     })
-    // }
-  }
-
   render () {
     const { classes } = this.props
-    console.log(this.state)
 
     if (this.state.redirect) {
       return <Redirect to='/portfolio' />
