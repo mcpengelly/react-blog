@@ -34,13 +34,20 @@ const styles = theme => ({
 
 class BlogPost extends Component {
   render () {
-    const { classes, title, content, catchPhrase, img } = this.props
+    const {
+      classes,
+      title,
+      content,
+      catchPhrase,
+      img,
+      previewImage
+    } = this.props
 
     return (
       <Card className={classes.card}>
         <CardMedia
           className={classes.media}
-          image={`http://localhost:4000/${img}`}
+          image={img ? `http://localhost:4000/${img}` : previewImage}
           title={img}
         />
         <CardContent>

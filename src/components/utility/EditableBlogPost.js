@@ -62,10 +62,10 @@ class EditableBlogPost extends Component {
   constructor (props) {
     super(props)
 
-    const { title, catchPhrase, content, isNew } = props
+    const { id, title, content, catchPhrase, isNew } = props
 
     this.state = {
-      id: props.id || '',
+      id: id || '',
       title: '',
       content: '',
       catchPhrase: '',
@@ -85,7 +85,6 @@ class EditableBlogPost extends Component {
 
   onSubmitClick (e) {
     e.preventDefault()
-    console.log('this.state', this.state)
 
     let data = {
       id: !this.state.isNew ? this.state.id : uuidv4(),
@@ -215,6 +214,7 @@ class EditableBlogPost extends Component {
             catchPhrase={this.state.catchPhrase}
             content={this.state.content}
             img={this.state.img}
+            previewImage={this.state.file[0].preview || '/smiley'}
           />
         </div>
       </Card>
