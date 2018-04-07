@@ -5,8 +5,9 @@ const passport = require('passport')
 const BasicStrategy = require('passport-http').BasicStrategy
 const multer = require('multer')
 const path = require('path')
+const camelcaseKeys = require('camelcase-keys')
 
-let storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.resolve(__dirname, '../', 'build'))
   },
@@ -14,8 +15,7 @@ let storage = multer.diskStorage({
     cb(null, file.originalname)
   }
 })
-let upload = multer({ storage: storage })
-// const upload = multer({ dest: 'uploads/' })
+const upload = multer({ storage: storage })
 
 const pgpConfig = {
   host: process.env.PGHOST || 'localhost',
@@ -62,27 +62,6 @@ passport.use(
 )
 
 module.exports = function (app) {
-  // Image accepting endpoint
-  // app.post(`/api/projects/image`, upload.single('file'), (req, res) => {
-  //   const file = req.file
-  //   const data = req.body
-  //   data.img = file.filename
-  //   console.log(data)
-
-  //   const sortedKeys = Object.keys(data).sort()
-  //   const fields = sortedKeys.map(_snakeCase).join(',')
-  //   const values = sortedKeys.map(_prepValueAccessors).join(',')
-
-  //   db
-  //     .none(`INSERT INTO projects (${fields}) VALUES (${values})`, data)
-  //     .then(() => {
-  //       res.send('uploaded file')
-  //     })
-  //     .catch(err => {
-  //       res.status(HTTP_INTERNAL_SERVER_ERROR).json({ error: err })
-  //     })
-  // })
-
   // Generic GET all
   function getAll (relation) {
     app.get(`/api/${relation}`, (req, res) => {
@@ -92,7 +71,8 @@ module.exports = function (app) {
           if (data.length < 1) {
             res.send(`no ${relation} found`)
           } else {
-            res.send(data)
+            // send back a list of entries with their keys camelCased
+            res.json(data.map(obj => camelcaseKeys(obj)))
           }
         })
         .catch(err => {
@@ -107,8 +87,7 @@ module.exports = function (app) {
       db
         .one(`SELECT * from ${relation} WHERE id = $1`, [req.params.id])
         .then(data => {
-          // TODO: return different message when nothing found?
-          res.send(data)
+          res.json(camelcaseKeys(data))
         })
         .catch(err => {
           res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
@@ -169,13 +148,10 @@ module.exports = function (app) {
 
   // Generic UPDATE route
   function updateById (relation, targetKeys) {
-    app.put(`/api/${relation}/:id`,
-      upload.single('file'),
-      (req, res) => {
-
+    app.put(`/api/${relation}/:id`, upload.single('file'), (req, res) => {
       const id = req.params.id
       const data = req.body
-      if(req.file){
+      if (req.file) {
         data.img = req.file.originalname
       }
 
@@ -200,7 +176,6 @@ module.exports = function (app) {
     // assumes db columns are snake cased
     const fields = sortedKeys.map(_snakeCase).join(',')
     const values = sortedKeys.map(_prepValueAccessors).join(',')
-    console.log(`UPDATE ${table} SET (${fields}) = (${values}) WHERE id = '${id}'`)
 
     return db.one(
       `UPDATE ${table} SET (${fields}) = (${values}) WHERE id = '${id}' RETURNING id`,
@@ -242,9 +217,6 @@ module.exports = function (app) {
   // CREATE new blog post
   app.post('/api/posts', upload.single('file'), (req, res) => {
     let postid
-
-    console.log('req.body', req.body)
-    console.log('req.file', req.file)
 
     // save the string path to the db?
 
@@ -367,9 +339,7 @@ module.exports = function (app) {
 
   // lookup subscriber by id and set active = true
   // jumps to .catch if query doesnt find any subscriber with the correct id
-  // is there a better way to handle this?
   // is url params the best way to do this? there might be other ways?
-  // TODO refactor with named promises?
   app.get('/api/confirm/:id', (req, res) => {
     db
       .one('UPDATE subscribers SET active = TRUE WHERE id = $1 returning *', [

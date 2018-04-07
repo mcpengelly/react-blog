@@ -44,7 +44,9 @@ function BlogSummary (props) {
       />
       <CardContent>
         <Typography variant='headline'>{title}</Typography>
-        <Typography className={classes.pos}>{catchPhrase}</Typography>
+        <Typography className={classes.pos}>
+          {catchPhrase || 'catchyPhrase'}
+        </Typography>
         <Typography variant='body1'>{content}</Typography>
         <br />
       </CardContent>

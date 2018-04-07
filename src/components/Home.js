@@ -26,6 +26,7 @@ function withBlogPostData (WrappedComponent) {
           return res.json()
         })
         .then(blogPost => {
+          console.log(blogPost, 'blogPost')
           this.setState({
             title: blogPost.title,
             content: blogPost.content,
