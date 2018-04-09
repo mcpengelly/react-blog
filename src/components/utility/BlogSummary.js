@@ -33,26 +33,25 @@ const styles = theme => ({
 })
 
 function BlogSummary (props) {
-  const { classes } = props
+  const { classes, title, content, catchPhrase, id, img } = props
 
   return (
     <Card className={classes.card}>
       <CardMedia
         className={classes.media}
-        image='/static/images/cards/contemplative-reptile.jpg'
-        title='bang'
+        image={`http://localhost:4000/${img}`}
+        title={img}
       />
       <CardContent>
-        <Typography className={classes.title}>Word of the Day</Typography>
-        <Typography variant='headline'>{props.title}</Typography>
-        <Typography className={classes.pos}>adjective</Typography>
-        <Typography variant='body1'>
-          {props.content}
-          <br />
+        <Typography variant='headline'>{title}</Typography>
+        <Typography className={classes.pos}>
+          {catchPhrase || 'catchyPhrase'}
         </Typography>
+        <Typography variant='body1'>{content}</Typography>
+        <br />
       </CardContent>
       <CardActions>
-        <Button size='small' component={Link} to={`/blog/${props.id}`}>
+        <Button size='small' component={Link} to={`/blog/${id}`}>
           See More...
         </Button>
       </CardActions>

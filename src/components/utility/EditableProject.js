@@ -5,8 +5,8 @@ import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
 import Divider from 'material-ui/Divider'
 import { BrowserRouter as Router } from 'react-router-dom'
-import uuidv4 from 'uuidv4'
 import Dropzone from 'react-dropzone'
+import { Redirect } from 'react-router'
 
 import classnames from 'classnames'
 import Card, {
@@ -24,10 +24,22 @@ import MoreVertIcon from 'material-ui-icons/MoreVert'
 
 const styles = theme => ({
   card: {
-    maxWidth: 400
+    maxWidth: 875,
+    margin: 'auto',
+    paddingBottom: 25
+  },
+  innerCard: {
+    maxWidth: 400,
+    maxHeight: '80%',
+    marginTop: 25,
+    margin: 'auto'
+  },
+  form: {
+    width: '100%',
+    margin: 'auto'
   },
   media: {
-    height: 194
+    height: 200
   },
   actions: {
     display: 'flex'
@@ -44,6 +56,19 @@ const styles = theme => ({
   },
   avatar: {
     backgroundColor: red[500]
+  },
+  textfield: {
+    width: '40%'
+  },
+  textarea: {
+    width: '80%'
+  },
+  fileUploader: {
+    marginTop: 25,
+    width: '60%',
+    height: 100,
+    border: '1px solid black',
+    margin: 'auto'
   }
 })
 
@@ -51,14 +76,13 @@ class EditableProject extends Component {
   constructor (props) {
     super(props)
 
-    console.log('document.referer', document.referrer)
-
     this.state = {
       id: '',
       title: '',
       description: '',
       isNew: false,
-      file: [{ preview: '/placeholder' }]
+      file: [{ preview: '/placeholder' }],
+      redirect: false
     }
   }
 
@@ -92,19 +116,14 @@ class EditableProject extends Component {
         return response.text()
       })
       .then(text => {
-        // whats our response?
-        console.log(text)
-
-        // clear inputs
+        // clear inputs, redirect
         this.setState({
           id: '',
           title: '',
           description: '',
-          file: [{ preview: '/placeholder' }]
+          file: [{ preview: '/placeholder' }],
+          redirect: true
         })
-
-        // navigate home
-        // location.href = 'https://localhost:3000/'
       })
   }
 
@@ -115,32 +134,12 @@ class EditableProject extends Component {
     // maybe post/put request here?
   }
 
-  componentDidMount () {
-    console.log('document.referer', document.referrer)
-
-    // if its not a new record then fetch existing data from backend
-    if (!this.state.isNew) {
-      fetch('/api/projects')
-        .then(response => {
-          return response.text()
-        })
-        .then(text => {
-          console.log(text)
-
-          const { id, title, description } = text
-
-          this.setState({
-            id: id || uuidv4(),
-            title: title || '',
-            description: description || ''
-          })
-        })
-    }
-  }
-
   render () {
     const { classes } = this.props
-    console.log(this.state)
+
+    if (this.state.redirect) {
+      return <Redirect to='/portfolio' />
+    }
 
     return (
       <Card className={classes.card}>
@@ -177,8 +176,11 @@ class EditableProject extends Component {
           </form>
         </CardActions>
         <Divider />
+
         <Typography variant='headline'>Preview</Typography>
-        <Card className={classes.card}>
+
+        {/* <SingleProject title={this.state.title} description={this.state.description} /> */}
+        <Card className={classes.innerCard}>
           <CardHeader
             avatar={
               <Avatar aria-label='Recipe' className={classes.avatar}>

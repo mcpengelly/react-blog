@@ -4,11 +4,22 @@ const changeCase = require('change-case')
 const passport = require('passport')
 const BasicStrategy = require('passport-http').BasicStrategy
 const multer = require('multer')
-const upload = multer({ dest: 'server/assets/img/uploads' })
+const path = require('path')
+const camelcaseKeys = require('camelcase-keys')
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.resolve(__dirname, '../', 'build'))
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname)
+  }
+})
+const upload = multer({ storage: storage })
 
 const pgpConfig = {
   host: process.env.PGHOST || 'localhost',
-  user: process.env.PGUSER || 'postgres',
+  user: process.env.PGUSER || 'mapengel', // postgres
   password: process.env.PGPASS || 'postgres',
   database: process.env.PGDATABASE || 'postgres',
   port: process.env.PGPORT || 5432
@@ -51,27 +62,6 @@ passport.use(
 )
 
 module.exports = function (app) {
-  // Image accepting endpoint
-  app.post(`/api/projects/image`, upload.single('file'), (req, res) => {
-    const file = req.file
-    const data = req.body
-    data.img = file.filename
-    console.log(data)
-
-    const sortedKeys = Object.keys(data).sort()
-    const fields = sortedKeys.map(_snakeCase).join(',')
-    const values = sortedKeys.map(_prepValueAccessors).join(',')
-
-    db
-      .none(`INSERT INTO projects (${fields}) VALUES (${values})`, data)
-      .then(() => {
-        res.send('uploaded file')
-      })
-      .catch(err => {
-        res.status(HTTP_INTERNAL_SERVER_ERROR).json({ error: err })
-      })
-  })
-
   // Generic GET all
   function getAll (relation) {
     app.get(`/api/${relation}`, (req, res) => {
@@ -81,7 +71,8 @@ module.exports = function (app) {
           if (data.length < 1) {
             res.send(`no ${relation} found`)
           } else {
-            res.send(data)
+            // send back a list of entries with their keys camelCased
+            res.json(data.map(obj => camelcaseKeys(obj)))
           }
         })
         .catch(err => {
@@ -96,8 +87,7 @@ module.exports = function (app) {
       db
         .one(`SELECT * from ${relation} WHERE id = $1`, [req.params.id])
         .then(data => {
-          // TODO: return different message when nothing found?
-          res.send(data)
+          res.json(camelcaseKeys(data))
         })
         .catch(err => {
           res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
@@ -107,22 +97,16 @@ module.exports = function (app) {
 
   // Generic DELETE by id
   function deleteById (relation) {
-    app.delete(
-      `/api/${relation}/:id`,
-      passport.authenticate('basic', {
-        session: false
-      }),
-      (req, res) => {
-        db
-          .none(`DELETE FROM ${relation} WHERE id = $1`, [req.params.id])
-          .then(() => {
-            res.send(`${relation} ID: ${req.params.id} has been deleted`)
-          })
-          .catch(err => {
-            res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
-          })
-      }
-    )
+    app.delete(`/api/${relation}/:id`, (req, res) => {
+      db
+        .none(`DELETE FROM ${relation} WHERE id = $1`, [req.params.id])
+        .then(() => {
+          res.send(`${relation} ID: ${req.params.id} has been deleted`)
+        })
+        .catch(err => {
+          res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
+        })
+    })
   }
 
   // Generic CREATE route
@@ -164,26 +148,26 @@ module.exports = function (app) {
 
   // Generic UPDATE route
   function updateById (relation, targetKeys) {
-    app.put(
-      `/api/${relation}/:id`,
-      (req, res) => {
-        const id = req.params.id
-        const data = req.body
-
-        const table = changeCase.snakeCase(relation)
-        const filteredData = _filterData(data, targetKeys)
-
-        db_updateById(table, id, filteredData)
-          .then(result => {
-            res
-              .status(HTTP_ACCEPTED)
-              .json({ msg: `updated existing ${table}, id: ${result.id}` })
-          })
-          .catch(err => {
-            res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
-          })
+    app.put(`/api/${relation}/:id`, upload.single('file'), (req, res) => {
+      const id = req.params.id
+      const data = req.body
+      if (req.file) {
+        data.img = req.file.originalname
       }
-    )
+
+      const table = changeCase.snakeCase(relation)
+      const filteredData = _filterData(data, targetKeys)
+
+      db_updateById(table, id, filteredData)
+        .then(result => {
+          res
+            .status(HTTP_ACCEPTED)
+            .json({ msg: `updated existing ${table}, id: ${result.id}` })
+        })
+        .catch(err => {
+          res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
+        })
+    })
   }
 
   function db_updateById (table, id, data) {
@@ -228,61 +212,66 @@ module.exports = function (app) {
   getAll('posts')
   getOneById('posts')
   deleteById('posts')
-  updateById('posts', ['title', 'content'])
+  updateById('posts', ['title', 'content', 'catchPhrase', 'img'])
 
   // CREATE new blog post
-  app.post(
-    '/api/posts',
-    (req, res) => {
-      let postid
+  app.post('/api/posts', upload.single('file'), (req, res) => {
+    let postid
 
-      querystring =
-        'INSERT INTO posts (title, content) VALUES ($1, $2) RETURNING *'
-      db
-        .one(querystring, [req.body.title, req.body.content])
-        .then(post => {
-          postId = post.id
+    // save the string path to the db?
 
-          // mail all active subscribers
-          db
-            .any('SELECT * FROM subscribers WHERE active = TRUE')
-            .then(activeSubscribers => {
-              // TODO? send 1 volley of emails
-              if (activeSubscribers && activeSubscribers.length) {
-                activeSubscribers.forEach(sub => {
-                  const path = `/api/unsubscribe/${sub.id}`
-                  const mailOptions = {
-                    from: '"Burna" <burnermcbernstein@gmail.com>',
-                    to: sub.email,
-                    subject: `New Post, ${
-                      post.title
-                    } is available at mattpengelly.com`,
-                    html: `
-                        A new post is up! check it out
-                        <a href="${HOSTNAME}" target="_blank">
-                            Here
-                        </a>
+    querystring =
+      'INSERT INTO posts (title, content, catch_phrase, img) VALUES ($1, $2, $3, $4) RETURNING *'
 
-                        Tired of emails?
-                        <a href="${HOSTNAME + path}" target="_blank">
-                            Unsubscribe
-                        </a>
+    db
+      .one(querystring, [
+        req.body.title,
+        req.body.content,
+        req.body.catchPhrase,
+        req.file.originalname
+      ])
+      .then(post => {
+        postId = post.id
+
+        // mail all active subscribers
+        db
+          .any('SELECT * FROM subscribers WHERE active = TRUE')
+          .then(activeSubscribers => {
+            // TODO? send 1 volley of emails
+            if (activeSubscribers && activeSubscribers.length) {
+              activeSubscribers.forEach(sub => {
+                const path = `/api/unsubscribe/${sub.id}`
+                const mailOptions = {
+                  from: '"Burna" <burnermcbernstein@gmail.com>',
+                  to: sub.email,
+                  subject: `New Post, ${
+                    post.title
+                  } is available at mattpengelly.com`,
+                  html: `
+                      A new post is up! check it out
+                      <a href="${HOSTNAME}" target="_blank">
+                          Here
+                      </a>
+
+                      Tired of emails?
+                      <a href="${HOSTNAME + path}" target="_blank">
+                          Unsubscribe
+                      </a>
                     `
-                  }
+                }
 
-                  transporter.sendMail(mailOptions)
-                })
-              }
-            })
-        })
-        .then(() => {
-          res.status(HTTP_CREATED).send(`new post created, id: ${postId}`)
-        })
-        .catch(err => {
-          res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
-        })
-    }
-  )
+                transporter.sendMail(mailOptions)
+              })
+            }
+          })
+      })
+      .then(() => {
+        res.status(HTTP_CREATED).send(`new post created, id: ${postId}`)
+      })
+      .catch(err => {
+        res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
+      })
+  })
 
   // mailer: emails me on behalf of user
   app.post('/api/send-mail', (req, res) => {
@@ -303,7 +292,6 @@ module.exports = function (app) {
   })
 
   // checks if user is in the mailing list, if not, add him and set active = false
-  // TODO refactor with named promises?
   app.post('/api/subscribe', (req, res) => {
     db.task('insertIfNotExists', t => {
       return t
@@ -330,12 +318,12 @@ module.exports = function (app) {
             to: [req.body.subscriberEmail],
             subject: `Subscriber Confirmation for mattpengelly.com`,
             html: `
-                            Click the button below to confirm your subscription to <strong>mattpengelly.com</strong> and receive updates for new blogposts. If you didn't subscribe please ignore this email, you will not receive any further emails.
+                Click the button below to confirm your subscription to <strong>mattpengelly.com</strong> and receive updates for new blogposts. If you didn't subscribe please ignore this email, you will not receive any further emails.
 
-                            <a href="${HOSTNAME + path}" target="_blank">
-                                Subscribe
-                            </a>
-                        `
+                <a href="${HOSTNAME + path}" target="_blank">
+                    Subscribe
+                </a>
+            `
           }
 
           transporter.sendMail(mailOptions)
@@ -351,9 +339,7 @@ module.exports = function (app) {
 
   // lookup subscriber by id and set active = true
   // jumps to .catch if query doesnt find any subscriber with the correct id
-  // is there a better way to handle this?
   // is url params the best way to do this? there might be other ways?
-  // TODO refactor with named promises?
   app.get('/api/confirm/:id', (req, res) => {
     db
       .one('UPDATE subscribers SET active = TRUE WHERE id = $1 returning *', [
@@ -368,13 +354,13 @@ module.exports = function (app) {
             to: [sub.email],
             subject: `Successfully added to mattpengelly.com mailing list`,
             html: `
-                            You've been added to mattpengelly.com mailing list, you'll receive an email when new blog posts are available.
+                You've been added to mattpengelly.com mailing list, you'll receive an email when new blog posts are available.
 
-                            Tired of emails?
-                            <a href="${HOSTNAME + path}" target="_blank">
-                                Unsubscribe
-                            </a>
-                        `
+                Tired of emails?
+                <a href="${HOSTNAME + path}" target="_blank">
+                    Unsubscribe
+                </a>
+            `
           }
 
           transporter.sendMail(mailOptions)

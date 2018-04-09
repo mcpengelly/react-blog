@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-
-import Project from './Project'
 import Paper from 'material-ui/Paper'
 import Grid from 'material-ui/Grid'
 import { withStyles } from 'material-ui/styles'
+
+import Project from './Project'
+import FloatingButton from './FloatingButton'
 
 const imgPath = '/uploads/'
 
@@ -25,7 +26,7 @@ const styles = theme => ({
   }
 })
 
-class ProjectsContainer extends Component {
+class ProjectsList extends Component {
   constructor () {
     super()
     this.state = {
@@ -52,6 +53,7 @@ class ProjectsContainer extends Component {
 
     return (
       <div className={classes.container}>
+        <FloatingButton url='/portfolio/new/project' />
         <Grid container className={classes.root}>
           <Grid item xs={12}>
             <Grid
@@ -69,4 +71,4 @@ class ProjectsContainer extends Component {
   }
 }
 
-export default withStyles(styles)(ProjectsContainer)
+export default withStyles(styles)(ProjectsList)
