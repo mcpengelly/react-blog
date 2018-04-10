@@ -14,19 +14,25 @@ class App extends Component {
         className='App'
         style={{ backgroundImage: 'url(' + backgroundImage + ')' }}
       >
-        <link
-          rel='stylesheet'
-          href='https://fonts.googleapis.com/icon?family=Material+Icons'
-        />
-
-        <div className='App-body'>
-          <NavBar />
-          {this.props.children}
-        </div>
+        <Header />
+        <div className='App-body' />
         <Footer copyright='Matt Pengelly 2017' />
       </div>
     )
   }
+}
+
+const Header = () => {
+  return (
+    <div>
+      <link
+        rel='stylesheet'
+        href='https://fonts.googleapis.com/icon?family=Material+Icons'
+      />
+
+      <NavBar />
+    </div>
+  )
 }
 
 export default App
