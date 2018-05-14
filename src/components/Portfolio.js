@@ -27,6 +27,7 @@ function withProjectData (WrappedComponent) {
           this.setState({
             title: blogPost.title,
             description: blogPost.description,
+            img: blogPost.img,
             pageIsReady: true
           })
         })
@@ -42,6 +43,7 @@ function withProjectData (WrappedComponent) {
           id={this.props.match.params.id}
           title={this.state.title}
           description={this.state.description}
+          img={this.state.img}
         />
       )
     }

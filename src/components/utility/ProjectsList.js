@@ -5,6 +5,9 @@ import { withStyles } from 'material-ui/styles'
 
 import Project from './Project'
 import FloatingButton from './FloatingButton'
+import Button from 'material-ui/Button'
+import Icon from 'material-ui/Icon'
+import { Link } from 'react-router-dom'
 
 const imgPath = '/uploads/'
 
@@ -42,8 +45,9 @@ class ProjectsList extends Component {
           <Paper className={classes.paper}>
             <Project
               key={index}
+              id={project.id}
               title={project.title}
-              img={imgPath + project.img}
+              img={project.img}
               description={project.description}
             />
           </Paper>
@@ -53,7 +57,11 @@ class ProjectsList extends Component {
 
     return (
       <div className={classes.container}>
-        <FloatingButton url='/portfolio/new/project' />
+        <FloatingButton
+          url='/portfolio/new/project'
+          color='primary'
+          iconName='note_add'
+        />
         <Grid container className={classes.root}>
           <Grid item xs={12}>
             <Grid

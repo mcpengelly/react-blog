@@ -17,10 +17,14 @@ import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
 import MoreVertIcon from 'material-ui-icons/MoreVert'
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 import Button from 'material-ui/Button'
+import Icon from 'material-ui/Icon'
+
+import { _abbreviate } from '../../helpers/helpers'
 
 const styles = theme => ({
   card: {
-    maxWidth: 400
+    maxWidth: 300,
+    minWidth: 300
   },
   media: {
     height: 194
@@ -49,20 +53,23 @@ class PortfolioItem extends Component {
     this.state = { expanded: false }
     this.handleExpandClick = this.handleExpandClick.bind(this)
   }
+  onDeleteClick () {
+    console.log('does nothing')
+  }
 
   handleExpandClick () {
     this.setState({ expanded: !this.state.expanded })
   }
 
   render () {
-    const { classes } = this.props
+    const { classes, img } = this.props
 
     return (
       <Card className={classes.card}>
         <CardHeader
           avatar={
-            <Avatar aria-label='Recipe' className={classes.avatar}>
-              R
+            <Avatar aria-label='abbrv' className={classes.avatar}>
+              {_abbreviate(this.props.title)}
             </Avatar>
           }
           action={
@@ -75,8 +82,8 @@ class PortfolioItem extends Component {
         />
         <CardMedia
           className={classes.media}
-          image='/static/images/cards/paella.jpg'
-          title='bing'
+          image={`http://localhost:4000/${img}`}
+          title={img}
         />
         <CardContent>
           <Typography variant='body1'>{this.props.description}</Typography>
@@ -95,25 +102,38 @@ class PortfolioItem extends Component {
           <Button
             size='small'
             component={Link}
-            to={`/projects/${this.props.id}`}
+            to={`/portfolio/${this.props.id}`}
           >
-            See more...
+            View
           </Button>
         </CardActions>
-        <Collapse in={this.state.expanded} timeout='auto' unmountOnExit>
+        <Collapse in={this.props.expanded} timeout='auto' unmountOnExit>
           <CardContent>
             <Typography paragraph variant='body2'>
               Method:
             </Typography>
-            <Typography paragraph>
-              Heat 1/2 cup of the broth in a pot until simmering, add saffron
-              and set aside for 10 minutes.
-            </Typography>
-            <Typography>
-              Set aside off of the heat to let rest for 10 minutes, and then
-              serve.
-            </Typography>
+            <Typography paragraph>{this.state.description}</Typography>
+            <Typography paragraph>{this.state.description}</Typography>
           </CardContent>
+          <CardActions>
+            <Button
+              mini
+              component={Link}
+              to={'/edit'}
+              aria-label='new'
+              variant='fab'
+            >
+              <Icon>edit_pencil</Icon>
+            </Button>
+            <Button
+              mini
+              onClick={this.onDeleteClick.bind(this)}
+              aria-label='delete'
+              variant='fab'
+            >
+              <Icon>delete</Icon>
+            </Button>
+          </CardActions>
         </Collapse>
       </Card>
     )

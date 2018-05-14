@@ -7,6 +7,7 @@ import Divider from 'material-ui/Divider'
 import { BrowserRouter as Router } from 'react-router-dom'
 import Dropzone from 'react-dropzone'
 import { Redirect } from 'react-router'
+import uuidv4 from 'uuidv4'
 
 import classnames from 'classnames'
 import Card, {
@@ -76,11 +77,13 @@ class EditableProject extends Component {
   constructor (props) {
     super(props)
 
+    const { isNew, id } = props
+
     this.state = {
-      id: '',
+      id: id,
       title: '',
       description: '',
-      isNew: false,
+      isNew: isNew || false,
       file: [{ preview: '/placeholder' }],
       redirect: false
     }
@@ -94,24 +97,46 @@ class EditableProject extends Component {
     }
   }
 
+  componentDidMount (props) {
+    const { isNew, id, title, description, img } = this.props
+
+    // if its not a new record then fetch existing data from backend
+    if (!isNew) {
+      this.setState({
+        id,
+        title,
+        description,
+        img
+      })
+    }
+  }
+
   onSubmitClick (e) {
     e.preventDefault()
 
     let data = {
-      id: this.state.id,
+      id: !this.state.isNew ? this.state.id : uuidv4(),
       title: this.state.title,
-      description: this.state.description
+      description: this.state.description,
+      file: this.state.file[0] // should do this better
     }
 
+    // for sending multipart/form-data
+    let formData = new FormData()
+    for (let name in data) {
+      formData.append(name, data[name])
+    }
+
+    console.log('this.state.isNew', this.state.isNew)
+    const url = this.state.isNew
+      ? '/api/projects'
+      : `/api/projects/${this.state.id}`
     const options = {
       method: this.state.isNew ? 'POST' : 'PUT',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      body: formData
     }
 
-    fetch('/api/projects', options)
+    fetch(url, options)
       .then(response => {
         return response.text()
       })
@@ -131,7 +156,6 @@ class EditableProject extends Component {
     this.setState({
       file: acceptedFiles
     })
-    // maybe post/put request here?
   }
 
   render () {
@@ -144,7 +168,7 @@ class EditableProject extends Component {
     return (
       <Card className={classes.card}>
         <CardActions>
-          <form className={classes.form} onSubmit={this.onSubmitClick}>
+          <form className={classes.form}>
             <TextField
               className={classes.textfield}
               label='Project Title'
@@ -170,7 +194,11 @@ class EditableProject extends Component {
               </Typography>
             </Dropzone>
             <br />
-            <Button variant='raised' color='primary'>
+            <Button
+              onClick={this.onSubmitClick.bind(this)}
+              variant='raised'
+              color='primary'
+            >
               Submit
             </Button>
           </form>

@@ -17,10 +17,13 @@ import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
 import MoreVertIcon from 'material-ui-icons/MoreVert'
 import Button from 'material-ui/Button'
 import { BrowserRouter as Router, Link } from 'react-router-dom'
+import FloatingButton from './FloatingButton'
 
 const styles = theme => ({
   card: {
-    maxWidth: 400
+    margin: 'auto',
+    maxWidth: 400,
+    minWidth: 400
   },
   media: {
     height: 194
@@ -54,6 +57,18 @@ class SingleProject extends Component {
     this.setState({ expanded: !this.state.expanded })
   }
 
+  onDeleteClick () {
+    const options = { method: 'DELETE' }
+
+    fetch(`/api/projects/${this.props.id}`, options)
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
+        throw err
+      })
+  }
+
   componentDidMount () {
     // fetch(`/api/projects/${this.props.id}`)
     //   .then(res => {
@@ -78,7 +93,7 @@ class SingleProject extends Component {
         <CardHeader
           avatar={
             <Avatar aria-label='Recipe' className={classes.avatar}>
-              R
+              MP
             </Avatar>
           }
           action={
@@ -97,33 +112,6 @@ class SingleProject extends Component {
         <CardContent>
           <Typography variant='body1'>{this.props.description}</Typography>
         </CardContent>
-        <CardActions className={classes.actions} disableActionSpacing>
-          <IconButton
-            className={classnames(classes.expand, {
-              [classes.expandOpen]: this.state.expanded
-            })}
-            onClick={this.handleExpandClick}
-            aria-expanded={this.state.expanded}
-            aria-label='Show more'
-          >
-            <Button
-              size='small'
-              component={Link}
-              to={`/projects/${this.props.id}/edit`}
-            >
-              Edit
-            </Button>
-            <ExpandMoreIcon />
-          </IconButton>
-        </CardActions>
-        <Collapse in={this.state.expanded} timeout='auto' unmountOnExit>
-          <CardContent>
-            <Typography paragraph variant='body2'>
-              Method: Heat 1/2 cup of the broth in a pot until simmering, add
-              saffron and set aside for 10 minutes.
-            </Typography>
-          </CardContent>
-        </Collapse>
       </Card>
     )
   }

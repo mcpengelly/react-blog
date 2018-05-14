@@ -112,6 +112,7 @@ class EditableBlogPost extends Component {
       })
       .then(text => {
         console.log('text', text)
+
         // clear inputs
         this.setState({
           id: '',
@@ -119,7 +120,6 @@ class EditableBlogPost extends Component {
           content: '',
           catchPhrase: '',
           file: [{ preview: '' }],
-          img: '',
           redirect: true
         })
       })
