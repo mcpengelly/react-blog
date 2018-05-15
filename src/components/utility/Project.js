@@ -52,9 +52,13 @@ class PortfolioItem extends Component {
     super()
     this.state = { expanded: false }
     this.handleExpandClick = this.handleExpandClick.bind(this)
+    this.onDeleteClick = this.onDeleteClick.bind(this)
   }
-  onDeleteClick () {
-    console.log('does nothing')
+
+  onDeleteClick (id) {
+    return () => {
+      this.props.removeProject(id)
+    }
   }
 
   handleExpandClick () {
@@ -62,7 +66,7 @@ class PortfolioItem extends Component {
   }
 
   render () {
-    const { classes, img } = this.props
+    const { classes, img, file } = this.props
 
     return (
       <Card className={classes.card}>
@@ -82,7 +86,7 @@ class PortfolioItem extends Component {
         />
         <CardMedia
           className={classes.media}
-          image={`http://localhost:4000/${img}`}
+          image={(file && file[0].preview) || `http://localhost:4000/${img}`}
           title={img}
         />
         <CardContent>
@@ -107,29 +111,25 @@ class PortfolioItem extends Component {
             View
           </Button>
         </CardActions>
-        <Collapse in={this.props.expanded} timeout='auto' unmountOnExit>
+        <Collapse in={this.state.expanded} timeout='auto' unmountOnExit>
           <CardContent>
-            <Typography paragraph variant='body2'>
-              Method:
-            </Typography>
-            <Typography paragraph>{this.state.description}</Typography>
             <Typography paragraph>{this.state.description}</Typography>
           </CardContent>
           <CardActions>
             <Button
               mini
               component={Link}
-              to={'/edit'}
+              to={`/portfolio/${this.props.id}/edit`}
               aria-label='new'
               variant='fab'
             >
               <Icon>edit_pencil</Icon>
             </Button>
             <Button
-              mini
-              onClick={this.onDeleteClick.bind(this)}
+              onClick={this.onDeleteClick(this.props.id)}
               aria-label='delete'
               variant='fab'
+              mini
             >
               <Icon>delete</Icon>
             </Button>

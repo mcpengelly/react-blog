@@ -36,6 +36,7 @@ class ProjectsList extends Component {
       spacing: '16'
     }
   }
+
   render () {
     const { classes } = this.props
     const { spacing } = this.state
@@ -49,6 +50,7 @@ class ProjectsList extends Component {
               title={project.title}
               img={project.img}
               description={project.description}
+              removeProject={this.props.removeProject}
             />
           </Paper>
         </Grid>

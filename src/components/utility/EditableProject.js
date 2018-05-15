@@ -114,42 +114,17 @@ class EditableProject extends Component {
   onSubmitClick (e) {
     e.preventDefault()
 
-    let data = {
-      id: !this.state.isNew ? this.state.id : uuidv4(),
-      title: this.state.title,
-      description: this.state.description,
-      file: this.state.file[0] // should do this better
-    }
+    // bubble state upward
+    this.props.addProject(this.state)
 
-    // for sending multipart/form-data
-    let formData = new FormData()
-    for (let name in data) {
-      formData.append(name, data[name])
-    }
-
-    console.log('this.state.isNew', this.state.isNew)
-    const url = this.state.isNew
-      ? '/api/projects'
-      : `/api/projects/${this.state.id}`
-    const options = {
-      method: this.state.isNew ? 'POST' : 'PUT',
-      body: formData
-    }
-
-    fetch(url, options)
-      .then(response => {
-        return response.text()
-      })
-      .then(text => {
-        // clear inputs, redirect
-        this.setState({
-          id: '',
-          title: '',
-          description: '',
-          file: [{ preview: '/placeholder' }],
-          redirect: true
-        })
-      })
+    // clear inputs, redirect
+    this.setState({
+      id: '',
+      title: '',
+      description: '',
+      file: [{ preview: '/placeholder' }],
+      redirect: true
+    })
   }
 
   onDrop (acceptedFiles, rejectedFiles) {
@@ -159,7 +134,7 @@ class EditableProject extends Component {
   }
 
   render () {
-    const { classes } = this.props
+    const { classes, img } = this.props
 
     if (this.state.redirect) {
       return <Redirect to='/portfolio' />
@@ -225,8 +200,12 @@ class EditableProject extends Component {
           />
           <CardMedia
             className={classes.media}
-            image={this.state.file[0].preview}
-            title='bing'
+            image={
+              this.state.isNew
+                ? this.state.file[0].preview
+                : `http://localhost:4000/${img}`
+            }
+            title={img}
           />
           <CardContent>
             <Typography variant='body1'>{this.state.description}</Typography>

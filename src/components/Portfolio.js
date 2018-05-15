@@ -6,8 +6,9 @@ import { Route, Switch } from 'react-router-dom'
 import SingleProject from './utility/SingleProject'
 import EditableProject from './utility/EditableProject'
 import { CircularProgress } from 'material-ui/Progress'
+import uuidv4 from 'uuidv4'
 
-function withProjectData (WrappedComponent) {
+function withProjectData (WrappedComponent, callback) {
   return class ProjectContainer extends React.Component {
     constructor () {
       super()
@@ -44,6 +45,7 @@ function withProjectData (WrappedComponent) {
           title={this.state.title}
           description={this.state.description}
           img={this.state.img}
+          addProject={callback}
         />
       )
     }
@@ -56,6 +58,9 @@ export default class Portfolio extends Component {
     this.state = {
       projectList: []
     }
+
+    this.addProject = this.addProject.bind(this)
+    this.removeProject = this.removeProject.bind(this)
   }
 
   componentDidMount () {
@@ -75,32 +80,98 @@ export default class Portfolio extends Component {
       })
   }
 
+  removeProject (projectId) {
+    const options = { method: 'delete' }
+
+    fetch(`/api/projects/${projectId}`, options).then(() => {
+      this.setState({
+        projectList: this.state.projectList.filter(
+          project => project.id !== projectId
+        )
+      })
+    })
+  }
+
+  addProject (project) {
+    const { id, isNew, title, description, file } = project
+
+    let data = {
+      id: !isNew ? id : uuidv4(),
+      title: title,
+      description: description,
+      file: file[0] // should do this better
+    }
+
+    console.log(file)
+    // for sending multipart/form-data
+    let formData = new FormData()
+    for (let name in data) {
+      formData.append(name, data[name])
+    }
+
+    const url = isNew ? '/api/projects' : `/api/projects/${id}`
+
+    const options = {
+      method: isNew ? 'POST' : 'PUT',
+      body: formData
+    }
+
+    fetch(url, options)
+      .then(response => {
+        return response.text()
+      })
+      .then(() => {
+        if (isNew) {
+          this.setState({
+            projectList: this.state.projectList.concat({
+              ...data,
+              img: file[0]
+            })
+          })
+        } else {
+          this.setState({
+            projectList: this.state.projectList.map(p => {
+              // when we find a match replace its data
+              if (project.id === p.id) {
+                return { ...project, img: file[0] }
+              }
+              return p
+            })
+          })
+        }
+      })
+  }
+
   render () {
-    console.log('this.props.match.url', this.props.match.url)
     return (
       <Switch>
         <Route
           exact
           path={`${this.props.match.url}`}
           render={() => {
-            return <ProjectsList projects={this.state.projectList} />
+            return (
+              <ProjectsList
+                removeProject={this.removeProject}
+                projects={this.state.projectList}
+              />
+            )
           }}
         />
         <Route
           exact
           path={`${this.props.match.url}/:id`}
-          component={withProjectData(SingleProject)}
+          component={withProjectData(SingleProject, this.addProject)}
         />
         <Route
           exact
           path={`${this.props.match.url}/:id/edit`}
-          component={withProjectData(EditableProject)}
+          component={withProjectData(EditableProject, this.addProject)}
         />
         <Route
           exact
           path={`${this.props.match.url}/new/project`}
           render={() => {
-            return <EditableProject isNew />
+            return <EditableProject isNew addProject={this.addProject} />
           }}
         />
       </Switch>
