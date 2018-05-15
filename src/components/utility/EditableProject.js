@@ -85,6 +85,7 @@ class EditableProject extends Component {
       description: '',
       isNew: isNew || false,
       file: [{ preview: '/placeholder' }],
+      hasPreview: false,
       redirect: false
     }
   }
@@ -123,13 +124,16 @@ class EditableProject extends Component {
       title: '',
       description: '',
       file: [{ preview: '/placeholder' }],
+      hasPreview: false,
       redirect: true
     })
   }
 
   onDrop (acceptedFiles, rejectedFiles) {
+    console.log('acceptedFiles', acceptedFiles)
     this.setState({
-      file: acceptedFiles
+      file: acceptedFiles,
+      hasPreview: true
     })
   }
 
@@ -201,7 +205,7 @@ class EditableProject extends Component {
           <CardMedia
             className={classes.media}
             image={
-              this.state.isNew
+              this.state.hasPreview
                 ? this.state.file[0].preview
                 : `http://localhost:4000/${img}`
             }

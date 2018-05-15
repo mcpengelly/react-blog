@@ -93,11 +93,12 @@ export default class Portfolio extends Component {
   }
 
   addProject (project) {
-    const { id, isNew, title, description, file } = project
+    const { id, isNew, title, description, img, file } = project
 
     let data = {
       id: !isNew ? id : uuidv4(),
       title: title,
+      img: file[0].originalname, // maybe file
       description: description,
       file: file[0] // should do this better
     }

@@ -86,7 +86,7 @@ class PortfolioItem extends Component {
         />
         <CardMedia
           className={classes.media}
-          image={(file && file[0].preview) || `http://localhost:4000/${img}`}
+          image={`http://localhost:4000/${img}`}
           title={img}
         />
         <CardContent>
