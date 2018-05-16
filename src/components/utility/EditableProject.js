@@ -1,15 +1,12 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router'
+import { BrowserRouter as Router } from 'react-router-dom'
+import Dropzone from 'react-dropzone'
 import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button'
 import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
 import Divider from 'material-ui/Divider'
-import { BrowserRouter as Router } from 'react-router-dom'
-import Dropzone from 'react-dropzone'
-import { Redirect } from 'react-router'
-import uuidv4 from 'uuidv4'
-
-import classnames from 'classnames'
 import Card, {
   CardHeader,
   CardMedia,
@@ -22,6 +19,7 @@ import IconButton from 'material-ui/IconButton'
 import red from 'material-ui/colors/red'
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
 import MoreVertIcon from 'material-ui-icons/MoreVert'
+import classnames from 'classnames'
 
 const styles = theme => ({
   card: {

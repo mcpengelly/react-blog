@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import './App.css'
 
 import NavBar from './components/utility/NavBar'
 import Footer from './components/utility/Footer'
+import backgroundImage from './assets/img/escheresque.png'
+import './App.css'
 
 /* Background pattern from Subtle Patterns */
-import backgroundImage from './assets/img/escheresque.png'
 const background = { backgroundImage: 'url(' + backgroundImage + ')' }
 
 class App extends Component {

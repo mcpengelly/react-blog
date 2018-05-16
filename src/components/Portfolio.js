@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
-
-import ProjectsList from './utility/ProjectsList'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
-import SingleProject from './utility/SingleProject'
-import EditableProject from './utility/EditableProject'
 import { CircularProgress } from 'material-ui/Progress'
 import uuidv4 from 'uuidv4'
+
+import EditableProject from './utility/EditableProject'
+import ProjectsList from './utility/ProjectsList'
 
 function withProjectData (WrappedComponent, callback) {
   return class ProjectContainer extends React.Component {
@@ -93,7 +92,7 @@ export default class Portfolio extends Component {
   }
 
   addProject (project) {
-    const { id, isNew, title, description, img, file } = project
+    const { id, isNew, title, description, file } = project
 
     let data = {
       id: !isNew ? id : uuidv4(),
@@ -102,7 +101,6 @@ export default class Portfolio extends Component {
       file: file[0] // should do this better
     }
 
-    console.log(file)
     // for sending multipart/form-data
     let formData = new FormData()
     for (let name in data) {
@@ -156,11 +154,6 @@ export default class Portfolio extends Component {
               />
             )
           }}
-        />
-        <Route
-          exact
-          path={`${this.props.match.url}/:id`}
-          component={withProjectData(SingleProject, this.addProject)}
         />
         <Route
           exact

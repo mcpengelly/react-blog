@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 // eslint-disable-next-line
-import { BrowserRouter as Router } from 'react-router-dom'
-import { Link } from 'react-router-dom'
+import { BrowserRouter as Router, Link } from 'react-router-dom'
 import Card, { CardContent, CardMedia, CardActions } from 'material-ui/Card'
 import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
 import { withStyles } from 'material-ui/styles'
+
 import FloatingButton from './FloatingButton'
 
 // how should i properly host images? /public?

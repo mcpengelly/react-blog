@@ -5,9 +5,6 @@ import { withStyles } from 'material-ui/styles'
 
 import Project from './Project'
 import FloatingButton from './FloatingButton'
-import Button from 'material-ui/Button'
-import Icon from 'material-ui/Icon'
-import { Link } from 'react-router-dom'
 
 const imgPath = '/uploads/'
 

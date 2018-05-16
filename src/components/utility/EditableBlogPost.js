@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router'
+import { BrowserRouter as Router } from 'react-router-dom'
+import Dropzone from 'react-dropzone'
+import uuidv4 from 'uuidv4'
 import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button'
 import Card, { CardActions } from 'material-ui/Card'
 import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
 import Divider from 'material-ui/Divider'
-import { BrowserRouter as Router } from 'react-router-dom'
-import { Redirect } from 'react-router'
-import uuidv4 from 'uuidv4'
-import Dropzone from 'react-dropzone'
+
 import BlogPost from './BlogPost'
 
 // TODO: use/leverage draftjs RTE for adding styles to blog posts with html

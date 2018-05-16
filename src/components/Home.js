@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 // eslint-disable-next-line
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
+import { CircularProgress } from 'material-ui/Progress'
 
 import BlogSummaryList from './utility/BlogSummaryList'
 import BlogPost from './utility/BlogPost'
 import EditableBlogPost from './utility/EditableBlogPost'
-import { CircularProgress } from 'material-ui/Progress'
 
 function withBlogPostData (WrappedComponent) {
   return class BlogPostContainer extends React.Component {
