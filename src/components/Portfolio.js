@@ -98,7 +98,6 @@ export default class Portfolio extends Component {
     let data = {
       id: !isNew ? id : uuidv4(),
       title: title,
-      img: file[0].originalname, // maybe file
       description: description,
       file: file[0] // should do this better
     }
@@ -126,7 +125,7 @@ export default class Portfolio extends Component {
           this.setState({
             projectList: this.state.projectList.concat({
               ...data,
-              img: file[0]
+              img: file[0].name
             })
           })
         } else {
@@ -134,7 +133,7 @@ export default class Portfolio extends Component {
             projectList: this.state.projectList.map(p => {
               // when we find a match replace its data
               if (project.id === p.id) {
-                return { ...project, img: file[0] }
+                return { ...project, img: file[0].name }
               }
               return p
             })
