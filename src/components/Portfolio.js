@@ -14,6 +14,7 @@ function withProjectData (WrappedComponent, callback) {
       this.state = {
         title: '',
         description: '',
+        img: '',
         pageIsReady: false
       }
     }
@@ -23,11 +24,11 @@ function withProjectData (WrappedComponent, callback) {
         .then(res => {
           return res.json()
         })
-        .then(blogPost => {
+        .then(project => {
           this.setState({
-            title: blogPost.title,
-            description: blogPost.description,
-            img: blogPost.img,
+            title: project.title,
+            description: project.description,
+            img: project.img,
             pageIsReady: true
           })
         })
@@ -68,8 +69,6 @@ export default class Portfolio extends Component {
         return response.json()
       })
       .then(text => {
-        console.log(text)
-
         this.setState({
           projectList: text
         })
@@ -92,11 +91,12 @@ export default class Portfolio extends Component {
   }
 
   addProject (project) {
-    const { id, isNew, title, description, file } = project
+    const { id, isNew, title, description, img, file } = project
 
-    let data = {
+    const data = {
       id: !isNew ? id : uuidv4(),
       title: title,
+      img: img,
       description: description,
       file: file[0] // should do this better
     }
@@ -131,7 +131,10 @@ export default class Portfolio extends Component {
             projectList: this.state.projectList.map(p => {
               // when we find a match replace its data
               if (project.id === p.id) {
-                return { ...project, img: file[0].name }
+                return {
+                  ...project,
+                  img: file[0].name || img
+                }
               }
               return p
             })

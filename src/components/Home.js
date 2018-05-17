@@ -3,12 +3,13 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
 import { CircularProgress } from 'material-ui/Progress'
+import uuidv4 from 'uuidv4'
 
 import BlogSummaryList from './utility/BlogSummaryList'
 import BlogPost from './utility/BlogPost'
 import EditableBlogPost from './utility/EditableBlogPost'
 
-function withBlogPostData (WrappedComponent) {
+function withBlogPostData (WrappedComponent, callback) {
   return class BlogPostContainer extends React.Component {
     constructor () {
       super()
@@ -16,6 +17,7 @@ function withBlogPostData (WrappedComponent) {
         title: '',
         content: '',
         catchPhrase: '',
+        img: '',
         pageIsReady: false
       }
     }
@@ -26,7 +28,6 @@ function withBlogPostData (WrappedComponent) {
           return res.json()
         })
         .then(blogPost => {
-          console.log(blogPost, 'blogPost')
           this.setState({
             title: blogPost.title,
             content: blogPost.content,
@@ -49,6 +50,7 @@ function withBlogPostData (WrappedComponent) {
           content={this.state.content}
           catchPhrase={this.state.catchPhrase}
           img={this.state.img}
+          removePost={callback}
         />
       )
     }
@@ -78,6 +80,70 @@ class Home extends Component {
       })
   }
 
+  removePost (postId) {
+    const options = { method: 'delete' }
+
+    fetch(`/api/posts/${postId}`, options).then(() => {
+      this.setState({
+        blogPosts: this.state.blogPosts.filter(post => post.id !== postId)
+      })
+    })
+  }
+
+  addPost (post) {
+    const { id, isNew, title, catchPhrase, content, img, file } = post
+
+    const data = {
+      id: !isNew ? id : uuidv4(),
+      title: title,
+      catchPhrase: catchPhrase,
+      img: img,
+      content: content,
+      file: file[0] // should do this better
+    }
+
+    // for sending multipart/form-data
+    let formData = new FormData()
+    for (let name in data) {
+      formData.append(name, data[name])
+    }
+
+    const url = isNew ? '/api/posts' : `/api/posts/${id}`
+
+    const options = {
+      method: isNew ? 'POST' : 'PUT',
+      body: formData
+    }
+
+    fetch(url, options)
+      .then(response => {
+        return response.text()
+      })
+      .then(() => {
+        if (isNew) {
+          this.setState({
+            blogPosts: this.state.blogPosts.concat({
+              ...data,
+              img: file[0].name
+            })
+          })
+        } else {
+          this.setState({
+            blogPosts: this.state.blogPosts.map(p => {
+              // when we find a match replace its data
+              if (post.id === p.id) {
+                return {
+                  ...post,
+                  img: file[0].name || img
+                }
+              }
+              return p
+            })
+          })
+        }
+      })
+  }
+
   render () {
     return (
       <Switch>
@@ -85,24 +151,29 @@ class Home extends Component {
           exact
           path={`${this.props.match.url}`}
           render={() => {
-            return <BlogSummaryList posts={this.state.blogPosts} />
+            return (
+              <BlogSummaryList
+                posts={this.state.blogPosts}
+                removePost={this.removePost}
+              />
+            )
           }}
         />
         <Route
           exact
           path={`${this.props.match.url}/:id`}
-          component={withBlogPostData(BlogPost)}
+          component={withBlogPostData(BlogPost, this.removePost)}
         />
         <Route
           exact
           path={`${this.props.match.url}/:id/edit`}
-          component={withBlogPostData(EditableBlogPost)}
+          component={withBlogPostData(EditableBlogPost, this.addPost)}
         />
         <Route
           exact
           path={`${this.props.match.url}/new/post`}
           render={() => {
-            return <EditableBlogPost isNew />
+            return <EditableBlogPost isNew addPost={this.addPost} />
           }}
         />
       </Switch>

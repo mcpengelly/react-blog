@@ -51,6 +51,7 @@ class PortfolioItem extends Component {
   constructor () {
     super()
     this.state = { expanded: false, anchorEl: null }
+
     this.handleExpandClick = this.handleExpandClick.bind(this)
     this.onDeleteClick = this.onDeleteClick.bind(this)
     this.handleMenuClick = this.handleMenuClick.bind(this)
@@ -77,7 +78,7 @@ class PortfolioItem extends Component {
   }
 
   render () {
-    const { classes, img } = this.props
+    const { classes } = this.props
     const { anchorEl } = this.state
 
     return (
@@ -115,8 +116,8 @@ class PortfolioItem extends Component {
         />
         <CardMedia
           className={classes.media}
-          image={`http://localhost:4000/${img}`}
-          title={img}
+          image={`http://localhost:4000/${this.props.img}`}
+          title={this.props.img}
         />
         <CardActions className={classes.actions} disableActionSpacing>
           <IconButton

@@ -40,16 +40,13 @@ class BlogPost extends Component {
       content,
       catchPhrase,
       img,
-      previewImage
+      previewImage,
+      hasPreview
     } = this.props
 
     return (
       <Card className={classes.card}>
-        <CardMedia
-          className={classes.media}
-          image={img ? `http://localhost:4000/${img}` : previewImage}
-          title={img}
-        />
+        <CardMedia className={classes.media} image={img} title={title} />
         <CardContent>
           <Typography className={classes.title} variant='headline'>
             {title || 'title'}
@@ -73,23 +70,11 @@ class BlogPost extends Component {
             url='/blog'
             color='secondary'
             iconName='delete_icon'
-            onClick={this.onDeleteClick.bind(this)}
+            onClick={this.props.removePost(this.props.id)}
           />
         </CardActions>
       </Card>
     )
-  }
-
-  onDeleteClick () {
-    const options = { method: 'DELETE' }
-
-    fetch(`/api/posts/${this.props.id}`, options)
-      .then(res => {
-        console.log(res)
-      })
-      .catch(err => {
-        throw err
-      })
   }
 }
 

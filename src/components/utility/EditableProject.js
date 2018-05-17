@@ -79,13 +79,18 @@ class EditableProject extends Component {
 
     this.state = {
       id: id,
+      isNew: isNew || false,
+      hasPreview: false,
       title: '',
       description: '',
-      isNew: isNew || false,
+      img: '',
       file: [{ preview: '/placeholder' }],
-      hasPreview: false,
+      expanded: false,
       redirect: false
     }
+
+    this.onSubmitClick = this.onSubmitClick.bind(this)
+    this.handleExpandClick = this.handleExpandClick.bind(this)
   }
 
   onHandleChange (name) {
@@ -116,23 +121,21 @@ class EditableProject extends Component {
     // bubble state upward
     this.props.addProject(this.state)
 
-    // clear inputs, redirect
+    // redirect
     this.setState({
-      id: '',
-      title: '',
-      description: '',
-      file: [{ preview: '/placeholder' }],
-      hasPreview: false,
       redirect: true
     })
   }
 
   onDrop (acceptedFiles, rejectedFiles) {
-    console.log('acceptedFiles', acceptedFiles)
     this.setState({
       file: acceptedFiles,
       hasPreview: true
     })
+  }
+
+  handleExpandClick () {
+    this.setState({ expanded: !this.state.expanded })
   }
 
   render () {
@@ -172,7 +175,7 @@ class EditableProject extends Component {
             </Dropzone>
             <br />
             <Button
-              onClick={this.onSubmitClick.bind(this)}
+              onClick={this.onSubmitClick}
               variant='raised'
               color='primary'
             >
@@ -192,11 +195,6 @@ class EditableProject extends Component {
                 R
               </Avatar>
             }
-            action={
-              <IconButton>
-                <MoreVertIcon />
-              </IconButton>
-            }
             title={this.state.title}
             subheader={''}
           />
@@ -209,9 +207,6 @@ class EditableProject extends Component {
             }
             title={img}
           />
-          <CardContent>
-            <Typography variant='body1'>{this.state.description}</Typography>
-          </CardContent>
           <CardActions className={classes.actions} disableActionSpacing>
             <IconButton
               className={classnames(classes.expand, {

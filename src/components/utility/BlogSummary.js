@@ -40,7 +40,7 @@ function BlogSummary (props) {
       <CardMedia
         className={classes.media}
         image={`http://localhost:4000/${img}`}
-        title={img}
+        title={title}
       />
       <CardContent>
         <Typography variant='headline'>{title}</Typography>
