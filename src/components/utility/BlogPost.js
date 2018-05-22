@@ -50,9 +50,15 @@ class BlogPost extends Component {
       hasPreview
     } = this.props
 
+    console.log('image', img)
+
     return (
       <Card className={classes.card}>
-        <CardMedia className={classes.media} image={img} title={title} />
+        <CardMedia
+          className={classes.media}
+          image={`http://localhost:4000/${img}`}
+          title={title}
+        />
         <CardContent>
           <Typography className={classes.title} variant='headline'>
             {title || 'title'}
