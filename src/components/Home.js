@@ -9,7 +9,7 @@ import BlogSummaryList from './utility/BlogSummaryList'
 import BlogPost from './utility/BlogPost'
 import EditableBlogPost from './utility/EditableBlogPost'
 
-function withBlogPostData (WrappedComponent, callback) {
+function withBlogPostData (WrappedComponent, callback1, callback2) {
   return class BlogPostContainer extends React.Component {
     constructor () {
       super()
@@ -50,7 +50,8 @@ function withBlogPostData (WrappedComponent, callback) {
           content={this.state.content}
           catchPhrase={this.state.catchPhrase}
           img={this.state.img}
-          removePost={callback}
+          addPost={callback1}
+          removePost={callback2}
         />
       )
     }
@@ -63,6 +64,9 @@ class Home extends Component {
     this.state = {
       blogPosts: []
     }
+
+    this.addPost = this.addPost.bind(this)
+    this.removePost = this.removePost.bind(this)
   }
 
   componentDidMount () {
@@ -115,6 +119,7 @@ class Home extends Component {
       body: formData
     }
 
+    console.log('Home state', this.state)
     fetch(url, options)
       .then(response => {
         return response.text()
@@ -162,12 +167,16 @@ class Home extends Component {
         <Route
           exact
           path={`${this.props.match.url}/:id`}
-          component={withBlogPostData(BlogPost, this.removePost)}
+          component={withBlogPostData(BlogPost, this.addPost, this.removePost)}
         />
         <Route
           exact
           path={`${this.props.match.url}/:id/edit`}
-          component={withBlogPostData(EditableBlogPost, this.addPost)}
+          component={withBlogPostData(
+            EditableBlogPost,
+            this.addPost,
+            this.addPost
+          )}
         />
         <Route
           exact

@@ -86,6 +86,7 @@ class EditableBlogPost extends Component {
 
   onSubmitClick (e) {
     e.preventDefault()
+    console.log(this.props)
 
     this.props.addPost(this.state)
 

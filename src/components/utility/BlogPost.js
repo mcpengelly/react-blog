@@ -33,6 +33,12 @@ const styles = theme => ({
 })
 
 class BlogPost extends Component {
+  deletePost (id) {
+    return () => {
+      this.props.removePost(id)
+    }
+  }
+
   render () {
     const {
       classes,
@@ -57,9 +63,6 @@ class BlogPost extends Component {
           <Typography variant='body1'>{content || 'content'}</Typography>
         </CardContent>
         <CardActions>
-          <Button size='small' component={Link} to={`${this.props.id}/edit`}>
-            Edit
-          </Button>
           <FloatingButton
             url={`${this.props.id}/edit`}
             color='primary'
@@ -70,7 +73,7 @@ class BlogPost extends Component {
             url='/blog'
             color='secondary'
             iconName='delete_icon'
-            onClick={this.props.removePost(this.props.id)}
+            onClick={this.deletePost(this.props.id)}
           />
         </CardActions>
       </Card>

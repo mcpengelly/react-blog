@@ -21,7 +21,7 @@ class App extends Component {
           <NavBar />
           {this.props.children}
         </div>
-        <Footer copyright='Matt Pengelly 2017' />
+        <Footer copyright='Matt Pengelly 2018' />
       </div>
     )
   }
