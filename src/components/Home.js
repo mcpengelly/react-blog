@@ -17,6 +17,7 @@ function withBlogPostData (WrappedComponent, callback1, callback2) {
         title: '',
         content: '',
         catchPhrase: '',
+        lastUpdatedDate: '',
         img: '',
         pageIsReady: false
       }
@@ -32,6 +33,7 @@ function withBlogPostData (WrappedComponent, callback1, callback2) {
             title: blogPost.title,
             content: blogPost.content,
             catchPhrase: blogPost.catchPhrase,
+            lastUpdatedDate: blogPost.lastUpdatedDate,
             img: blogPost.img,
             pageIsReady: true
           })
@@ -49,6 +51,7 @@ function withBlogPostData (WrappedComponent, callback1, callback2) {
           title={this.state.title}
           content={this.state.content}
           catchPhrase={this.state.catchPhrase}
+          lastUpdatedDate={this.state.lastUpdatedDate}
           img={this.state.img}
           addPost={callback1}
           removePost={callback2}
@@ -95,12 +98,22 @@ class Home extends Component {
   }
 
   addPost (post) {
-    const { id, isNew, title, catchPhrase, content, img, file } = post
+    const {
+      id,
+      isNew,
+      title,
+      catchPhrase,
+      content,
+      lastUpdatedDate,
+      img,
+      file
+    } = post
 
     const data = {
       id: !isNew ? id : uuidv4(),
       title: title,
       catchPhrase: catchPhrase,
+      lastUpdatedDate: lastUpdatedDate,
       img: img,
       content: content,
       file: file[0] // should do this better

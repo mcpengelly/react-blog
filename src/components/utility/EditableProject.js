@@ -16,12 +16,13 @@ import Card, {
 import Collapse from 'material-ui/transitions/Collapse'
 import Avatar from 'material-ui/Avatar'
 import IconButton from 'material-ui/IconButton'
-import red from 'material-ui/colors/red'
+import yellow from 'material-ui/colors/yellow'
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
 import MoreVertIcon from 'material-ui-icons/MoreVert'
 import classnames from 'classnames'
 
 import { baseURL } from '../../helpers/globals'
+import { formatDate } from '../../helpers/helpers'
 
 const styles = theme => ({
   card: {
@@ -56,7 +57,7 @@ const styles = theme => ({
     transform: 'rotate(180deg)'
   },
   avatar: {
-    backgroundColor: red[500]
+    backgroundColor: yellow[600]
   },
   textfield: {
     width: '40%'
@@ -85,6 +86,7 @@ class EditableProject extends Component {
       hasPreview: false,
       title: '',
       description: '',
+      lastUpdatedDate: formatDate(new Date()),
       img: '',
       file: [{ preview: '/placeholder' }],
       expanded: false,
@@ -104,7 +106,7 @@ class EditableProject extends Component {
   }
 
   componentDidMount (props) {
-    const { isNew, id, title, description, img } = this.props
+    const { isNew, id, title, description, lastUpdatedDate, img } = this.props
 
     // if its not a new record then fetch existing data from backend
     if (!isNew) {
@@ -112,6 +114,7 @@ class EditableProject extends Component {
         id,
         title,
         description,
+        lastUpdatedDate,
         img
       })
     }
@@ -194,11 +197,11 @@ class EditableProject extends Component {
           <CardHeader
             avatar={
               <Avatar aria-label='Recipe' className={classes.avatar}>
-                R
+                JS
               </Avatar>
             }
             title={this.state.title}
-            subheader={''}
+            subheader={this.state.lastUpdatedDate}
           />
           <CardMedia
             className={classes.media}

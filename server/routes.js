@@ -9,7 +9,7 @@ const camelcaseKeys = require('camelcase-keys')
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.resolve(__dirname, '../', 'build'))
+    cb(null, path.join(__dirname, '/uploads'))
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname)
@@ -125,8 +125,10 @@ module.exports = function (app) {
           data = req.body
         }
 
+
         const table = changeCase.snakeCase(relation)
         const filteredData = _filterData(data, targetKeys)
+          console.log('projects filteredData', filteredData)
 
         db_createOne(table, filteredData)
           .then(result => {
@@ -213,29 +215,30 @@ module.exports = function (app) {
   getAll('projects')
   getOneById('projects')
   deleteById('projects')
-  createOne('projects', ['id', 'title', 'description', 'img'])
-  updateById('projects', ['title', 'description', 'img'])
+  createOne('projects', ['id', 'title', 'description', 'lastUpdatedDate', 'img'])
+  updateById('projects', ['title', 'description', 'lastUpdatedDate', 'img'])
 
-  app.post('/api/projects', upload.single('file'), (req, res) => {
-    const data = { ...req.body, img: req.file.originalname }
+  // app.post('/api/projects', upload.single('file'), (req, res) => {
+  //   const data = { ...req.body, img: req.file.originalname }
 
-    const filteredData = _filterData(data, [
-      'id',
-      'title',
-      'description',
-      'img'
-    ])
+  //   const filteredData = _filterData(data, [
+  //     'id',
+  //     'title',
+  //     'description',
+  //     'lastUpdatedDate',
+  //     'img'
+  //   ])
 
-    console.log('projects filteredData', filteredData)
+  //   console.log('projects filteredData', filteredData)
 
-    db_createOne('projects', filteredData)
-      .then((project) => {
-        res.status(HTTP_CREATED).send(`new project created, id: ${project.id}`)
-      })
-      .catch(err => {
-        res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
-      })
-  })
+  //   db_createOne('projects', filteredData)
+  //     .then((project) => {
+  //       res.status(HTTP_CREATED).send(`new project created, id: ${project.id}`)
+  //     })
+  //     .catch(err => {
+  //       res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
+  //     })
+  // })
 
   function notifyActiveSubscribers (post) {
     // mail all active subscribers
@@ -274,8 +277,8 @@ module.exports = function (app) {
   getAll('posts')
   getOneById('posts')
   deleteById('posts')
-  createAndCallback('posts', ['id', 'title', 'content', 'catchPhrase', 'img'], notifyActiveSubscribers)
-  updateById('posts', ['title', 'content', 'catchPhrase', 'img'])
+  createAndCallback('posts', ['id', 'title', 'content', 'catchPhrase', 'lastUpdatedDate', 'img'], notifyActiveSubscribers)
+  updateById('posts', ['title', 'content', 'catchPhrase', 'lastUpdatedDate', 'img'])
 
   // CREATE new blog post
   // app.post('/api/posts', upload.single('file'), (req, res) => {
@@ -458,7 +461,7 @@ module.exports = function (app) {
       const filteredData = _filterData(data, targetKeys)
 
       db_createOne(relation, filteredData)
-        .then(notifyActiveSubscribers)
+        .then(callback)
         .then((postId) => {
           res.status(HTTP_CREATED).send(`new post created, id: ${postId}`)
         })

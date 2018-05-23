@@ -16,7 +16,7 @@ import { withStyles } from 'material-ui/styles'
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
 import MoreVertIcon from 'material-ui-icons/MoreVert'
 import Collapse from 'material-ui/transitions/Collapse'
-import red from 'material-ui/colors/red'
+import yellow from 'material-ui/colors/yellow'
 import classnames from 'classnames'
 
 import { _abbreviate } from '../../helpers/helpers'
@@ -44,7 +44,7 @@ const styles = theme => ({
     transform: 'rotate(180deg)'
   },
   avatar: {
-    backgroundColor: red[500]
+    backgroundColor: yellow[600]
   }
 })
 
@@ -79,7 +79,7 @@ class PortfolioItem extends Component {
   }
 
   render () {
-    const { classes, id, title, img, description } = this.props
+    const { classes, id, title, img, description, lastUpdatedDate } = this.props
     const { anchorEl, expanded } = this.state
 
     const imgPath = baseURL + img
@@ -101,8 +101,8 @@ class PortfolioItem extends Component {
         </Menu>
         <CardHeader
           avatar={
-            <Avatar aria-label='abbrv' className={classes.avatar}>
-              {_abbreviate(title)}
+            <Avatar aria-label='language' className={classes.avatar}>
+              JS
             </Avatar>
           }
           action={
@@ -115,7 +115,7 @@ class PortfolioItem extends Component {
             </IconButton>
           }
           title={title}
-          subheader={''}
+          subheader={lastUpdatedDate}
         />
         <CardMedia className={classes.media} image={imgPath} title={img} />
         <CardActions className={classes.actions} disableActionSpacing>

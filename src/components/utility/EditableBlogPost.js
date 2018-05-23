@@ -12,10 +12,9 @@ import Divider from 'material-ui/Divider'
 
 import BlogPost from './BlogPost'
 import { baseURL } from '../../helpers/globals'
+import { formatDate } from '../../helpers/helpers'
 
 // TODO: use/leverage draftjs RTE for adding styles to blog posts with html
-// TODO: make image upload part of the preview
-// TODO: navigate home after submission
 
 const styles = theme => ({
   card: {
@@ -71,6 +70,7 @@ class EditableBlogPost extends Component {
       title: '',
       content: '',
       catchPhrase: '',
+      lastUpdatedDate: formatDate(new Date()),
       hasPreview: false,
       file: [{ preview: '' }],
       redirect: false
@@ -94,45 +94,6 @@ class EditableBlogPost extends Component {
     this.setState({
       redirect: true
     })
-
-    // const { isNew, id, title, content, catchPhrase, file } = this.state
-
-    // let data = {
-    //   id: !isNew ? id : uuidv4(),
-    //   title: title,
-    //   content: content,
-    //   catchPhrase: catchPhrase,
-    //   file: file[0] // should do this better
-    // }
-
-    // // for sending multipart/form-data
-    // let formData = new FormData()
-    // for (let name in data) {
-    //   formData.append(name, data[name])
-    // }
-
-    // // hit different endpoints with POST/PUT based on if its new or not
-    // const url = isNew ? '/api/posts' : `/api/posts/${id}`
-    // const options = {
-    //   method: isNew ? 'POST' : 'PUT',
-    //   body: formData
-    // }
-
-    // fetch(url, options)
-    //   .then(response => {
-    //     return response.text()
-    //   })
-    //   .then(text => {
-    //     // clear inputs
-    //     this.setState({
-    //       id: '',
-    //       title: '',
-    //       content: '',
-    //       catchPhrase: '',
-    //       file: [{ preview: '' }],
-    //       redirect: true
-    //     })
-    //   })
   }
 
   onDrop (acceptedFiles, rejectedFiles) {
@@ -143,7 +104,15 @@ class EditableBlogPost extends Component {
   }
 
   componentDidMount (props) {
-    const { isNew, id, title, catchPhrase, content, img } = this.props
+    const {
+      isNew,
+      id,
+      title,
+      catchPhrase,
+      content,
+      lastUpdatedDate,
+      img
+    } = this.props
 
     // if its not a new record then fetch existing data from backend
     if (!isNew) {
@@ -151,6 +120,7 @@ class EditableBlogPost extends Component {
         id,
         title,
         catchPhrase,
+        lastUpdatedDate,
         content,
         img
       })
@@ -164,6 +134,7 @@ class EditableBlogPost extends Component {
       title,
       content,
       catchPhrase,
+      lastUpdatedDate,
       img,
       file,
       hasPreview
@@ -237,6 +208,9 @@ class EditableBlogPost extends Component {
                 {catchPhrase || 'catchPhrase'}
               </Typography>
               <Typography variant='body1'>{content || 'content'}</Typography>
+              <Typography variant='body2'>
+                {lastUpdatedDate || 'lastUpdatedDate'}
+              </Typography>
             </CardContent>
           </Card>
         </div>

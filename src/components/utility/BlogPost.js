@@ -10,9 +10,6 @@ import FloatingButton from './FloatingButton'
 
 import { baseURL } from '../../helpers/globals'
 
-// how should i properly host images? /public?
-// where do i dynamically save files from the backend?
-
 const styles = theme => ({
   card: {
     minWidth: 275,
@@ -47,6 +44,7 @@ class BlogPost extends Component {
       title,
       content,
       catchPhrase,
+      lastUpdatedDate,
       img,
       previewImage,
       hasPreview
@@ -60,12 +58,6 @@ class BlogPost extends Component {
           title={title}
         />
 
-        <CardMedia
-          className={classes.media}
-          image='http://localhost:4000/smiley.jpg'
-          title={title}
-        />
-
         <CardContent>
           <Typography className={classes.title} variant='headline'>
             {title || 'title'}
@@ -74,6 +66,9 @@ class BlogPost extends Component {
             {catchPhrase || 'catchPhrase'}
           </Typography>
           <Typography variant='body1'>{content || 'content'}</Typography>
+          <Typography variant='body2'>
+            {lastUpdatedDate || 'lastUpdatedDate'}
+          </Typography>
         </CardContent>
         <CardActions>
           <FloatingButton

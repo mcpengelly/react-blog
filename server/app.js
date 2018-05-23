@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 
 const server = express()
 
-// middleware
+// middlewares
 // Setup logger
 server.use(
   morgan(
@@ -16,9 +16,7 @@ server.use(
 
 // Serve static assets
 server.use(express.static(path.resolve(__dirname, '..', 'build')))
-console.log(__dirname)
-console.log(path.join(__dirname, '/uploads'))
-server.use(express.static(path.join(__dirname, '/uploads')));
+server.use(express.static(path.join(__dirname, '/uploads')))
 
 // req body middleware
 server.use(bodyParser.urlencoded({ extended: true }))
@@ -27,9 +25,11 @@ server.use(bodyParser.json())
 // routing
 require('./routes.js')(server)
 
+module.exports = server
+
+
+// flagged for removal
 // react: Always return the main index.html, so react-router render the route in the client
 // server.get('*', (req, res) => {
 //   res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'))
 // })
-
-module.exports = server

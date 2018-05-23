@@ -45,6 +45,7 @@ class ProjectsList extends Component {
               title={project.title}
               img={project.img}
               description={project.description}
+              lastUpdatedDate={project.lastUpdatedDate}
               removeProject={this.props.removeProject}
             />
           </Paper>

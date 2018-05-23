@@ -35,7 +35,15 @@ const styles = theme => ({
 })
 
 function BlogSummary (props) {
-  const { classes, title, content, catchPhrase, id, img } = props
+  const {
+    classes,
+    title,
+    content,
+    catchPhrase,
+    lastUpdatedDate,
+    id,
+    img
+  } = props
 
   return (
     <Card className={classes.card}>
@@ -46,6 +54,9 @@ function BlogSummary (props) {
       />
       <CardContent>
         <Typography variant='headline'>{title}</Typography>
+        <Typography variant='body2'>
+          {lastUpdatedDate || 'lastUpdatedDate'}
+        </Typography>
         <Typography className={classes.pos}>
           {catchPhrase || 'catchyPhrase'}
         </Typography>

@@ -7,6 +7,8 @@ import uuidv4 from 'uuidv4'
 import EditableProject from './utility/EditableProject'
 import ProjectsList from './utility/ProjectsList'
 
+import { formatDate } from '../helpers/helpers'
+
 function withProjectData (WrappedComponent, callback) {
   return class ProjectContainer extends React.Component {
     constructor () {
@@ -14,6 +16,7 @@ function withProjectData (WrappedComponent, callback) {
       this.state = {
         title: '',
         description: '',
+        lastUpdatedDate: '',
         img: '',
         pageIsReady: false
       }
@@ -28,6 +31,7 @@ function withProjectData (WrappedComponent, callback) {
           this.setState({
             title: project.title,
             description: project.description,
+            lastUpdatedDate: project.lastUpdatedDate,
             img: project.img,
             pageIsReady: true
           })
@@ -44,6 +48,7 @@ function withProjectData (WrappedComponent, callback) {
           id={this.props.match.params.id}
           title={this.state.title}
           description={this.state.description}
+          lastUpdatedDate={this.state.lastUpdatedDate}
           img={this.state.img}
           addProject={callback}
         />
@@ -97,8 +102,9 @@ export default class Portfolio extends Component {
       id: !isNew ? id : uuidv4(),
       title: title,
       img: img,
+      lastUpdatedDate: formatDate(new Date()),
       description: description,
-      file: file[0] // should do this better
+      file: file[0]
     }
 
     // for sending multipart/form-data
