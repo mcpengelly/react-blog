@@ -175,7 +175,7 @@ class Home extends Component {
           component={withBlogPostData(
             EditableBlogPost,
             this.addPost,
-            this.addPost
+            this.removePost
           )}
         />
         <Route

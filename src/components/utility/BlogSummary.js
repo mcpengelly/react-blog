@@ -6,6 +6,8 @@ import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card'
 import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
 
+import { baseURL } from '../../helpers/globals'
+
 const styles = theme => ({
   card: {
     minWidth: 275,
@@ -39,7 +41,7 @@ function BlogSummary (props) {
     <Card className={classes.card}>
       <CardMedia
         className={classes.media}
-        image={`http://localhost:4000/${img}`}
+        image={baseURL + img}
         title={title}
       />
       <CardContent>

@@ -36,7 +36,7 @@ const transporter = mailer.createTransport({
   }
 })
 
-const HOSTNAME = process.env.HOSTNAME || 'http://localhost:9000'
+const HOSTNAME = process.env.HOSTNAME || 'http://localhost:3000'
 const HTTP_INTERNAL_SERVER_ERROR = 500
 const HTTP_CREATED = 201
 const HTTP_ACCEPTED = 202

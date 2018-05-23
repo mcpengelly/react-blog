@@ -20,6 +20,7 @@ import red from 'material-ui/colors/red'
 import classnames from 'classnames'
 
 import { _abbreviate } from '../../helpers/helpers'
+import { baseURL } from '../../helpers/globals'
 
 const styles = theme => ({
   card: {
@@ -78,8 +79,10 @@ class PortfolioItem extends Component {
   }
 
   render () {
-    const { classes } = this.props
-    const { anchorEl } = this.state
+    const { classes, id, title, img, description } = this.props
+    const { anchorEl, expanded } = this.state
+
+    const imgPath = baseURL + img
 
     return (
       <Card className={classes.card}>
@@ -89,17 +92,17 @@ class PortfolioItem extends Component {
           open={Boolean(anchorEl)}
           onClose={this.handleMenuClose}
         >
-          <MenuItem component={Link} to={`/portfolio/${this.props.id}/edit`}>
+          <MenuItem component={Link} to={`/portfolio/${id}/edit`}>
             <Icon>edit_pencil</Icon>Edit
           </MenuItem>
-          <MenuItem onClick={this.onDeleteClick(this.props.id)}>
+          <MenuItem onClick={this.onDeleteClick(id)}>
             <Icon>delete</Icon>Delete
           </MenuItem>
         </Menu>
         <CardHeader
           avatar={
             <Avatar aria-label='abbrv' className={classes.avatar}>
-              {_abbreviate(this.props.title)}
+              {_abbreviate(title)}
             </Avatar>
           }
           action={
@@ -111,29 +114,25 @@ class PortfolioItem extends Component {
               <MoreVertIcon />
             </IconButton>
           }
-          title={this.props.title}
+          title={title}
           subheader={''}
         />
-        <CardMedia
-          className={classes.media}
-          image={`http://localhost:4000/${this.props.img}`}
-          title={this.props.img}
-        />
+        <CardMedia className={classes.media} image={imgPath} title={img} />
         <CardActions className={classes.actions} disableActionSpacing>
           <IconButton
             className={classnames(classes.expand, {
-              [classes.expandOpen]: this.state.expanded
+              [classes.expandOpen]: expanded
             })}
             onClick={this.handleExpandClick}
-            aria-expanded={this.state.expanded}
+            aria-expanded={expanded}
             aria-label='Show more'
           >
             <ExpandMoreIcon />
           </IconButton>
         </CardActions>
-        <Collapse in={this.state.expanded} timeout='auto' unmountOnExit>
+        <Collapse in={expanded} timeout='auto' unmountOnExit>
           <CardContent>
-            <Typography paragraph>{this.props.description}</Typography>
+            <Typography paragraph>{description}</Typography>
           </CardContent>
         </Collapse>
       </Card>

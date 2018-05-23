@@ -11,6 +11,7 @@ import Typography from 'material-ui/Typography'
 import Divider from 'material-ui/Divider'
 
 import BlogPost from './BlogPost'
+import { baseURL } from '../../helpers/globals'
 
 // TODO: use/leverage draftjs RTE for adding styles to blog posts with html
 // TODO: make image upload part of the preview
@@ -168,7 +169,7 @@ class EditableBlogPost extends Component {
       hasPreview
     } = this.state
 
-    console.log('this.state', this.state)
+    const imgPath = baseURL + img
 
     if (redirect) {
       return <Redirect to='/blog' />
@@ -225,9 +226,7 @@ class EditableBlogPost extends Component {
           <Card className={classes.card}>
             <CardMedia
               className={classes.media}
-              image={
-                hasPreview ? file[0].preview : `http://localhost:4000/${img}`
-              }
+              image={hasPreview ? file[0].preview : imgPath}
               title={title}
             />
             <CardContent>

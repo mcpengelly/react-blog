@@ -21,6 +21,8 @@ import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
 import MoreVertIcon from 'material-ui-icons/MoreVert'
 import classnames from 'classnames'
 
+import { baseURL } from '../../helpers/globals'
+
 const styles = theme => ({
   card: {
     maxWidth: 875,
@@ -140,6 +142,7 @@ class EditableProject extends Component {
 
   render () {
     const { classes, img } = this.props
+    const imgPath = baseURL + img
 
     if (this.state.redirect) {
       return <Redirect to='/portfolio' />
@@ -187,7 +190,6 @@ class EditableProject extends Component {
 
         <Typography variant='headline'>Preview</Typography>
 
-        {/* <SingleProject title={this.state.title} description={this.state.description} /> */}
         <Card className={classes.innerCard}>
           <CardHeader
             avatar={
@@ -200,11 +202,7 @@ class EditableProject extends Component {
           />
           <CardMedia
             className={classes.media}
-            image={
-              this.state.hasPreview
-                ? this.state.file[0].preview
-                : `http://localhost:4000/${img}`
-            }
+            image={this.state.hasPreview ? this.state.file[0].preview : imgPath}
             title={img}
           />
           <CardActions className={classes.actions} disableActionSpacing>

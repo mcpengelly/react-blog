@@ -8,6 +8,8 @@ import { withStyles } from 'material-ui/styles'
 
 import FloatingButton from './FloatingButton'
 
+import { baseURL } from '../../helpers/globals'
+
 // how should i properly host images? /public?
 // where do i dynamically save files from the backend?
 
@@ -50,15 +52,20 @@ class BlogPost extends Component {
       hasPreview
     } = this.props
 
-    console.log('image', img)
-
     return (
       <Card className={classes.card}>
         <CardMedia
           className={classes.media}
-          image={`http://localhost:4000/${img}`}
+          image={baseURL + img}
           title={title}
         />
+
+        <CardMedia
+          className={classes.media}
+          image='http://localhost:4000/smiley.jpg'
+          title={title}
+        />
+
         <CardContent>
           <Typography className={classes.title} variant='headline'>
             {title || 'title'}

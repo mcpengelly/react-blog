@@ -6,8 +6,6 @@ import { withStyles } from 'material-ui/styles'
 import Project from './Project'
 import FloatingButton from './FloatingButton'
 
-const imgPath = '/uploads/'
-
 const styles = theme => ({
   container: {
     padding: 25,
