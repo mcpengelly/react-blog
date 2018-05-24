@@ -11,8 +11,23 @@ import Typography from 'material-ui/Typography'
 import Divider from 'material-ui/Divider'
 
 import BlogPost from './BlogPost'
+// import RTEditor from './RTEditor'
 import { baseURL } from '../../helpers/globals'
 import { formatDate } from '../../helpers/helpers'
+import BasicHtmlEditor from 'draft-js-basic-html-editor'
+
+// const MyEditor = () => {
+//   const initialHtml = 'hello, <b>World</b>';
+//   const onEditorChange = html => this.setState({ content: html ]})
+
+//   return (
+//     <BasicHtmlEditor
+//       value={ content }
+//       onChange={ onEditorChange }
+//       debounce={ 500 }
+//     />
+//   )
+// }
 
 // TODO: use/leverage draftjs RTE for adding styles to blog posts with html
 
@@ -75,6 +90,8 @@ class EditableBlogPost extends Component {
       file: [{ preview: '' }],
       redirect: false
     }
+
+    this.onEditorChange = html => this.setState({ content: html })
   }
 
   onHandleChange (name) {
@@ -172,6 +189,14 @@ class EditableBlogPost extends Component {
               value={content}
               onChange={this.onHandleChange('content')}
             />
+
+            <hr />
+            <BasicHtmlEditor
+              value={content}
+              onChange={this.onEditorChange}
+              debounce={500}
+            />
+            <hr />
             <br />
             <Dropzone
               className={classes.fileUploader}
@@ -207,7 +232,9 @@ class EditableBlogPost extends Component {
               <Typography className={classes.pos}>
                 {catchPhrase || 'catchPhrase'}
               </Typography>
-              <Typography variant='body1'>{content || 'content'}</Typography>
+              <Typography variant='body1'>
+                {this.state.editorState || 'content'}
+              </Typography>
               <Typography variant='body2'>
                 {lastUpdatedDate || 'lastUpdatedDate'}
               </Typography>

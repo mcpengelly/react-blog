@@ -26,6 +26,8 @@
     "change-case": "^3.0.1",
     "classnames": "^2.2.5",
     "dotenv": "^4.0.0",
+    "draft-js": "^0.10.5",
+    "draft-js-basic-html-editor": "^1.0.10",
     "express": "^4.15.0",
     "https": "^1.0.0",
     "marked": "^0.3.17",
