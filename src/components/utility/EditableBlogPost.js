@@ -1,19 +1,20 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router'
+import { BrowserRouter as Router } from 'react-router-dom'
+import Dropzone from 'react-dropzone'
+import uuidv4 from 'uuidv4'
 import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button'
-import Card, { CardActions } from 'material-ui/Card'
+import Card, { CardContent, CardMedia, CardActions } from 'material-ui/Card'
 import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
 import Divider from 'material-ui/Divider'
-import { BrowserRouter as Router } from 'react-router-dom'
-import { Redirect } from 'react-router'
-import uuidv4 from 'uuidv4'
-import Dropzone from 'react-dropzone'
+
 import BlogPost from './BlogPost'
+import { baseURL } from '../../helpers/globals'
+import { formatDate } from '../../helpers/helpers'
 
 // TODO: use/leverage draftjs RTE for adding styles to blog posts with html
-// TODO: make image upload part of the preview
-// TODO: navigate home after submission
 
 const styles = theme => ({
   card: {
@@ -65,10 +66,12 @@ class EditableBlogPost extends Component {
 
     this.state = {
       id: id || '',
+      isNew: isNew || false,
       title: '',
       content: '',
       catchPhrase: '',
-      isNew: isNew || false,
+      lastUpdatedDate: formatDate(new Date()),
+      hasPreview: false,
       file: [{ preview: '' }],
       redirect: false
     }
@@ -84,55 +87,32 @@ class EditableBlogPost extends Component {
 
   onSubmitClick (e) {
     e.preventDefault()
+    console.log(this.props)
 
-    let data = {
-      id: !this.state.isNew ? this.state.id : uuidv4(),
-      title: this.state.title,
-      content: this.state.content,
-      catchPhrase: this.state.catchPhrase,
-      file: this.state.file[0] // should do this better
-    }
+    this.props.addPost(this.state)
 
-    // for sending multipart/form-data
-    let formData = new FormData()
-    for (let name in data) {
-      formData.append(name, data[name])
-    }
-
-    // hit different endpoints with POST/PUT based on if its new or not
-    const url = this.state.isNew ? '/api/posts' : `/api/posts/${this.state.id}`
-    const options = {
-      method: this.state.isNew ? 'POST' : 'PUT',
-      body: formData
-    }
-
-    fetch(url, options)
-      .then(response => {
-        return response.text()
-      })
-      .then(text => {
-        console.log('text', text)
-        // clear inputs
-        this.setState({
-          id: '',
-          title: '',
-          content: '',
-          catchPhrase: '',
-          file: [{ preview: '' }],
-          img: '',
-          redirect: true
-        })
-      })
+    this.setState({
+      redirect: true
+    })
   }
 
   onDrop (acceptedFiles, rejectedFiles) {
     this.setState({
-      file: acceptedFiles
+      file: acceptedFiles,
+      hasPreview: true
     })
   }
 
   componentDidMount (props) {
-    const { isNew, id, title, catchPhrase, content, img } = this.props
+    const {
+      isNew,
+      id,
+      title,
+      catchPhrase,
+      content,
+      lastUpdatedDate,
+      img
+    } = this.props
 
     // if its not a new record then fetch existing data from backend
     if (!isNew) {
@@ -140,6 +120,7 @@ class EditableBlogPost extends Component {
         id,
         title,
         catchPhrase,
+        lastUpdatedDate,
         content,
         img
       })
@@ -148,8 +129,20 @@ class EditableBlogPost extends Component {
 
   render () {
     const { classes } = this.props
+    const {
+      redirect,
+      title,
+      content,
+      catchPhrase,
+      lastUpdatedDate,
+      img,
+      file,
+      hasPreview
+    } = this.state
 
-    if (this.state.redirect) {
+    const imgPath = baseURL + img
+
+    if (redirect) {
       return <Redirect to='/blog' />
     }
 
@@ -160,14 +153,14 @@ class EditableBlogPost extends Component {
             <TextField
               className={classes.textfield}
               label='Blog Post Title'
-              value={this.state.title}
+              value={title}
               onChange={this.onHandleChange('title')}
             />
             <br />
             <TextField
               className={classes.textfield}
               label='Catch phrase'
-              value={this.state.catchPhrase}
+              value={catchPhrase}
               onChange={this.onHandleChange('catchPhrase')}
             />
             <br />
@@ -176,7 +169,7 @@ class EditableBlogPost extends Component {
               label='Blog Post Content'
               multiline
               rows='8'
-              value={this.state.content}
+              value={content}
               onChange={this.onHandleChange('content')}
             />
             <br />
@@ -201,13 +194,25 @@ class EditableBlogPost extends Component {
         <Divider />
         <Typography variant='headline'>Preview</Typography>
         <div className={classes.container}>
-          <BlogPost
-            title={this.state.title}
-            catchPhrase={this.state.catchPhrase}
-            content={this.state.content}
-            img={this.state.img}
-            previewImage={this.state.file[0].preview || '/smiley'}
-          />
+          <Card className={classes.card}>
+            <CardMedia
+              className={classes.media}
+              image={hasPreview ? file[0].preview : imgPath}
+              title={title}
+            />
+            <CardContent>
+              <Typography className={classes.title} variant='headline'>
+                {title || 'title'}
+              </Typography>
+              <Typography className={classes.pos}>
+                {catchPhrase || 'catchPhrase'}
+              </Typography>
+              <Typography variant='body1'>{content || 'content'}</Typography>
+              <Typography variant='body2'>
+                {lastUpdatedDate || 'lastUpdatedDate'}
+              </Typography>
+            </CardContent>
+          </Card>
         </div>
       </Card>
     )
@@ -215,13 +220,3 @@ class EditableBlogPost extends Component {
 }
 
 export default withStyles(styles)(EditableBlogPost)
-
-/*
-// const options = {
-//   method: this.state.isNew ? 'POST' : 'PUT',
-//   body: JSON.stringify(data),
-//   headers: {
-//     'Content-Type': 'multipart/form-data'
-//   }
-// }
-*/

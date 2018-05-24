@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { withStyles } from 'material-ui/styles'
 import AppBar from 'material-ui/AppBar'
@@ -11,7 +12,6 @@ import Switch from 'material-ui/Switch'
 import { FormControlLabel, FormGroup } from 'material-ui/Form'
 import Menu, { MenuItem } from 'material-ui/Menu'
 import Icon from 'material-ui/Icon'
-import { Link } from 'react-router-dom'
 import FaGithub from 'react-icons/lib/fa/github'
 
 const styles = {

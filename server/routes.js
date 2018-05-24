@@ -9,7 +9,7 @@ const camelcaseKeys = require('camelcase-keys')
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.resolve(__dirname, '../', 'build'))
+    cb(null, path.join(__dirname, '/uploads'))
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname)
@@ -36,7 +36,7 @@ const transporter = mailer.createTransport({
   }
 })
 
-const HOSTNAME = process.env.HOSTNAME || 'http://localhost:9000'
+const HOSTNAME = process.env.HOSTNAME || 'http://localhost:3000'
 const HTTP_INTERNAL_SERVER_ERROR = 500
 const HTTP_CREATED = 201
 const HTTP_ACCEPTED = 202
@@ -113,14 +113,22 @@ module.exports = function (app) {
   function createOne (relation, targetKeys) {
     app.post(
       `/api/${relation}`,
-      passport.authenticate('basic', {
-        session: false
-      }),
+      upload.single('file'),
+      // passport.authenticate('basic', {
+      //   session: false
+      // }),
       (req, res) => {
-        const data = req.body
+        let data
+        if (req.file) {
+          data = { ...req.body, img: req.file.originalname }
+        } else {
+          data = req.body
+        }
+
 
         const table = changeCase.snakeCase(relation)
         const filteredData = _filterData(data, targetKeys)
+          console.log('projects filteredData', filteredData)
 
         db_createOne(table, filteredData)
           .then(result => {
@@ -151,6 +159,8 @@ module.exports = function (app) {
     app.put(`/api/${relation}/:id`, upload.single('file'), (req, res) => {
       const id = req.params.id
       const data = req.body
+
+      // update the image location if image data was sent
       if (req.file) {
         data.img = req.file.originalname
       }
@@ -205,73 +215,127 @@ module.exports = function (app) {
   getAll('projects')
   getOneById('projects')
   deleteById('projects')
-  createOne('projects', ['title', 'description', 'img'])
-  updateById('projects', ['title', 'description', 'img'])
+  createOne('projects', ['id', 'title', 'description', 'lastUpdatedDate', 'img'])
+  updateById('projects', ['title', 'description', 'lastUpdatedDate', 'img'])
+
+  // app.post('/api/projects', upload.single('file'), (req, res) => {
+  //   const data = { ...req.body, img: req.file.originalname }
+
+  //   const filteredData = _filterData(data, [
+  //     'id',
+  //     'title',
+  //     'description',
+  //     'lastUpdatedDate',
+  //     'img'
+  //   ])
+
+  //   console.log('projects filteredData', filteredData)
+
+  //   db_createOne('projects', filteredData)
+  //     .then((project) => {
+  //       res.status(HTTP_CREATED).send(`new project created, id: ${project.id}`)
+  //     })
+  //     .catch(err => {
+  //       res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
+  //     })
+  // })
+
+  function notifyActiveSubscribers (post) {
+    // mail all active subscribers
+    db
+      .any('SELECT * FROM subscribers WHERE active = TRUE')
+      .then(activeSubscribers => {
+        // TODO? send 1 volley of emails
+        if (activeSubscribers && activeSubscribers.length) {
+          activeSubscribers.forEach(sub => {
+            const path = `/api/unsubscribe/${sub.id}`
+            const mailOptions = {
+              from: '"Burna" <burnermcbernstein@gmail.com>',
+              to: sub.email,
+              subject: `New Post, ${post.title} is available at ${HOSTNAME}`,
+              html: `
+                A new post is up! check it out
+                <a href="${HOSTNAME}" target="_blank">
+                    Here
+                </a>
+
+                Tired of emails?
+                <a href="${HOSTNAME + path}" target="_blank">
+                    Unsubscribe
+                </a>
+              `
+            }
+
+            transporter.sendMail(mailOptions)
+          })
+        }
+      })
+    return post.id
+  }
 
   /** posts api **/
   getAll('posts')
   getOneById('posts')
   deleteById('posts')
-  updateById('posts', ['title', 'content', 'catchPhrase', 'img'])
+  createAndCallback('posts', ['id', 'title', 'content', 'catchPhrase', 'lastUpdatedDate', 'img'], notifyActiveSubscribers)
+  updateById('posts', ['title', 'content', 'catchPhrase', 'lastUpdatedDate', 'img'])
 
   // CREATE new blog post
-  app.post('/api/posts', upload.single('file'), (req, res) => {
-    let postid
+  // app.post('/api/posts', upload.single('file'), (req, res) => {
+  //   let postid
 
-    // save the string path to the db?
+  //   const data = { ...req.body, img: req.file.originalname }
+  //   const filteredData = _filterData(data, [
+  //     'id',
+  //     'title',
+  //     'content',
+  //     'catchPhrase',
+  //     'img'
+  //   ])
 
-    querystring =
-      'INSERT INTO posts (title, content, catch_phrase, img) VALUES ($1, $2, $3, $4) RETURNING *'
+  //   db_createOne('posts', filteredData)
+  //     .then(post => {
+  //       postId = post.id
 
-    db
-      .one(querystring, [
-        req.body.title,
-        req.body.content,
-        req.body.catchPhrase,
-        req.file.originalname
-      ])
-      .then(post => {
-        postId = post.id
+  //       // mail all active subscribers
+  //       db
+  //         .any('SELECT * FROM subscribers WHERE active = TRUE')
+  //         .then(activeSubscribers => {
+  //           // TODO? send 1 volley of emails
+  //           if (activeSubscribers && activeSubscribers.length) {
+  //             activeSubscribers.forEach(sub => {
+  //               const path = `/api/unsubscribe/${sub.id}`
+  //               const mailOptions = {
+  //                 from: '"Burna" <burnermcbernstein@gmail.com>',
+  //                 to: sub.email,
+  //                 subject: `New Post, ${
+  //                   post.title
+  //                 } is available at mattpengelly.com`,
+  //                 html: `
+  //                     A new post is up! check it out
+  //                     <a href="${HOSTNAME}" target="_blank">
+  //                         Here
+  //                     </a>
 
-        // mail all active subscribers
-        db
-          .any('SELECT * FROM subscribers WHERE active = TRUE')
-          .then(activeSubscribers => {
-            // TODO? send 1 volley of emails
-            if (activeSubscribers && activeSubscribers.length) {
-              activeSubscribers.forEach(sub => {
-                const path = `/api/unsubscribe/${sub.id}`
-                const mailOptions = {
-                  from: '"Burna" <burnermcbernstein@gmail.com>',
-                  to: sub.email,
-                  subject: `New Post, ${
-                    post.title
-                  } is available at mattpengelly.com`,
-                  html: `
-                      A new post is up! check it out
-                      <a href="${HOSTNAME}" target="_blank">
-                          Here
-                      </a>
+  //                     Tired of emails?
+  //                     <a href="${HOSTNAME + path}" target="_blank">
+  //                         Unsubscribe
+  //                     </a>
+  //                   `
+  //               }
 
-                      Tired of emails?
-                      <a href="${HOSTNAME + path}" target="_blank">
-                          Unsubscribe
-                      </a>
-                    `
-                }
-
-                transporter.sendMail(mailOptions)
-              })
-            }
-          })
-      })
-      .then(() => {
-        res.status(HTTP_CREATED).send(`new post created, id: ${postId}`)
-      })
-      .catch(err => {
-        res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
-      })
-  })
+  //               transporter.sendMail(mailOptions)
+  //             })
+  //           }
+  //         })
+  //     })
+  //     .then(() => {
+  //       res.status(HTTP_CREATED).send(`new post created, id: ${postId}`)
+  //     })
+  //     .catch(err => {
+  //       res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
+  //     })
+  // })
 
   // mailer: emails me on behalf of user
   app.post('/api/send-mail', (req, res) => {
@@ -390,4 +454,20 @@ module.exports = function (app) {
         res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
       })
   })
+
+  function createAndCallback (relation, targetKeys, callback) {
+    app.post('/api/posts', upload.single('file'), (req, res) => {
+      const data = { ...req.body, img: req.file.originalname }
+      const filteredData = _filterData(data, targetKeys)
+
+      db_createOne(relation, filteredData)
+        .then(callback)
+        .then((postId) => {
+          res.status(HTTP_CREATED).send(`new post created, id: ${postId}`)
+        })
+        .catch(err => {
+          res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
+        })
+    })
+  }
 }

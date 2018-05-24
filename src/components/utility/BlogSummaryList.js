@@ -13,6 +13,7 @@ class BlogSummaryList extends Component {
           title={post.title}
           content={post.content}
           catchPhrase={post.catchPhrase}
+          lastUpdatedDate={post.lastUpdatedDate}
           img={post.img}
         />
       )

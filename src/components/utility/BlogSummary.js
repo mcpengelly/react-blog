@@ -1,10 +1,12 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { withStyles } from 'material-ui/styles'
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card'
-import { Link } from 'react-router-dom'
 import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
+
+import { baseURL } from '../../helpers/globals'
 
 const styles = theme => ({
   card: {
@@ -33,17 +35,28 @@ const styles = theme => ({
 })
 
 function BlogSummary (props) {
-  const { classes, title, content, catchPhrase, id, img } = props
+  const {
+    classes,
+    title,
+    content,
+    catchPhrase,
+    lastUpdatedDate,
+    id,
+    img
+  } = props
 
   return (
     <Card className={classes.card}>
       <CardMedia
         className={classes.media}
-        image={`http://localhost:4000/${img}`}
-        title={img}
+        image={baseURL + img}
+        title={title}
       />
       <CardContent>
         <Typography variant='headline'>{title}</Typography>
+        <Typography variant='body2'>
+          {lastUpdatedDate || 'lastUpdatedDate'}
+        </Typography>
         <Typography className={classes.pos}>
           {catchPhrase || 'catchyPhrase'}
         </Typography>

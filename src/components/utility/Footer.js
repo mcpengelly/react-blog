@@ -1,10 +1,10 @@
 import React from 'react'
-import SocialMediaIcons from './SocialMediaIcons'
 import { withStyles } from 'material-ui/styles'
+
+import SocialMediaIcons from './SocialMediaIcons'
 
 const styles = {
   footer: {
-    // backgroundColor: 'white',
     padding: 10
   }
 }

@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router'
+import { BrowserRouter as Router } from 'react-router-dom'
+import Dropzone from 'react-dropzone'
 import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button'
 import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
 import Divider from 'material-ui/Divider'
-import { BrowserRouter as Router } from 'react-router-dom'
-import Dropzone from 'react-dropzone'
-import { Redirect } from 'react-router'
-
-import classnames from 'classnames'
 import Card, {
   CardHeader,
   CardMedia,
@@ -18,9 +16,13 @@ import Card, {
 import Collapse from 'material-ui/transitions/Collapse'
 import Avatar from 'material-ui/Avatar'
 import IconButton from 'material-ui/IconButton'
-import red from 'material-ui/colors/red'
+import yellow from 'material-ui/colors/yellow'
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
 import MoreVertIcon from 'material-ui-icons/MoreVert'
+import classnames from 'classnames'
+
+import { baseURL } from '../../helpers/globals'
+import { formatDate } from '../../helpers/helpers'
 
 const styles = theme => ({
   card: {
@@ -55,7 +57,7 @@ const styles = theme => ({
     transform: 'rotate(180deg)'
   },
   avatar: {
-    backgroundColor: red[500]
+    backgroundColor: yellow[600]
   },
   textfield: {
     width: '40%'
@@ -76,14 +78,23 @@ class EditableProject extends Component {
   constructor (props) {
     super(props)
 
+    const { isNew, id } = props
+
     this.state = {
-      id: '',
+      id: id,
+      isNew: isNew || false,
+      hasPreview: false,
       title: '',
       description: '',
-      isNew: false,
+      lastUpdatedDate: formatDate(new Date()),
+      img: '',
       file: [{ preview: '/placeholder' }],
+      expanded: false,
       redirect: false
     }
+
+    this.onSubmitClick = this.onSubmitClick.bind(this)
+    this.handleExpandClick = this.handleExpandClick.bind(this)
   }
 
   onHandleChange (name) {
@@ -94,48 +105,47 @@ class EditableProject extends Component {
     }
   }
 
+  componentDidMount (props) {
+    const { isNew, id, title, description, lastUpdatedDate, img } = this.props
+
+    // if its not a new record then fetch existing data from backend
+    if (!isNew) {
+      this.setState({
+        id,
+        title,
+        description,
+        lastUpdatedDate,
+        img
+      })
+    }
+  }
+
   onSubmitClick (e) {
     e.preventDefault()
 
-    let data = {
-      id: this.state.id,
-      title: this.state.title,
-      description: this.state.description
-    }
+    // bubble state upward
+    this.props.addProject(this.state)
 
-    const options = {
-      method: this.state.isNew ? 'POST' : 'PUT',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
-
-    fetch('/api/projects', options)
-      .then(response => {
-        return response.text()
-      })
-      .then(text => {
-        // clear inputs, redirect
-        this.setState({
-          id: '',
-          title: '',
-          description: '',
-          file: [{ preview: '/placeholder' }],
-          redirect: true
-        })
-      })
+    // redirect
+    this.setState({
+      redirect: true
+    })
   }
 
   onDrop (acceptedFiles, rejectedFiles) {
     this.setState({
-      file: acceptedFiles
+      file: acceptedFiles,
+      hasPreview: true
     })
-    // maybe post/put request here?
+  }
+
+  handleExpandClick () {
+    this.setState({ expanded: !this.state.expanded })
   }
 
   render () {
-    const { classes } = this.props
+    const { classes, img } = this.props
+    const imgPath = baseURL + img
 
     if (this.state.redirect) {
       return <Redirect to='/portfolio' />
@@ -144,7 +154,7 @@ class EditableProject extends Component {
     return (
       <Card className={classes.card}>
         <CardActions>
-          <form className={classes.form} onSubmit={this.onSubmitClick}>
+          <form className={classes.form}>
             <TextField
               className={classes.textfield}
               label='Project Title'
@@ -170,7 +180,11 @@ class EditableProject extends Component {
               </Typography>
             </Dropzone>
             <br />
-            <Button variant='raised' color='primary'>
+            <Button
+              onClick={this.onSubmitClick}
+              variant='raised'
+              color='primary'
+            >
               Submit
             </Button>
           </form>
@@ -179,30 +193,21 @@ class EditableProject extends Component {
 
         <Typography variant='headline'>Preview</Typography>
 
-        {/* <SingleProject title={this.state.title} description={this.state.description} /> */}
         <Card className={classes.innerCard}>
           <CardHeader
             avatar={
               <Avatar aria-label='Recipe' className={classes.avatar}>
-                R
+                JS
               </Avatar>
             }
-            action={
-              <IconButton>
-                <MoreVertIcon />
-              </IconButton>
-            }
             title={this.state.title}
-            subheader={''}
+            subheader={this.state.lastUpdatedDate}
           />
           <CardMedia
             className={classes.media}
-            image={this.state.file[0].preview}
-            title='bing'
+            image={this.state.hasPreview ? this.state.file[0].preview : imgPath}
+            title={img}
           />
-          <CardContent>
-            <Typography variant='body1'>{this.state.description}</Typography>
-          </CardContent>
           <CardActions className={classes.actions} disableActionSpacing>
             <IconButton
               className={classnames(classes.expand, {
