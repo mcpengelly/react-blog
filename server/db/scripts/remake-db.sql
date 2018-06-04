@@ -35,6 +35,7 @@ CREATE TABLE subscribers (
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
+	id text,
 	username text,
 	password text
 );

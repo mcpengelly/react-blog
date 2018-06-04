@@ -1,2 +1,2 @@
 # Run table creation with
-```psql -U postgres -f server/scripts/remake-db.sql```
+```psql -U <user> -f server/db/scripts/remake-db.sql```

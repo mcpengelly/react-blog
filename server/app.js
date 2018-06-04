@@ -26,10 +26,3 @@ server.use(bodyParser.json())
 require('./routes.js')(server)
 
 module.exports = server
-
-
-// flagged for removal
-// react: Always return the main index.html, so react-router render the route in the client
-// server.get('*', (req, res) => {
-//   res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'))
-// })

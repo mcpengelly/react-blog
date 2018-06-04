@@ -56,12 +56,38 @@ passport.use(
         }
       })
       .catch(error => {
-        done(null, error)
+        done(error)
       })
   })
 )
 
+// passport.serializeUser(function(user, done) {
+//   done(null, user)
+// })
+
+// passport.deserializeUser(function (user, done) {
+//   db
+//     .one('SELECT id FROM users WHERE id = $1', ['vg'])
+//     .then(user => {
+//       done(null, user)
+//     })
+//     .catch(error => {
+//       done(error)
+//     })
+// })
+
 module.exports = function (app) {
+  app.use(require('cookie-parser')())
+  app.use(
+    require('express-session')({
+      secret: 'keyboard cat',
+      resave: true,
+      saveUninitialized: true
+    })
+  )
+  app.use(passport.initialize())
+  app.use(passport.session())
+
   // Generic GET all
   function getAll (relation) {
     app.get(`/api/${relation}`, (req, res) => {
@@ -115,9 +141,11 @@ module.exports = function (app) {
       `/api/${relation}`,
       upload.single('file'),
       // passport.authenticate('basic', {
-      //   session: false
+      //   session: true
       // }),
       (req, res) => {
+        console.log('req.user', req.user)
+
         let data
         if (req.file) {
           data = { ...req.body, img: req.file.originalname }
@@ -125,10 +153,9 @@ module.exports = function (app) {
           data = req.body
         }
 
-
         const table = changeCase.snakeCase(relation)
         const filteredData = _filterData(data, targetKeys)
-          console.log('projects filteredData', filteredData)
+        console.log('projects filteredData', filteredData)
 
         db_createOne(table, filteredData)
           .then(result => {
@@ -215,30 +242,14 @@ module.exports = function (app) {
   getAll('projects')
   getOneById('projects')
   deleteById('projects')
-  createOne('projects', ['id', 'title', 'description', 'lastUpdatedDate', 'img'])
+  createOne('projects', [
+    'id',
+    'title',
+    'description',
+    'lastUpdatedDate',
+    'img'
+  ])
   updateById('projects', ['title', 'description', 'lastUpdatedDate', 'img'])
-
-  // app.post('/api/projects', upload.single('file'), (req, res) => {
-  //   const data = { ...req.body, img: req.file.originalname }
-
-  //   const filteredData = _filterData(data, [
-  //     'id',
-  //     'title',
-  //     'description',
-  //     'lastUpdatedDate',
-  //     'img'
-  //   ])
-
-  //   console.log('projects filteredData', filteredData)
-
-  //   db_createOne('projects', filteredData)
-  //     .then((project) => {
-  //       res.status(HTTP_CREATED).send(`new project created, id: ${project.id}`)
-  //     })
-  //     .catch(err => {
-  //       res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
-  //     })
-  // })
 
   function notifyActiveSubscribers (post) {
     // mail all active subscribers
@@ -277,65 +288,35 @@ module.exports = function (app) {
   getAll('posts')
   getOneById('posts')
   deleteById('posts')
-  createAndCallback('posts', ['id', 'title', 'content', 'catchPhrase', 'lastUpdatedDate', 'img'], notifyActiveSubscribers)
-  updateById('posts', ['title', 'content', 'catchPhrase', 'lastUpdatedDate', 'img'])
+  createAndCallback(
+    'posts',
+    ['id', 'title', 'content', 'catchPhrase', 'lastUpdatedDate', 'img'],
+    notifyActiveSubscribers
+  )
+  updateById('posts', [
+    'title',
+    'content',
+    'catchPhrase',
+    'lastUpdatedDate',
+    'img'
+  ])
 
-  // CREATE new blog post
-  // app.post('/api/posts', upload.single('file'), (req, res) => {
-  //   let postid
+  /* login api */
+  app.post(
+    '/api/login',
+    passport.authenticate('basic', {
+      session: false
+    }),
+    (req, res) => {
+      console.log(req.user)
+      res.send('trying to authetnticate')
+    }
+  )
 
-  //   const data = { ...req.body, img: req.file.originalname }
-  //   const filteredData = _filterData(data, [
-  //     'id',
-  //     'title',
-  //     'content',
-  //     'catchPhrase',
-  //     'img'
-  //   ])
-
-  //   db_createOne('posts', filteredData)
-  //     .then(post => {
-  //       postId = post.id
-
-  //       // mail all active subscribers
-  //       db
-  //         .any('SELECT * FROM subscribers WHERE active = TRUE')
-  //         .then(activeSubscribers => {
-  //           // TODO? send 1 volley of emails
-  //           if (activeSubscribers && activeSubscribers.length) {
-  //             activeSubscribers.forEach(sub => {
-  //               const path = `/api/unsubscribe/${sub.id}`
-  //               const mailOptions = {
-  //                 from: '"Burna" <burnermcbernstein@gmail.com>',
-  //                 to: sub.email,
-  //                 subject: `New Post, ${
-  //                   post.title
-  //                 } is available at mattpengelly.com`,
-  //                 html: `
-  //                     A new post is up! check it out
-  //                     <a href="${HOSTNAME}" target="_blank">
-  //                         Here
-  //                     </a>
-
-  //                     Tired of emails?
-  //                     <a href="${HOSTNAME + path}" target="_blank">
-  //                         Unsubscribe
-  //                     </a>
-  //                   `
-  //               }
-
-  //               transporter.sendMail(mailOptions)
-  //             })
-  //           }
-  //         })
-  //     })
-  //     .then(() => {
-  //       res.status(HTTP_CREATED).send(`new post created, id: ${postId}`)
-  //     })
-  //     .catch(err => {
-  //       res.status(HTTP_INTERNAL_SERVER_ERROR).send(err)
-  //     })
-  // })
+  app.get('/api/logout', (req, res) => {
+    req.logout()
+    res.redirect('/')
+  })
 
   // mailer: emails me on behalf of user
   app.post('/api/send-mail', (req, res) => {
@@ -457,12 +438,13 @@ module.exports = function (app) {
 
   function createAndCallback (relation, targetKeys, callback) {
     app.post('/api/posts', upload.single('file'), (req, res) => {
-      const data = { ...req.body, img: req.file.originalname }
+      console.log('req.file', req.file)
+      const data = { ...req.body, img: req.file ? req.file.originalname : '' }
       const filteredData = _filterData(data, targetKeys)
 
       db_createOne(relation, filteredData)
         .then(callback)
-        .then((postId) => {
+        .then(postId => {
           res.status(HTTP_CREATED).send(`new post created, id: ${postId}`)
         })
         .catch(err => {

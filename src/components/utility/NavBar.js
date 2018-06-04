@@ -113,6 +113,13 @@ class MenuAppBar extends Component {
               <MenuItem
                 component={Link}
                 onClick={this.handleNavClose}
+                to='/login'
+              >
+                <Icon>home</Icon> - login
+              </MenuItem>
+              <MenuItem
+                component={Link}
+                onClick={this.handleNavClose}
                 to='/blog'
               >
                 <Icon>home</Icon> - Home
