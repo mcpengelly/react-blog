@@ -22,3 +22,6 @@ yarn-error.log*
 
 # assets
 src/assets/img/uploads
+
+# assets
+server/uploads

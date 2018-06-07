@@ -7,6 +7,14 @@
 //   return str.split(' ').map(word => word[0])
 // }
 
+import padLeft from 'pad-left'
+
 export function formatDate (date) {
-  return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getYear()
+  return (
+    padLeft(date.getMonth() + 1, 2, 0) +
+    '/' +
+    padLeft(date.getDate(), 2, 0) +
+    '/' +
+    date.getFullYear()
+  )
 }
