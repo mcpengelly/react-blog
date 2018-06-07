@@ -1,4 +1,5 @@
 import React from 'react'
+import Cookies from 'universal-cookie'
 
 class LoginForm extends React.Component {
   constructor () {
@@ -18,6 +19,12 @@ class LoginForm extends React.Component {
       })
     }
   }
+  clearInputFields () {
+    this.setState({
+      username: '',
+      password: ''
+    })
+  }
   login () {
     const data = {
       username: this.state.username,
@@ -27,27 +34,17 @@ class LoginForm extends React.Component {
     const options = {
       method: 'POST',
       body: JSON.stringify(data),
+      credentials: 'include',
       headers: {
-        // Authorization: 'Basic dGVzdDp0ZXN0',
         'Content-Type': 'application/json'
       }
     }
 
-    fetch('/api/login', options)
-      .then(res => {
-        console.log('res', res)
-      })
-      .then(this.clearInputFields.bind(this))
+    fetch('/login', options).then(this.clearInputFields.bind(this))
   }
   logout () {
-    fetch('/api/logout').then(res => {
+    fetch('/logout').then(res => {
       console.log('res', res)
-    })
-  }
-  clearInputFields () {
-    this.setState({
-      username: '',
-      password: ''
     })
   }
   render () {
@@ -59,11 +56,13 @@ class LoginForm extends React.Component {
           value={username}
           onChange={this.handleChange('username')}
         />
+        <br />
         password:<input
           type='text'
           value={password}
           onChange={this.handleChange('password')}
         />
+        <br />
         <input type='button' value='login' onClick={this.login} />
         <input type='button' value='logout' onClick={this.logout} />
       </div>
