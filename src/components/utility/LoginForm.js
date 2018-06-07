@@ -1,5 +1,14 @@
 import React from 'react'
-import Cookies from 'universal-cookie'
+import Paper from 'material-ui/Paper'
+import { withStyles } from 'material-ui/styles'
+const styles = {
+  container: {
+    paddingTop: 25,
+    maxWidth: 900,
+    minHeight: 200,
+    margin: 'auto'
+  }
+}
 
 class LoginForm extends React.Component {
   constructor () {
@@ -48,26 +57,30 @@ class LoginForm extends React.Component {
     })
   }
   render () {
+    const { classes } = this.props
     const { username, password } = this.state
+
     return (
-      <div>
-        username:<input
-          type='text'
-          value={username}
-          onChange={this.handleChange('username')}
-        />
-        <br />
-        password:<input
-          type='text'
-          value={password}
-          onChange={this.handleChange('password')}
-        />
-        <br />
-        <input type='button' value='login' onClick={this.login} />
-        <input type='button' value='logout' onClick={this.logout} />
-      </div>
+      <Paper className={classes.container}>
+        <div>
+          username:<input
+            type='text'
+            value={username}
+            onChange={this.handleChange('username')}
+          />
+          <br />
+          password:<input
+            type='text'
+            value={password}
+            onChange={this.handleChange('password')}
+          />
+          <br />
+          <input type='button' value='login' onClick={this.login} />
+          <input type='button' value='logout' onClick={this.logout} />
+        </div>
+      </Paper>
     )
   }
 }
 
-export default LoginForm
+export default withStyles(styles)(LoginForm)

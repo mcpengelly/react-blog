@@ -31,7 +31,7 @@ class MenuAppBar extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      auth: true,
+      auth: false,
       anchorEl: null,
       anchorNavEl: null
     }
@@ -63,6 +63,10 @@ class MenuAppBar extends Component {
     this.setState({ anchorNavEl: null })
   }
 
+  navigateLogin () {
+    window.location.href = '/login'
+  }
+
   render () {
     const { classes } = this.props
     const { auth, anchorEl, anchorNavEl } = this.state
@@ -81,6 +85,7 @@ class MenuAppBar extends Component {
               />
             }
             label={auth ? 'Logout' : 'Login'}
+            onClick={this.navigateLogin}
           />
         </FormGroup>
         <AppBar position='static'>
@@ -110,13 +115,6 @@ class MenuAppBar extends Component {
               open={openNavigation}
               onClose={this.handleNavClose}
             >
-              <MenuItem
-                component={Link}
-                onClick={this.handleNavClose}
-                to='/login'
-              >
-                <Icon>home</Icon> - login
-              </MenuItem>
               <MenuItem
                 component={Link}
                 onClick={this.handleNavClose}
