@@ -2,10 +2,11 @@ var pgp = require('pg-promise')({})
 const mailer = require('nodemailer')
 const changeCase = require('change-case')
 const passport = require('passport')
-const BasicStrategy = require('passport-http').BasicStrategy
 const multer = require('multer')
 const path = require('path')
 const camelcaseKeys = require('camelcase-keys')
+const LocalStrategy = require('passport-local').Strategy
+const bodyParser = require('body-parser')
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -43,7 +44,7 @@ const HTTP_ACCEPTED = 202
 
 // Basic authentication
 passport.use(
-  new BasicStrategy(function (username, password, done) {
+  new LocalStrategy(function (username, password, done) {
     db
       .one('SELECT password FROM users WHERE username = $1', [username])
       .then(user => {
@@ -65,6 +66,11 @@ passport.use(
 )
 
 module.exports = function (app) {
+  // req body middleware
+  app.use(require('cookie-parser')())
+  app.use(bodyParser.urlencoded({ extended: true }))
+  app.use(bodyParser.json())
+
   app.use(
     require('express-session')({
       secret: 'keyboard cat',
@@ -311,7 +317,7 @@ module.exports = function (app) {
 
   /* login api */
   app.post(
-    '/login',
+    '/api/login',
     passport.authenticate('local', {
       // successRedirect: '/profile',
       // failureRedirect: '/error'
@@ -327,6 +333,7 @@ module.exports = function (app) {
   })
 
   function isAuthenticated (req, res, next) {
+    console.log('req.user', req.user)
     if (req.user) {
       return next()
     } else {
@@ -459,7 +466,8 @@ module.exports = function (app) {
   })
 
   function createAndCallback (relation, targetKeys, callback) {
-    app.post('/api/posts', upload.single('file'), (req, res) => {
+    // app.post('/api/posts', [isAuthenticated, upload.single('file')], (req, res) => {
+    app.post('/api/posts', isAuthenticated, (req, res) => {
       console.log('req.file', req.file)
       const data = { ...req.body, img: req.file ? req.file.originalname : '' }
       const filteredData = _filterData(data, targetKeys)

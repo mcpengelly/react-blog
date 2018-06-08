@@ -43,6 +43,18 @@ class MenuAppBar extends Component {
     this.handleNavClose = this.handleNavClose.bind(this)
   }
 
+  componentDidMount () {
+    if (document.cookie) {
+      this.setState({
+        auth: true
+      })
+    } else {
+      this.setState({
+        auth: false
+      })
+    }
+  }
+
   handleChange (event, checked) {
     this.setState({ auth: checked })
   }

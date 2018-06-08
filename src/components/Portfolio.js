@@ -84,7 +84,10 @@ export default class Portfolio extends Component {
   }
 
   removeProject (projectId) {
-    const options = { method: 'delete' }
+    const options = {
+      method: 'delete',
+      credentials: 'include'
+    }
 
     fetch(`/api/projects/${projectId}`, options).then(() => {
       this.setState({
@@ -117,7 +120,8 @@ export default class Portfolio extends Component {
 
     const options = {
       method: isNew ? 'POST' : 'PUT',
-      body: formData
+      body: formData,
+      credentials: 'include'
     }
 
     fetch(url, options)
