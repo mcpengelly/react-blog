@@ -41,19 +41,22 @@ const HTTP_INTERNAL_SERVER_ERROR = 500
 const HTTP_CREATED = 201
 const HTTP_ACCEPTED = 202
 
-let querystring = ''
-
 // Basic authentication
 passport.use(
   new BasicStrategy(function (username, password, done) {
     db
       .one('SELECT password FROM users WHERE username = $1', [username])
       .then(user => {
-        if (password === user.password) {
-          done(null, user)
-        } else {
-          done(null, false)
+        console.log(user)
+        if (!password || !user) {
+          done('invalid credentials')
         }
+
+        if (password !== user.password) {
+          done('invalid credentials')
+        }
+
+        done(null, user)
       })
       .catch(error => {
         done(error)
@@ -61,32 +64,37 @@ passport.use(
   })
 )
 
-// passport.serializeUser(function(user, done) {
-//   done(null, user)
-// })
-
-// passport.deserializeUser(function (user, done) {
-//   db
-//     .one('SELECT id FROM users WHERE id = $1', ['vg'])
-//     .then(user => {
-//       done(null, user)
-//     })
-//     .catch(error => {
-//       done(error)
-//     })
-// })
-
 module.exports = function (app) {
-  app.use(require('cookie-parser')())
   app.use(
     require('express-session')({
       secret: 'keyboard cat',
       resave: true,
-      saveUninitialized: true
+      saveUninitialized: true,
+      cookie: {
+        httpOnly: false,
+        secure: false
+      }
     })
   )
   app.use(passport.initialize())
   app.use(passport.session())
+
+  passport.serializeUser(function (user, done) {
+    console.log('serializeUser:', user)
+    done(null, user)
+  })
+
+  passport.deserializeUser(function (usr, done) {
+    console.log('deserializeUser:', usr)
+    db
+      .one('SELECT * FROM users WHERE password = $1', [usr.password])
+      .then(user => {
+        done(null, user)
+      })
+      .catch(error => {
+        done(error)
+      })
+  })
 
   // Generic GET all
   function getAll (relation) {
@@ -303,19 +311,33 @@ module.exports = function (app) {
 
   /* login api */
   app.post(
-    '/api/login',
-    passport.authenticate('basic', {
-      session: false
+    '/login',
+    passport.authenticate('local', {
+      // successRedirect: '/profile',
+      // failureRedirect: '/error'
     }),
     (req, res) => {
-      console.log(req.user)
-      res.send('trying to authetnticate')
+      res.send('authenticated!')
     }
   )
 
   app.get('/api/logout', (req, res) => {
     req.logout()
-    res.redirect('/')
+    // res.redirect('/')
+  })
+
+  function isAuthenticated (req, res, next) {
+    if (req.user) {
+      return next()
+    } else {
+      return res.status(401).json({
+        error: 'User not authenticated'
+      })
+    }
+  }
+
+  app.get('/profile', isAuthenticated, (req, res) => {
+    res.send('user profile access')
   })
 
   // mailer: emails me on behalf of user

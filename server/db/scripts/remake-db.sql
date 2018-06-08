@@ -7,7 +7,7 @@ CREATE TABLE projects (
 	title text,
 	description text,
 	img text,
-	last_updated_date text,
+	last_updated_date date,
 	PRIMARY KEY (id)
 );
 
@@ -19,7 +19,7 @@ CREATE TABLE posts (
 	content text,
 	catch_phrase text,
 	img text,
-	last_updated_date text,
+	last_updated_date date,
 	PRIMARY KEY (id)
 );
 
