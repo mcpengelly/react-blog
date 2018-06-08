@@ -86,7 +86,7 @@ class EditableProject extends Component {
       hasPreview: false,
       title: '',
       description: '',
-      lastUpdatedDate: formatDate(new Date()),
+      lastUpdatedDate: new Date(),
       img: '',
       file: [{ preview: '/placeholder' }],
       expanded: false,
@@ -201,7 +201,7 @@ class EditableProject extends Component {
               </Avatar>
             }
             title={this.state.title}
-            subheader={this.state.lastUpdatedDate}
+            subheader={formatDate(this.state.lastUpdatedDate)}
           />
           <CardMedia
             className={classes.media}

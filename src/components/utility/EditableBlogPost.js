@@ -70,7 +70,7 @@ class EditableBlogPost extends Component {
       title: '',
       content: '',
       catchPhrase: '',
-      lastUpdatedDate: formatDate(new Date()),
+      lastUpdatedDate: new Date(),
       hasPreview: false,
       file: [{ preview: '' }],
       redirect: false
@@ -209,7 +209,7 @@ class EditableBlogPost extends Component {
               </Typography>
               <Typography variant='body1'>{content || 'content'}</Typography>
               <Typography variant='body2'>
-                {lastUpdatedDate || 'lastUpdatedDate'}
+                {formatDate(lastUpdatedDate) || 'lastUpdatedDate'}
               </Typography>
             </CardContent>
           </Card>
