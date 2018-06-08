@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router'
 
 import NavBar from './components/utility/NavBar'
 import Footer from './components/utility/Footer'
@@ -19,6 +20,7 @@ class App extends Component {
 
         <div className='App-body'>
           <NavBar />
+          <Redirect to='/blog' />
           {this.props.children}
         </div>
         <Footer copyright='Matt Pengelly 2018' />
