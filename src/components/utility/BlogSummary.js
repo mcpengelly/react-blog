@@ -7,6 +7,7 @@ import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
 
 import { baseURL } from '../../helpers/globals'
+import { formatDate } from '../../helpers/helpers'
 
 const styles = theme => ({
   card: {
@@ -55,7 +56,7 @@ function BlogSummary (props) {
       <CardContent>
         <Typography variant='headline'>{title}</Typography>
         <Typography variant='body2'>
-          {lastUpdatedDate || 'lastUpdatedDate'}
+          {formatDate(lastUpdatedDate) || 'lastUpdatedDate'}
         </Typography>
         <Typography className={classes.pos}>
           {catchPhrase || 'catchyPhrase'}

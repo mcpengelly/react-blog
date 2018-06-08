@@ -9,6 +9,7 @@ import { withStyles } from 'material-ui/styles'
 import FloatingButton from './FloatingButton'
 
 import { baseURL } from '../../helpers/globals'
+import { formatDate } from '../../helpers/helpers'
 
 const styles = theme => ({
   card: {
@@ -67,7 +68,7 @@ class BlogPost extends Component {
           </Typography>
           <Typography variant='body1'>{content || 'content'}</Typography>
           <Typography variant='body2'>
-            {lastUpdatedDate || 'lastUpdatedDate'}
+            {formatDate(lastUpdatedDate) || 'lastUpdatedDate'}
           </Typography>
         </CardContent>
         <CardActions>

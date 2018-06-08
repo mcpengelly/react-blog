@@ -19,7 +19,7 @@ import Collapse from 'material-ui/transitions/Collapse'
 import yellow from 'material-ui/colors/yellow'
 import classnames from 'classnames'
 
-import { _abbreviate } from '../../helpers/helpers'
+import { formatDate } from '../../helpers/helpers'
 import { baseURL } from '../../helpers/globals'
 
 const styles = theme => ({
@@ -115,7 +115,7 @@ class PortfolioItem extends Component {
             </IconButton>
           }
           title={title}
-          subheader={lastUpdatedDate}
+          subheader={formatDate(lastUpdatedDate)}
         />
         <CardMedia className={classes.media} image={imgPath} title={img} />
         <CardActions className={classes.actions} disableActionSpacing>
