@@ -36,8 +36,9 @@ DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
 	id text,
-	username text,
-	password text
+	username text UNIQUE,
+	password text,
+	PRIMARY KEY (id)
 );
 
 # INSERT INTO posts (id, title, content) VALUES ('Placeholder Title', 'placeholder', 'placeholder');

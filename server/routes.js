@@ -270,7 +270,6 @@ module.exports = function (app) {
     db
       .any('SELECT * FROM subscribers WHERE active = TRUE')
       .then(activeSubscribers => {
-        // TODO? send 1 volley of emails
         if (activeSubscribers && activeSubscribers.length) {
           activeSubscribers.forEach(sub => {
             const path = `/api/unsubscribe/${sub.id}`
@@ -466,8 +465,7 @@ module.exports = function (app) {
   })
 
   function createAndCallback (relation, targetKeys, callback) {
-    // app.post('/api/posts', [isAuthenticated, upload.single('file')], (req, res) => {
-    app.post('/api/posts', isAuthenticated, (req, res) => {
+    app.post('/api/posts', [isAuthenticated, upload.single('file')], (req, res) => {
       console.log('req.file', req.file)
       const data = { ...req.body, img: req.file ? req.file.originalname : '' }
       const filteredData = _filterData(data, targetKeys)
