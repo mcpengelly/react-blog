@@ -85,7 +85,7 @@ class EditableProject extends Component {
       hasPreview: false,
       title: '',
       description: '',
-      lastUpdatedDate: new Date(),
+      lastUpdatedDate: moment(new Date()).format('YYYY-MM-DD'),
       img: '',
       file: [{ preview: '/placeholder' }],
       expanded: false,

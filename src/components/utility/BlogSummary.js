@@ -56,7 +56,7 @@ function BlogSummary (props) {
       <CardContent>
         <Typography variant='headline'>{title}</Typography>
         <Typography variant='body2'>
-          {moment(lastUpdatedDate).format('YYYY-MM-DD') || 'lastUpdatedDate'}
+          {moment(lastUpdatedDate).format('YYYY-MM-DD')}
         </Typography>
         <Typography className={classes.pos}>
           {catchPhrase || 'catchyPhrase'}
