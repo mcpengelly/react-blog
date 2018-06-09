@@ -105,7 +105,7 @@ export default class Portfolio extends Component {
       id: !isNew ? id : uuidv4(),
       title: title,
       img: img,
-      lastUpdatedDate: formatDate(new Date()),
+      lastUpdatedDate: new Date(),
       description: description,
       file: file[0]
     }

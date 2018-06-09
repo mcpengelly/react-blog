@@ -1,18 +1,15 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router'
-import { BrowserRouter as Router } from 'react-router-dom'
 import Dropzone from 'react-dropzone'
-import uuidv4 from 'uuidv4'
 import TextField from 'material-ui/TextField'
 import Button from 'material-ui/Button'
 import Card, { CardContent, CardMedia, CardActions } from 'material-ui/Card'
 import { withStyles } from 'material-ui/styles'
 import Typography from 'material-ui/Typography'
 import Divider from 'material-ui/Divider'
+import moment from 'moment'
 
-import BlogPost from './BlogPost'
 import { baseURL } from '../../helpers/globals'
-import { formatDate } from '../../helpers/helpers'
 
 // TODO: use/leverage draftjs RTE for adding styles to blog posts with html
 
@@ -70,7 +67,7 @@ class EditableBlogPost extends Component {
       title: '',
       content: '',
       catchPhrase: '',
-      lastUpdatedDate: new Date(),
+      lastUpdatedDate: moment(new Date()).format('YYYY-MM-DD'),
       hasPreview: false,
       file: [{ preview: '' }],
       redirect: false
@@ -87,8 +84,7 @@ class EditableBlogPost extends Component {
 
   onSubmitClick (e) {
     e.preventDefault()
-    console.log(this.props)
-
+    console.log(this.state)
     this.props.addPost(this.state)
 
     this.setState({
@@ -96,7 +92,7 @@ class EditableBlogPost extends Component {
     })
   }
 
-  onDrop (acceptedFiles, rejectedFiles) {
+  onDrop (acceptedFiles) {
     this.setState({
       file: acceptedFiles,
       hasPreview: true
@@ -209,7 +205,7 @@ class EditableBlogPost extends Component {
               </Typography>
               <Typography variant='body1'>{content || 'content'}</Typography>
               <Typography variant='body2'>
-                {formatDate(lastUpdatedDate) || 'lastUpdatedDate'}
+                {moment(lastUpdatedDate).format('YYYY-MM-DD')}
               </Typography>
             </CardContent>
           </Card>
