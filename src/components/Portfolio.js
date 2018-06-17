@@ -7,8 +7,6 @@ import uuidv4 from 'uuidv4'
 import EditableProject from './utility/EditableProject'
 import ProjectsList from './utility/ProjectsList'
 
-import { formatDate } from '../helpers/helpers'
-
 function withProjectData (WrappedComponent, callback) {
   return class ProjectContainer extends React.Component {
     constructor () {
