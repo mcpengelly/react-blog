@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-
-import Project from './Project'
 import Paper from 'material-ui/Paper'
 import Grid from 'material-ui/Grid'
 import { withStyles } from 'material-ui/styles'
 
-const imgPath = '/uploads/'
+import Project from './Project'
+import FloatingButton from './FloatingButton'
 
 const styles = theme => ({
   container: {
@@ -25,13 +24,14 @@ const styles = theme => ({
   }
 })
 
-class ProjectsContainer extends Component {
+class ProjectsList extends Component {
   constructor () {
     super()
     this.state = {
       spacing: '16'
     }
   }
+
   render () {
     const { classes } = this.props
     const { spacing } = this.state
@@ -41,9 +41,12 @@ class ProjectsContainer extends Component {
           <Paper className={classes.paper}>
             <Project
               key={index}
+              id={project.id}
               title={project.title}
-              img={imgPath + project.img}
+              img={project.img}
               description={project.description}
+              lastUpdatedDate={project.lastUpdatedDate}
+              removeProject={this.props.removeProject}
             />
           </Paper>
         </Grid>
@@ -52,6 +55,11 @@ class ProjectsContainer extends Component {
 
     return (
       <div className={classes.container}>
+        <FloatingButton
+          url='/portfolio/new/project'
+          color='primary'
+          iconName='note_add'
+        />
         <Grid container className={classes.root}>
           <Grid item xs={12}>
             <Grid
@@ -69,4 +77,4 @@ class ProjectsContainer extends Component {
   }
 }
 
-export default withStyles(styles)(ProjectsContainer)
+export default withStyles(styles)(ProjectsList)

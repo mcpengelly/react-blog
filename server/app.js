@@ -1,33 +1,28 @@
-const express = require('express');
-const morgan = require('morgan');
-const path = require('path');
-const bodyParser = require('body-parser');
+const express = require('express')
+const morgan = require('morgan')
+const path = require('path')
 
-const server = express();
+const server = express()
 
-// middleware
-// Setup logger
+// Middleware: logger
 server.use(
-	morgan(
-		':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version"' +
-			':status :res[content-length] :response-time ms'
-	)
-);
+  morgan(
+    ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version"' +
+      ':status :res[content-length] :response-time ms'
+  )
+)
 
-// Serve static assets
-server.use(express.static(path.resolve(__dirname, '..', 'build')));
-// server.use('/images', express.static(path.resolve(__dirname, 'assets/img', 'uploads')));
+// Middleware: Serve static assets
+server.use(express.static(path.resolve(__dirname, '..', 'build')))
+server.use(express.static(path.join(__dirname, '/uploads')))
 
-// req body middleware
-server.use(bodyParser.urlencoded({ extended: true }));
-server.use(bodyParser.json());
+// Database setup
+const database = require('./database')
 
-// routing
-require('./routes.js')(server);
+// Authentication
+require('./auth')(server, database)
 
-// react: Always return the main index.html, so react-router render the route in the client
-server.get('*', (req, res) => {
-	res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
-});
+// Routing
+require('./routes.js')(server, database)
 
-module.exports = server;
+module.exports = server

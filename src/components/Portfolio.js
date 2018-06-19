@@ -1,6 +1,59 @@
 import React, { Component } from 'react'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
+import { CircularProgress } from 'material-ui/Progress'
+import uuidv4 from 'uuidv4'
 
-import ProjectsContainer from './utility/ProjectsContainer'
+import EditableProject from './utility/EditableProject'
+import ProjectsList from './utility/ProjectsList'
+
+function withProjectData (WrappedComponent, callback) {
+  return class ProjectContainer extends React.Component {
+    constructor () {
+      super()
+      this.state = {
+        title: '',
+        description: '',
+        lastUpdatedDate: '',
+        img: '',
+        pageIsReady: false
+      }
+    }
+
+    componentDidMount () {
+      fetch(`/api/projects/${this.props.match.params.id}`)
+        .then(res => {
+          return res.json()
+        })
+        .then(project => {
+          this.setState({
+            title: project.title,
+            description: project.description,
+            lastUpdatedDate: project.lastUpdatedDate,
+            img: project.img,
+            pageIsReady: true
+          })
+        })
+    }
+
+    render () {
+      if (!this.state.pageIsReady) {
+        return <CircularProgress />
+      }
+
+      return (
+        <WrappedComponent
+          id={this.props.match.params.id}
+          title={this.state.title}
+          description={this.state.description}
+          lastUpdatedDate={this.state.lastUpdatedDate}
+          img={this.state.img}
+          addProject={callback}
+        />
+      )
+    }
+  }
+}
 
 export default class Portfolio extends Component {
   constructor (props) {
@@ -8,39 +61,132 @@ export default class Portfolio extends Component {
     this.state = {
       projectList: []
     }
+
+    this.addProject = this.addProject.bind(this)
+    this.removeProject = this.removeProject.bind(this)
   }
 
   componentDidMount () {
-    const lorem =
-      'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.'
-
-    // fetch portfolio items
     fetch('/api/projects')
-      // .then(response => {
-      //   return response.json()
-      // })
+      .then(response => {
+        return response.json()
+      })
       .then(text => {
-        console.log(text)
-        // set state to list received from backend
-        text = [
-          { index: '1', description: lorem, title: 'Project Number One' },
-          { index: '2', description: lorem, title: 'Project Number Two' },
-          { index: '3', description: lorem, title: 'Project Number Three' },
-          { index: '4', description: lorem, title: 'Project Number Four' },
-          { index: '5', description: lorem, title: 'Project Number Five' },
-          { index: '6', description: lorem, title: 'Project Number Six' },
-          { index: '7', description: lorem, title: 'Project Number Seven' }
-        ] // for testing only
         this.setState({
           projectList: text
         })
       })
       .catch(error => {
-        throw new Error(error)
+        throw error
+      })
+  }
+
+  removeProject (projectId) {
+    const options = {
+      method: 'delete',
+      credentials: 'include'
+    }
+
+    fetch(`/api/projects/${projectId}`, options).then(() => {
+      this.setState({
+        projectList: this.state.projectList.filter(
+          project => project.id !== projectId
+        )
+      })
+    })
+  }
+
+  addProject (project) {
+    const {
+      id,
+      isNew,
+      title,
+      description,
+      lastUpdatedDate,
+      img,
+      file
+    } = project
+
+    const data = {
+      id: !isNew ? id : uuidv4(),
+      title: title,
+      img: img,
+      lastUpdatedDate: lastUpdatedDate,
+      description: description,
+      file: file[0]
+    }
+
+    // for sending multipart/form-data
+    let formData = new FormData()
+    for (let name in data) {
+      formData.append(name, data[name])
+    }
+
+    const url = isNew ? '/api/projects' : `/api/projects/${id}`
+
+    const options = {
+      method: isNew ? 'POST' : 'PUT',
+      body: formData,
+      credentials: 'include'
+    }
+
+    fetch(url, options)
+      .then(response => {
+        return response.text()
+      })
+      .then(() => {
+        if (isNew) {
+          this.setState({
+            projectList: this.state.projectList.concat({
+              ...data,
+              img: file[0].name
+            })
+          })
+        } else {
+          this.setState({
+            projectList: this.state.projectList.map(p => {
+              // when we find a match replace its data
+              if (project.id === p.id) {
+                return {
+                  ...project,
+                  img: file[0].name || img
+                }
+              }
+              return p
+            })
+          })
+        }
       })
   }
 
   render () {
-    return <ProjectsContainer projects={this.state.projectList} />
+    return (
+      <Switch>
+        <Route
+          exact
+          path={`${this.props.match.url}`}
+          render={() => {
+            return (
+              <ProjectsList
+                removeProject={this.removeProject}
+                projects={this.state.projectList}
+              />
+            )
+          }}
+        />
+        <Route
+          exact
+          path={`${this.props.match.url}/:id/edit`}
+          component={withProjectData(EditableProject, this.addProject)}
+        />
+        <Route
+          exact
+          path={`${this.props.match.url}/new/project`}
+          render={() => {
+            return <EditableProject isNew addProject={this.addProject} />
+          }}
+        />
+      </Switch>
+    )
   }
 }

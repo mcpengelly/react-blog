@@ -1,9 +1,14 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { withStyles } from 'material-ui/styles'
-import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card'
-import Button from 'material-ui/Button'
+import React, { Component } from 'react'
+// eslint-disable-next-line
+import { BrowserRouter as Router, Link } from 'react-router-dom'
+import Card, { CardContent, CardMedia, CardActions } from 'material-ui/Card'
 import Typography from 'material-ui/Typography'
+import { withStyles } from 'material-ui/styles'
+import moment from 'moment'
+
+import FloatingButton from './FloatingButton'
+
+import { baseURL } from '../../helpers/globals'
 
 const styles = theme => ({
   card: {
@@ -11,11 +16,6 @@ const styles = theme => ({
     maxWidth: 875,
     margin: 'auto',
     padding: 10
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)'
   },
   media: {
     height: 200
@@ -31,34 +31,60 @@ const styles = theme => ({
   }
 })
 
-function BlogSummary (props) {
-  const { classes } = props
+class BlogPost extends Component {
+  deletePost (id) {
+    return () => {
+      this.props.removePost(id)
+    }
+  }
 
-  return (
-    <Card className={classes.card}>
-      <CardMedia
-        className={classes.media}
-        image='/static/images/cards/contemplative-reptile.jpg'
-        title='bang'
-      />
-      <CardContent>
-        <Typography className={classes.title}>Word of the Day</Typography>
-        <Typography variant='headline'>{props.title}</Typography>
-        <Typography className={classes.pos}>adjective</Typography>
-        <Typography variant='body'>
-          {props.content}
-          <br />
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size='small'>See More...</Button>
-      </CardActions>
-    </Card>
-  )
+  render () {
+    const {
+      classes,
+      title,
+      content,
+      catchPhrase,
+      lastUpdatedDate,
+      img
+    } = this.props
+
+    return (
+      <Card className={classes.card}>
+        <CardMedia
+          className={classes.media}
+          image={baseURL + img}
+          title={title}
+        />
+
+        <CardContent>
+          <Typography className={classes.title} variant='headline'>
+            {title || 'title'}
+          </Typography>
+          <Typography className={classes.pos}>
+            {catchPhrase || 'catchPhrase'}
+          </Typography>
+          <Typography variant='body1'>{content || 'content'}</Typography>
+          <Typography variant='body2'>
+            {moment(lastUpdatedDate).format('YYYY-MM-DD') || 'lastUpdatedDate'}
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <FloatingButton
+            url={`${this.props.id}/edit`}
+            color='primary'
+            iconName='edit_icon'
+            translation='translateX(-120%)'
+          />
+          <FloatingButton
+            url='/blog'
+            color='secondary'
+            iconName='delete_icon'
+            onClick={this.deletePost(this.props.id)}
+          />
+        </CardActions>
+      </Card>
+    )
+  }
 }
 
-BlogSummary.propTypes = {
-  classes: PropTypes.object.isRequired
-}
-
-export default withStyles(styles)(BlogSummary)
+export default withStyles(styles)(BlogPost)

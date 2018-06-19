@@ -9,27 +9,3 @@
 	text-align: center;
 }
 
-.App-header {
-	color: var(--white);
-	background-color: var(--navy-blue);
-	/*background-image: url('./assets/img/nasa-earth.jpg');*/
-	/*min-height: 200px;*/
-
-	/* Full height */
-	height: 100%;
-
-	/* Center and scale the image */
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-	/*padding: 20px;*/
-}
-
-.App-intro {
-	font-size: large;
-}
-
-@keyframes App-logo-spin {
-	from { transform: rotate(0deg); }
-	to { transform: rotate(360deg); }
-}

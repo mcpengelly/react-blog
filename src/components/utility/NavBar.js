@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router'
 import { withStyles } from 'material-ui/styles'
 import AppBar from 'material-ui/AppBar'
 import Toolbar from 'material-ui/Toolbar'
@@ -11,6 +11,7 @@ import AccountCircle from 'material-ui-icons/AccountCircle'
 import Switch from 'material-ui/Switch'
 import { FormControlLabel, FormGroup } from 'material-ui/Form'
 import Menu, { MenuItem } from 'material-ui/Menu'
+import Icon from 'material-ui/Icon'
 import FaGithub from 'react-icons/lib/fa/github'
 
 const styles = {
@@ -30,7 +31,7 @@ class MenuAppBar extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      auth: true,
+      auth: false,
       anchorEl: null,
       anchorNavEl: null
     }
@@ -40,6 +41,18 @@ class MenuAppBar extends Component {
     this.handleMenu = this.handleMenu.bind(this)
     this.handleNavMenu = this.handleNavMenu.bind(this)
     this.handleNavClose = this.handleNavClose.bind(this)
+  }
+
+  componentDidMount () {
+    if (document.cookie) {
+      this.setState({
+        auth: true
+      })
+    } else {
+      this.setState({
+        auth: false
+      })
+    }
   }
 
   handleChange (event, checked) {
@@ -54,12 +67,16 @@ class MenuAppBar extends Component {
     this.setState({ anchorEl: null })
   }
 
-  handleNavMenu () {
+  handleNavMenu (event) {
     this.setState({ anchorNavEl: event.currentTarget })
   }
 
   handleNavClose () {
     this.setState({ anchorNavEl: null })
+  }
+
+  navigateLogin () {
+    window.location.href = '/login'
   }
 
   render () {
@@ -80,6 +97,7 @@ class MenuAppBar extends Component {
               />
             }
             label={auth ? 'Logout' : 'Login'}
+            onClick={this.navigateLogin}
           />
         </FormGroup>
         <AppBar position='static'>
@@ -112,23 +130,23 @@ class MenuAppBar extends Component {
               <MenuItem
                 component={Link}
                 onClick={this.handleNavClose}
-                to='/'
+                to='/blog'
               >
-                Home
+                <Icon>home</Icon> - Home
               </MenuItem>
               <MenuItem
                 component={Link}
                 onClick={this.handleNavClose}
                 to='/about'
               >
-                About
+                <Icon>info</Icon> - About
               </MenuItem>
               <MenuItem
                 component={Link}
                 onClick={this.handleNavClose}
                 to='/portfolio'
               >
-                Projects
+                <Icon>folder</Icon> - Projects
               </MenuItem>
             </Menu>
             <Typography
@@ -141,7 +159,7 @@ class MenuAppBar extends Component {
             {auth && (
               <div>
                 <IconButton
-                  aria-owns={open ? 'menu-appbar' : null}
+                  aria-owns={openProfile ? 'menu-appbar' : null}
                   aria-haspopup='true'
                   onClick={this.handleMenu}
                   color='inherit'
