@@ -18,8 +18,8 @@ import MoreVertIcon from 'material-ui-icons/MoreVert'
 import Collapse from 'material-ui/transitions/Collapse'
 import yellow from 'material-ui/colors/yellow'
 import classnames from 'classnames'
+import moment from 'moment'
 
-import { formatDate } from '../../helpers/helpers'
 import { baseURL } from '../../helpers/globals'
 
 const styles = theme => ({
@@ -115,7 +115,7 @@ class PortfolioItem extends Component {
             </IconButton>
           }
           title={title}
-          subheader={formatDate(lastUpdatedDate)}
+          subheader={moment(lastUpdatedDate).format('YYYY-MM-DD')}
         />
         <CardMedia className={classes.media} image={imgPath} title={img} />
         <CardActions className={classes.actions} disableActionSpacing>

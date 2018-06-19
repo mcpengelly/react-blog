@@ -5,9 +5,9 @@ import { withStyles } from 'material-ui/styles'
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card'
 import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
+import moment from 'moment'
 
 import { baseURL } from '../../helpers/globals'
-import { formatDate } from '../../helpers/helpers'
 
 const styles = theme => ({
   card: {
@@ -56,7 +56,7 @@ function BlogSummary (props) {
       <CardContent>
         <Typography variant='headline'>{title}</Typography>
         <Typography variant='body2'>
-          {formatDate(lastUpdatedDate) || 'lastUpdatedDate'}
+          {moment(lastUpdatedDate).format('YYYY-MM-DD')}
         </Typography>
         <Typography className={classes.pos}>
           {catchPhrase || 'catchyPhrase'}

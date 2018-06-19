@@ -31,7 +31,7 @@ class MenuAppBar extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      auth: true,
+      auth: false,
       anchorEl: null,
       anchorNavEl: null
     }
@@ -41,6 +41,18 @@ class MenuAppBar extends Component {
     this.handleMenu = this.handleMenu.bind(this)
     this.handleNavMenu = this.handleNavMenu.bind(this)
     this.handleNavClose = this.handleNavClose.bind(this)
+  }
+
+  componentDidMount () {
+    if (document.cookie) {
+      this.setState({
+        auth: true
+      })
+    } else {
+      this.setState({
+        auth: false
+      })
+    }
   }
 
   handleChange (event, checked) {
@@ -63,6 +75,10 @@ class MenuAppBar extends Component {
     this.setState({ anchorNavEl: null })
   }
 
+  navigateLogin () {
+    window.location.href = '/login'
+  }
+
   render () {
     const { classes } = this.props
     const { auth, anchorEl, anchorNavEl } = this.state
@@ -81,6 +97,7 @@ class MenuAppBar extends Component {
               />
             }
             label={auth ? 'Logout' : 'Login'}
+            onClick={this.navigateLogin}
           />
         </FormGroup>
         <AppBar position='static'>

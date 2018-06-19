@@ -18,11 +18,10 @@ import Avatar from 'material-ui/Avatar'
 import IconButton from 'material-ui/IconButton'
 import yellow from 'material-ui/colors/yellow'
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
-import MoreVertIcon from 'material-ui-icons/MoreVert'
 import classnames from 'classnames'
+import moment from 'moment'
 
 import { baseURL } from '../../helpers/globals'
-import { formatDate } from '../../helpers/helpers'
 
 const styles = theme => ({
   card: {
@@ -86,7 +85,7 @@ class EditableProject extends Component {
       hasPreview: false,
       title: '',
       description: '',
-      lastUpdatedDate: new Date(),
+      lastUpdatedDate: moment(new Date()).format('YYYY-MM-DD'),
       img: '',
       file: [{ preview: '/placeholder' }],
       expanded: false,
@@ -201,7 +200,7 @@ class EditableProject extends Component {
               </Avatar>
             }
             title={this.state.title}
-            subheader={formatDate(this.state.lastUpdatedDate)}
+            subheader={moment(this.state.lastUpdatedDate).format('YYYY-MM-DD')}
           />
           <CardMedia
             className={classes.media}

@@ -7,8 +7,6 @@ import uuidv4 from 'uuidv4'
 import EditableProject from './utility/EditableProject'
 import ProjectsList from './utility/ProjectsList'
 
-import { formatDate } from '../helpers/helpers'
-
 function withProjectData (WrappedComponent, callback) {
   return class ProjectContainer extends React.Component {
     constructor () {
@@ -84,7 +82,10 @@ export default class Portfolio extends Component {
   }
 
   removeProject (projectId) {
-    const options = { method: 'delete' }
+    const options = {
+      method: 'delete',
+      credentials: 'include'
+    }
 
     fetch(`/api/projects/${projectId}`, options).then(() => {
       this.setState({
@@ -96,13 +97,21 @@ export default class Portfolio extends Component {
   }
 
   addProject (project) {
-    const { id, isNew, title, description, img, file } = project
+    const {
+      id,
+      isNew,
+      title,
+      description,
+      lastUpdatedDate,
+      img,
+      file
+    } = project
 
     const data = {
       id: !isNew ? id : uuidv4(),
       title: title,
       img: img,
-      lastUpdatedDate: formatDate(new Date()),
+      lastUpdatedDate: lastUpdatedDate,
       description: description,
       file: file[0]
     }
@@ -117,7 +126,8 @@ export default class Portfolio extends Component {
 
     const options = {
       method: isNew ? 'POST' : 'PUT',
-      body: formData
+      body: formData,
+      credentials: 'include'
     }
 
     fetch(url, options)

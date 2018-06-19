@@ -2,14 +2,13 @@ import React, { Component } from 'react'
 // eslint-disable-next-line
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 import Card, { CardContent, CardMedia, CardActions } from 'material-ui/Card'
-import Button from 'material-ui/Button'
 import Typography from 'material-ui/Typography'
 import { withStyles } from 'material-ui/styles'
+import moment from 'moment'
 
 import FloatingButton from './FloatingButton'
 
 import { baseURL } from '../../helpers/globals'
-import { formatDate } from '../../helpers/helpers'
 
 const styles = theme => ({
   card: {
@@ -46,9 +45,7 @@ class BlogPost extends Component {
       content,
       catchPhrase,
       lastUpdatedDate,
-      img,
-      previewImage,
-      hasPreview
+      img
     } = this.props
 
     return (
@@ -68,7 +65,7 @@ class BlogPost extends Component {
           </Typography>
           <Typography variant='body1'>{content || 'content'}</Typography>
           <Typography variant='body2'>
-            {formatDate(lastUpdatedDate) || 'lastUpdatedDate'}
+            {moment(lastUpdatedDate).format('YYYY-MM-DD') || 'lastUpdatedDate'}
           </Typography>
         </CardContent>
         <CardActions>

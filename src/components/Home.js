@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 // eslint-disable-next-line
-import { BrowserRouter as Router } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
 import { CircularProgress } from 'material-ui/Progress'
 import uuidv4 from 'uuidv4'
@@ -88,7 +87,10 @@ class Home extends Component {
   }
 
   removePost (postId) {
-    const options = { method: 'delete' }
+    const options = {
+      method: 'delete',
+      credentials: 'include'
+    }
 
     fetch(`/api/posts/${postId}`, options).then(() => {
       this.setState({
@@ -129,10 +131,10 @@ class Home extends Component {
 
     const options = {
       method: isNew ? 'POST' : 'PUT',
-      body: formData
+      body: formData,
+      credentials: 'include'
     }
 
-    console.log('Home state', this.state)
     fetch(url, options)
       .then(response => {
         return response.text()

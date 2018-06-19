@@ -10,6 +10,24 @@ import './App.css'
 const background = { backgroundImage: 'url(' + backgroundImage + ')' }
 
 class App extends Component {
+  constructor () {
+    super()
+    this.state = {
+      redirect: false
+    }
+  }
+  componentDidMount () {
+    if (window.location.pathname.endsWith('/')) {
+      this.setState({
+        redirect: true
+      })
+    }
+  }
+  redirect () {
+    if (this.state.redirect) {
+      return <Redirect to='/blog' />
+    }
+  }
   render () {
     return (
       <div className='App' style={background}>
@@ -20,8 +38,8 @@ class App extends Component {
 
         <div className='App-body'>
           <NavBar />
-          <Redirect to='/blog' />
           {this.props.children}
+          {this.redirect()}
         </div>
         <Footer copyright='Matt Pengelly 2018' />
       </div>
