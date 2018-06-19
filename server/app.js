@@ -4,8 +4,7 @@ const path = require('path')
 
 const server = express()
 
-// middlewares
-// Setup logger
+// Middleware: logger
 server.use(
   morgan(
     ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version"' +
@@ -13,11 +12,17 @@ server.use(
   )
 )
 
-// Serve static assets
+// Middleware: Serve static assets
 server.use(express.static(path.resolve(__dirname, '..', 'build')))
 server.use(express.static(path.join(__dirname, '/uploads')))
 
-// routing
-require('./routes.js')(server)
+// Database setup
+const database = require('./database')
+
+// Authentication
+require('./auth')(server, database)
+
+// Routing
+require('./routes.js')(server, database)
 
 module.exports = server
