@@ -35,8 +35,8 @@ module.exports = (app, db) => {
   app.use(
     require('express-session')({
       secret: 'keyboard cat', // what should this be?
-      resave: true,
-      saveUninitialized: true,
+      resave: false,
+      saveUninitialized: false,
       cookie: {
         httpOnly: false,
         secure: false
@@ -81,7 +81,12 @@ module.exports = (app, db) => {
    * Authentication: Handles logging out of passportjs session (deletes req.user object)
    */
   app.get('/api/logout', (req, res) => {
-    req.logout()
-    // res.redirect('/')
+    req.session.destroy(err => {
+      if (err) return err
+      req.logout()
+      res.send('logged out')
+      // res.redirect('/')
+    })
   })
+  // })
 }

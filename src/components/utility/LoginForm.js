@@ -52,7 +52,7 @@ class LoginForm extends React.Component {
     fetch('/api/login', options).then(this.clearInputFields.bind(this))
   }
   logout () {
-    fetch('/logout').then(res => {
+    fetch('/api/logout', { credentials: 'include' }).then(res => {
       console.log('res', res)
     })
   }
