@@ -1,9 +1,22 @@
-export const CREATED = 201
-export const ACCEPTED = 202
-export const BAD_REQUEST = 400
-export const UNAUTHORIZED = 401
-export const FORBIDDEN = 403
-export const NOT_FOUND = 404
-export const INTERNAL_SERVER_ERROR = 500
-export const BAD_GATEWAY = 502
-export const SERVICE_UNAVAILABLE = 503
+// module.js
+const CREATED = 201
+const ACCEPTED = 202
+const BAD_REQUEST = 400
+const UNAUTHORIZED = 401
+const FORBIDDEN = 403
+const NOT_FOUND = 404
+const INTERNAL_SERVER_ERROR = 500
+const BAD_GATEWAY = 502
+const SERVICE_UNAVAILABLE = 503
+
+module.exports = {
+  CREATED,
+  ACCEPTED,
+  BAD_REQUEST,
+  UNAUTHORIZED,
+  FORBIDDEN,
+  NOT_FOUND,
+  INTERNAL_SERVER_ERROR,
+  BAD_GATEWAY,
+  SERVICE_UNAVAILABLE
+}

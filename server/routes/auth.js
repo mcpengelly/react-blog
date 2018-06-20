@@ -73,7 +73,7 @@ module.exports = (app, db) => {
       // failureRedirect: '/error'
     }),
     (req, res) => {
-      res.send('authenticated!')
+      res.json({ isLoggedIn: true })
     }
   )
 

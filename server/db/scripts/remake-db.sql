@@ -21,6 +21,15 @@ CREATE TABLE posts (
 	PRIMARY KEY (id)
 );
 
+-- setup for draftjs
+-- DROP TABLE IF EXISTS posts; 
+-- CREATE TABLE posts (
+-- 	id uuid DEFAULT uuid_generate_v4 (),
+-- 	content text,
+-- 	last_updated_date timestamp,
+-- 	PRIMARY KEY (id)
+-- );
+
 DROP TABLE IF EXISTS subscribers;
 CREATE TABLE subscribers (
 	id uuid DEFAULT uuid_generate_v4 (),

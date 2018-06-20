@@ -9,7 +9,7 @@ const {
   ACCEPTED,
   UNAUTHORIZED,
   INTERNAL_SERVER_ERROR
-} = require('./http-status-codes')
+} = require('../http-status-codes')
 
 const HOSTNAME = process.env.HOSTNAME || 'http://localhost:3000'
 

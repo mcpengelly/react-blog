@@ -17,12 +17,12 @@ server.use(express.static(path.resolve(__dirname, '..', 'build')))
 server.use(express.static(path.join(__dirname, '/uploads')))
 
 // Database setup
-const database = require('./database')
+const database = require('./db/database')
 
 // Authentication
-require('./auth')(server, database)
+require('./routes/auth')(server, database)
 
 // Routing
-require('./routes.js')(server, database)
+require('./routes/api')(server, database)
 
 module.exports = server

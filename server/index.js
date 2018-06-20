@@ -1,5 +1,4 @@
 'use strict'
-const fs = require('fs')
 
 const app = require('./app')
 const HTTP_PORT = process.env.PORT || 4000

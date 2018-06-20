@@ -49,7 +49,11 @@ class LoginForm extends React.Component {
       }
     }
 
-    fetch('/api/login', options).then(this.clearInputFields.bind(this))
+    fetch('/api/login', options)
+      // .then(res => {
+      //   // dispatch an action changing isLoggedIn app state to true
+      // })
+      .then(this.clearInputFields.bind(this))
   }
   logout () {
     fetch('/logout').then(res => {
