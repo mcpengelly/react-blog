@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router'
 import Dropzone from 'react-dropzone'
-import TextField from 'material-ui/TextField'
-import Button from 'material-ui/Button'
-import Card, { CardContent, CardMedia, CardActions } from 'material-ui/Card'
-import { withStyles } from 'material-ui/styles'
-import Typography from 'material-ui/Typography'
-import Divider from 'material-ui/Divider'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import Card, {
+  CardContent,
+  CardMedia,
+  CardActions
+} from '@material-ui/core/Card'
+import { withStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import Divider from '@material-ui/core/Divider'
 import moment from 'moment'
 
 import { baseURL } from '../../helpers/globals'

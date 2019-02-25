@@ -6,17 +6,17 @@ import Card, {
   CardMedia,
   CardContent,
   CardActions
-} from 'material-ui/Card'
-import Avatar from 'material-ui/Avatar'
-import IconButton from 'material-ui/IconButton'
-import Typography from 'material-ui/Typography'
-import Icon from 'material-ui/Icon'
-import Menu, { MenuItem } from 'material-ui/Menu'
-import { withStyles } from 'material-ui/styles'
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
-import MoreVertIcon from 'material-ui-icons/MoreVert'
-import Collapse from 'material-ui/transitions/Collapse'
-import yellow from 'material-ui/colors/yellow'
+} from '@material-ui/core/Card'
+import Avatar from '@material-ui/core/Avatar'
+import IconButton from '@material-ui/core/IconButton'
+import Typography from '@material-ui/core/Typography'
+import Icon from '@material-ui/core/Icon'
+import Menu, { MenuItem } from '@material-ui/core/Menu'
+import { withStyles } from '@material-ui/core/styles'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
+import Collapse from '@material-ui/core/Collapse'
+import yellow from '@material-ui/core/colors/yellow'
 import classnames from 'classnames'
 import moment from 'moment'
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import Typography from 'material-ui/Typography'
-import { withStyles } from 'material-ui/styles'
+import Typography from '@material-ui/core/Typography'
+import { withStyles } from '@material-ui/core/styles'
 
 const styles = {
   container: {
@@ -28,10 +28,12 @@ class ContactInfo extends Component {
       <div className={this.props.classes.container}>
         <Typography variant='title'>Contact Information: </Typography>
         <address>
-          Github: mcpengelly<br />
+          Github: mcpengelly
+          <br />
           <a href='mailto:pengelly.mat@gmail.com'>pengelly.mat@gmail.com</a>
           <br />
-          Ontario, Canada<br />
+          Ontario, Canada
+          <br />
         </address>
         <SOFlair />
       </div>

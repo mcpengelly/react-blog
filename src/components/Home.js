@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // eslint-disable-next-line
 import { Route, Switch } from 'react-router-dom'
-import { CircularProgress } from 'material-ui/Progress'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import uuidv4 from 'uuidv4'
 
 import BlogSummaryList from './utility/BlogSummaryList'

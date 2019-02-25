@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Icon from 'material-ui/Icon'
-import Button from 'material-ui/Button'
-import { withStyles } from 'material-ui/styles'
+import Icon from '@material-ui/core/Icon'
+import Button from '@material-ui/core/Button'
+import { withStyles } from '@material-ui/core/styles'
 
 const styles = {
   floatButton: {

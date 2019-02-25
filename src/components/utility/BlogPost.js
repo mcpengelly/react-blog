@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
 // eslint-disable-next-line
 import { BrowserRouter as Router, Link } from 'react-router-dom'
-import Card, { CardContent, CardMedia, CardActions } from 'material-ui/Card'
-import Typography from 'material-ui/Typography'
-import { withStyles } from 'material-ui/styles'
+import Card, {
+  CardContent,
+  CardMedia,
+  CardActions
+} from '@material-ui/core/Card'
+import Typography from '@material-ui/core/Typography'
+import { withStyles } from '@material-ui/core/styles'
 import moment from 'moment'
 
 import FloatingButton from './FloatingButton'
