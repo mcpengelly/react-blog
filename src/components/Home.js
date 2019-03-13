@@ -77,6 +77,7 @@ class Home extends Component {
         return response.json()
       })
       .then(text => {
+        console.log('******************************', text)
         this.setState({
           blogPosts: text
         })
