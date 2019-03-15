@@ -1,17 +1,17 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import Card, {
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions
-} from '@material-ui/core/Card'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import CardMedia from '@material-ui/core/CardMedia'
+import CardActions from '@material-ui/core/CardActions'
+import CardHeader from '@material-ui/core/CardHeader'
 import Avatar from '@material-ui/core/Avatar'
 import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import Icon from '@material-ui/core/Icon'
-import Menu, { MenuItem } from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import Menu from '@material-ui/core/Menu'
 import { withStyles } from '@material-ui/core/styles'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import MoreVertIcon from '@material-ui/icons/MoreVert'

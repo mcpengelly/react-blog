@@ -20,7 +20,9 @@ class About extends Component {
     const { classes } = this.props
     return (
       <Paper className={classes.container}>
-        <Typography variant='title'>More info coming soon!</Typography>
+        <Typography variant='h4' gutterBottom>
+          More info coming soon.
+        </Typography>
         <ContactForm />
         <Divider />
         <ContactInfo />
