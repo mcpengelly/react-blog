@@ -183,7 +183,7 @@ class EditableBlogPost extends Component {
             <br />
             <Button
               onClick={this.onSubmitClick.bind(this)}
-              variant='raised'
+              variant='contained'
               color='primary'
             >
               Submit

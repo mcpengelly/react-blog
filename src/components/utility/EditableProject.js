@@ -180,7 +180,7 @@ class EditableProject extends Component {
             <br />
             <Button
               onClick={this.onSubmitClick}
-              variant='raised'
+              variant='contained'
               color='primary'
             >
               Submit

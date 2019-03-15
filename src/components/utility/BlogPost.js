@@ -25,7 +25,6 @@ const styles = theme => ({
   },
   title: {
     marginBottom: 16,
-    fontSize: 14,
     color: theme.palette.text.secondary
   },
   pos: {
@@ -60,10 +59,10 @@ class BlogPost extends Component {
         />
 
         <CardContent>
-          <Typography className={classes.title} variant='h1' gutterBottom>
+          <Typography className={classes.title} variant='h2' gutterBottom>
             {title || 'title'}
           </Typography>
-          <Typography className={classes.pos}>
+          <Typography className={classes.pos} variant='subtitle1'>
             {catchPhrase || 'catchPhrase'}
           </Typography>
           <Typography variant='body1'>{content || 'content'}</Typography>

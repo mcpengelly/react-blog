@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Icon from '@material-ui/core/Icon'
-import Button from '@material-ui/core/Button'
+import Fab from '@material-ui/core/Fab'
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = {
@@ -16,7 +16,7 @@ function FloatingButton (props) {
   const { classes, onClick, url, color, translation, iconName } = props
 
   return (
-    <Button
+    <Fab
       onClick={onClick}
       className={classes.floatButton}
       component={Link}
@@ -24,10 +24,9 @@ function FloatingButton (props) {
       color={color}
       style={{ transform: translation }}
       aria-label='new'
-      variant='fab'
     >
       <Icon>{iconName}</Icon>
-    </Button>
+    </Fab>
   )
 }
 

@@ -157,7 +157,7 @@ class ContactForm extends Component {
         <Button
           className={classes.submitButton}
           type='submit'
-          variant='raised'
+          variant='contained'
           color='primary'
         >
           Send<Icon>send</Icon>
@@ -181,7 +181,7 @@ class ContactForm extends Component {
         <Button
           className={classes.submitButton}
           onClick={this.addNewSubscriberNotification}
-          variant='raised'
+          variant='contained'
           color='primary'
         >
           Subscribe
