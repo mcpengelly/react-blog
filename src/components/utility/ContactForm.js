@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import NotificationSystem from 'react-notification-system'
-import TextField from 'material-ui/TextField'
-import Button from 'material-ui/Button'
-import Icon from 'material-ui/Icon'
-import Typography from 'material-ui/Typography'
-import { withStyles } from 'material-ui/styles'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import Icon from '@material-ui/core/Icon'
+import Typography from '@material-ui/core/Typography'
+import { withStyles } from '@material-ui/core/styles'
 
 const styles = {
   container: {
@@ -157,7 +157,7 @@ class ContactForm extends Component {
         <Button
           className={classes.submitButton}
           type='submit'
-          variant='raised'
+          variant='contained'
           color='primary'
         >
           Send<Icon>send</Icon>
@@ -181,7 +181,7 @@ class ContactForm extends Component {
         <Button
           className={classes.submitButton}
           onClick={this.addNewSubscriberNotification}
-          variant='raised'
+          variant='contained'
           color='primary'
         >
           Subscribe

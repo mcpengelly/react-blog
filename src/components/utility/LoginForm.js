@@ -1,6 +1,6 @@
 import React from 'react'
-import Paper from 'material-ui/Paper'
-import { withStyles } from 'material-ui/styles'
+import Paper from '@material-ui/core/Paper'
+import { withStyles } from '@material-ui/core/styles'
 const styles = {
   container: {
     paddingTop: 25,
@@ -63,13 +63,15 @@ class LoginForm extends React.Component {
     return (
       <Paper className={classes.container}>
         <div>
-          username:<input
+          username:
+          <input
             type='text'
             value={username}
             onChange={this.handleChange('username')}
           />
           <br />
-          password:<input
+          password:
+          <input
             type='text'
             value={password}
             onChange={this.handleChange('password')}

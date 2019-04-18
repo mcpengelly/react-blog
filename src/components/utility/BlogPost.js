@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 // eslint-disable-next-line
 import { BrowserRouter as Router, Link } from 'react-router-dom'
-import Card, { CardContent, CardMedia, CardActions } from 'material-ui/Card'
-import Typography from 'material-ui/Typography'
-import { withStyles } from 'material-ui/styles'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import CardMedia from '@material-ui/core/CardMedia'
+import CardActions from '@material-ui/core/CardActions'
+import Typography from '@material-ui/core/Typography'
+import { withStyles } from '@material-ui/core/styles'
 import moment from 'moment'
 
 import FloatingButton from './FloatingButton'
@@ -22,7 +25,6 @@ const styles = theme => ({
   },
   title: {
     marginBottom: 16,
-    fontSize: 14,
     color: theme.palette.text.secondary
   },
   pos: {
@@ -57,10 +59,10 @@ class BlogPost extends Component {
         />
 
         <CardContent>
-          <Typography className={classes.title} variant='headline'>
+          <Typography className={classes.title} variant='h2' gutterBottom>
             {title || 'title'}
           </Typography>
-          <Typography className={classes.pos}>
+          <Typography className={classes.pos} variant='subtitle1'>
             {catchPhrase || 'catchPhrase'}
           </Typography>
           <Typography variant='body1'>{content || 'content'}</Typography>

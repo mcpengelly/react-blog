@@ -2,7 +2,7 @@ import React from 'react'
 import FaGithub from 'react-icons/lib/fa/github'
 import FaLinkedIn from 'react-icons/lib/fa/linkedin'
 import FaTwitter from 'react-icons/lib/fa/twitter'
-import { withStyles } from 'material-ui/styles'
+import { withStyles } from '@material-ui/core/styles'
 
 const styles = {
   socMedIcons: {

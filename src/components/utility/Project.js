@@ -1,22 +1,22 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import Card, {
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions
-} from 'material-ui/Card'
-import Avatar from 'material-ui/Avatar'
-import IconButton from 'material-ui/IconButton'
-import Typography from 'material-ui/Typography'
-import Icon from 'material-ui/Icon'
-import Menu, { MenuItem } from 'material-ui/Menu'
-import { withStyles } from 'material-ui/styles'
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
-import MoreVertIcon from 'material-ui-icons/MoreVert'
-import Collapse from 'material-ui/transitions/Collapse'
-import yellow from 'material-ui/colors/yellow'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import CardMedia from '@material-ui/core/CardMedia'
+import CardActions from '@material-ui/core/CardActions'
+import CardHeader from '@material-ui/core/CardHeader'
+import Avatar from '@material-ui/core/Avatar'
+import IconButton from '@material-ui/core/IconButton'
+import Typography from '@material-ui/core/Typography'
+import Icon from '@material-ui/core/Icon'
+import MenuItem from '@material-ui/core/MenuItem'
+import Menu from '@material-ui/core/Menu'
+import { withStyles } from '@material-ui/core/styles'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
+import Collapse from '@material-ui/core/Collapse'
+import yellow from '@material-ui/core/colors/yellow'
 import classnames from 'classnames'
 import moment from 'moment'
 

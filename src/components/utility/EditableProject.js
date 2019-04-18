@@ -2,22 +2,21 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router'
 import { BrowserRouter as Router } from 'react-router-dom'
 import Dropzone from 'react-dropzone'
-import TextField from 'material-ui/TextField'
-import Button from 'material-ui/Button'
-import { withStyles } from 'material-ui/styles'
-import Typography from 'material-ui/Typography'
-import Divider from 'material-ui/Divider'
-import Card, {
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions
-} from 'material-ui/Card'
-import Collapse from 'material-ui/transitions/Collapse'
-import Avatar from 'material-ui/Avatar'
-import IconButton from 'material-ui/IconButton'
-import yellow from 'material-ui/colors/yellow'
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import { withStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import Divider from '@material-ui/core/Divider'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import CardMedia from '@material-ui/core/CardMedia'
+import CardActions from '@material-ui/core/CardActions'
+import CardHeader from '@material-ui/core/CardHeader'
+import Collapse from '@material-ui/core/Collapse'
+import Avatar from '@material-ui/core/Avatar'
+import IconButton from '@material-ui/core/IconButton'
+import yellow from '@material-ui/core/colors/yellow'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import classnames from 'classnames'
 import moment from 'moment'
 
@@ -181,7 +180,7 @@ class EditableProject extends Component {
             <br />
             <Button
               onClick={this.onSubmitClick}
-              variant='raised'
+              variant='contained'
               color='primary'
             >
               Submit

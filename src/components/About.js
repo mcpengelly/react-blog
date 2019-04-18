@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import Typography from 'material-ui/Typography'
-import Divider from 'material-ui/Divider'
-import Paper from 'material-ui/Paper'
-import { withStyles } from 'material-ui/styles'
+import Typography from '@material-ui/core/Typography'
+import Divider from '@material-ui/core/Divider'
+import Paper from '@material-ui/core/Paper'
+import { withStyles } from '@material-ui/core/styles'
 
 import ContactForm from './utility/ContactForm'
 import ContactInfo from './utility/ContactInfo'
@@ -20,7 +20,9 @@ class About extends Component {
     const { classes } = this.props
     return (
       <Paper className={classes.container}>
-        <Typography variant='title'>More info coming soon!</Typography>
+        <Typography variant='h4' gutterBottom>
+          More info coming soon.
+        </Typography>
         <ContactForm />
         <Divider />
         <ContactInfo />
